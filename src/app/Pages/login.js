@@ -2,7 +2,14 @@ export default function login(){
 
     return(
         <div>
-            Hola KBKJFF
+            <form>
+                <label>
+                    Nombre
+                    <input type="text"> </input>
+                </label>
+            </form>
+
+
         </div>
     )
 }

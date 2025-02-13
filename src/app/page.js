@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Menu from "./component/Menu.js"
+
 export default function Home() {
   return (
     // <Menu> </Menu>

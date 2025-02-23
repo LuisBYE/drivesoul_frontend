@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 
+// http://localhost:3000/Pages/registro
 export default function Registro() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');

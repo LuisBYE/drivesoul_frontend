@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import login from '../component/Pages/login';
+import login from '../../component/Pages/login';
 
 export default function Vlogin() {
     const [username, setUsername] = useState('');

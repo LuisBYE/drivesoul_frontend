@@ -1,12 +1,13 @@
-import Image from "next/image";
-import Menu from "./component/Menu.js"
+import React from 'react';
+import Menu from './component/Pages/menu';
+import Vlogin from './Pages/Registro/Vlogin';
+
 
 export default function Home() {
-  return (
-    // <Menu> </Menu>
-
-    <div>
-      <h1> Portada de Incio Coches</h1>
-    </div>
-  );
+    return (
+        <div>
+            <Menu />
+           <Vlogin/>
+        </div>
+    );
 }

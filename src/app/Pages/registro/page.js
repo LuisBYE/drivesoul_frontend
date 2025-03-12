@@ -1,128 +1,88 @@
 "use client";
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import MenuSimple from '../../component/Pages/MenuSimple';
+import loginService from '../../component/Pages/login';
+import './css_REGISTRO_LOGG.css';
 
 // http://localhost:3000/Pages/registro
 export default function Registro() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
+  const router = useRouter();
+  const [isLoginView, setIsLoginView] = useState(false);
+  const [formData, setFormData] = useState({
+    username: '',
+    password: ''
+  });
+  const [message, setMessage] = useState('');
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Usuario:', username, 'Email:', email, 'Teléfono:', phone, 'Contraseña:', password);
+    
+    if (isLoginView) {
+      const result = loginService.login(formData.username, formData.password);
+      setMessage(result.message);
+      if (result.success) {
+        setTimeout(() => {
+          router.push('/');
+        }, 1000);
+      }
+    } else {
+      setMessage('Registro no implementado aún');
+    }
   };
 
   return (
     <>
-      <div className="container">
-        <div className="registro-card">
-          <h1>Registro de Usuario</h1>
-          <form onSubmit={handleSubmit} className="registro-form">
-            <label>Nombre de usuario:</label>
+      <MenuSimple />
+      <div className="auth-container">
+        <div className="auth-card">
+          <div className="auth-tabs">
+            <button 
+              className={!isLoginView ? 'active' : ''} 
+              onClick={() => setIsLoginView(false)}
+            >
+              Registro
+            </button>
+            <button 
+              className={isLoginView ? 'active' : ''} 
+              onClick={() => setIsLoginView(true)}
+            >
+              Iniciar Sesión
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmit} className="auth-form">
             <input
               type="text"
+              name="username"
               placeholder="Nombre de usuario"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={formData.username}
+              onChange={handleChange}
             />
-            <label>Email:</label>
-            <input
-              type="email"
-              placeholder="Correo electrónico"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <label>Número de teléfono:</label>
-            <input
-              type="tel"
-              placeholder="Número de teléfono"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
-            <label>Contraseña:</label>
+            
             <input
               type="password"
+              name="password"
               placeholder="Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={handleChange}
             />
-            <button type="submit">Registrar</button>
+
+            <button type="submit">
+              {isLoginView ? 'Iniciar Sesión' : 'Registrarse'}
+            </button>
           </form>
+
+          {message && <p className="message">{message}</p>}
         </div>
       </div>
-
-      {/* Estilo moderno con CSS */}
-      <style jsx>{`
-        
-        :global(body) {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
-          background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-        }
-          .container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
-        }
-        .registro-card {
-          background-color: #1e1e1e;
-          border-radius: 15px;
-          padding: 40px 30px;
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
-          width: 400px;
-          color: #f5f5f5;
-          border: 1px solid #007bff;
-        }
-
-        .registro-card h1 {
-          text-align: center;
-          margin-bottom: 20px;
-          color: #007bff;
-        }
-
-        .registro-form {
-          display: flex;
-          flex-direction: column;
-        }
-
-        label {
-          margin-top: 10px;
-          font-weight: bold;
-        }
-
-        input {
-          padding: 10px;
-          margin-top: 5px;
-          border: none;
-          border-radius: 8px;
-          background-color: #333;
-          color: #fff;
-          outline: none;
-        }
-
-        input::placeholder {
-          color: #888;
-        }
-
-        button {
-          margin-top: 20px;
-          padding: 12px;
-          border-radius: 8px;
-          background-color: #007bff;
-          color: #fff;
-          font-weight: bold;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-          background-color: #0056b3;
-        }
-      `}</style>
     </>
   );
 }

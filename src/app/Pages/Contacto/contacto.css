@@ -1,0 +1,57 @@
+/* Banner principal */
+.banner {
+    display: flex;
+    margin-top: 100px;
+}
+
+.banner img {
+    width: 70%;
+    height: 600px;
+    object-fit: cover;
+}
+
+.texto {
+    width: 30%;
+    background: #0066B1;
+    padding: 50px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.texto h1 {
+    font-size: 3rem;
+}
+
+/* Sección de información */
+.contenido {
+    padding: 100px;
+    text-align: left;
+}
+
+.contenido h2 {
+    font-size: 3rem;
+    margin-bottom: 40px;
+}
+
+.datos {
+    line-height: 2;
+}
+
+/* Imagen final */
+.imagen-final {
+    width: 100%;
+    height: 600px;
+    object-fit: cover;
+}
+
+/* Responsive básico */
+@media (max-width: 768px) {
+    .banner {
+        flex-direction: column;
+    }
+    .banner img, .texto {
+        width: 100%;
+    }
+}

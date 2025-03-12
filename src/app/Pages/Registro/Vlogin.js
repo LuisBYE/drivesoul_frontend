@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import login from '../../component/Pages/login';
+import loginService from '../../component/Pages/login';
 
 export default function Vlogin() {
     const [username, setUsername] = useState('');
@@ -10,7 +10,7 @@ export default function Vlogin() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const result = login(username, password);
+        const result = loginService.login(username, password);
         setMessage(result.message);
     };
 

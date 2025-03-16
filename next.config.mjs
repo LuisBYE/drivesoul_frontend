@@ -1,4 +1,22 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {};
+// Importa el paquete 'next' completamente
+import next from 'next';
 
-export default nextConfig;
+
+const nextConfig = {
+    // Configuración de Next.js
+    experimental: {
+        taint: true,
+    },
+
+    async rewrites() {
+        return [
+            {
+                source: '/api/:path*', // Redirige las solicitudes que lleguen a /api/
+                destination: 'http://localhost:5003/api/:path*', // Redirige a tu backend
+            },
+        ];
+    },
+
+};
+
+export default nextConfig; // Exporta la configuración de Next.js

@@ -30,7 +30,7 @@ function MenuSimple() {
     return (
         <nav className="nav-principal">
             <div onClick={() => handleNavigation('/')} style={{cursor: 'pointer'}}>
-                <img src="/FOTOS/LOGO.png" alt="Logo BMW" className="logo" />
+            <img src="/FOTOS/logo.png" alt="Logo BMW" className="logo" />
             </div>
             <ul className="menu">
                 <li onClick={() => handleNavigation('/Pages/Novedades')}>Novedades</li>

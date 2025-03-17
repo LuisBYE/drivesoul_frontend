@@ -2,7 +2,10 @@
 let isLoggedIn = false;
 let currentUser = null;
 
+
 const loginService = {
+
+
     login: (username, password) => {
         if (username === "unax" && password === "1234") {
             localStorage.setItem('isLoggedIn', 'true');

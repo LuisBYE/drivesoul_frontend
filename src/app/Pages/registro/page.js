@@ -7,22 +7,36 @@ import './css_REGISTRO_LOGG.css';
 
 export default function Registro() {
   const router = useRouter();
-  const [isLoginView, setIsLoginView] = useState(false);
-  const [formData, setFormData] = useState({
-    Nombre: '',
-    Apellido: '',
-    Email: '',
-    Telefono: '',
-    Ciudad: '',
-    password: '',
-    rol:''
-  });
+  // Mensaje de Resgistro o loginService
+  const [message, setMessage] = useState('Mensajes de Registro o Login');
 
-  const [message, setMessage] = useState('');
+  const [isLoginView, setIsLoginView] = useState(false);
+  const [paramsLogin, setParamsLogin] = useState(
+    {
+      Nombre: '',
+      Password: ''
+    }
+  );
+  const [formData, setFormData] = useState(
+    {
+      ...paramsLogin,
+      Apellido: '',
+      Email: '',
+      Telefono: '',
+      Ciudad: '',
+      Rol: ''
+    }
+  );
+
+
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
+      [e.target.name]: e.target.value
+    });
+    setParamsLogin({
+      ...paramsLogin,
       [e.target.name]: e.target.value
     });
   };
@@ -31,23 +45,24 @@ export default function Registro() {
     e.preventDefault();
 
     if (isLoginView) {
-      setMessage('Esta función no está implementada aún');
-      alert(`Iniciar sesión aún no está disponible`);
-    } else {
-      alert(`Registrando usuario: ${JSON.stringify(formData)}`);
 
+      const result = await ReqUsuarios.getLoginUser(paramsLogin);
+      if (result) {
+        setMessage('Usuario logueado correctamente');
+      }else{
+        setMessage('Usuario o contraseña incorrectos');
+      }
+    } else {
       // Llamada a la API correctamente con await
       const result = await ReqUsuarios.postUsuarios(formData);
-
       if (result) {
-        alert(`Usuario Creado Correctamente: ${JSON.stringify(result)}`);
-
-        setTimeout(() => {
-          alert(`Redirigiendo a la página principal`);
-          router.push('/');
-        }, 1000);
+        setMessage(`Usuario Creado Correctamente: ${JSON.stringify(result)}`);
+        // setTimeout(() => {
+        //   alert(`Redirigiendo a la página principal`);
+        //   router.push('/');
+        // }, 1000);
       } else {
-        alert(`Error al crear usuario.`);
+        setMessage(`Error al crear usuario.`);
       }
     }
   };
@@ -68,18 +83,23 @@ export default function Registro() {
 
           <form onSubmit={handleSubmit} className="auth-form">
             <input type="text" name="Nombre" placeholder="Nombre de usuario" value={formData.Nombre} onChange={handleChange} />
-            <input type="password" name="password" placeholder="Contraseña" value={formData.password} onChange={handleChange} />
-            <input type="text" name="Apellido" placeholder="Apellido de usuario" value={formData.Apellido} onChange={handleChange} />
-            <input type="text" name="Email" placeholder="Email" value={formData.Email} onChange={handleChange} />
-            <input type="text" name="Telefono" placeholder="Telefono" value={formData.Telefono} onChange={handleChange} />
-            <input type="text" name="Ciudad" placeholder="Ciudad" value={formData.Ciudad} onChange={handleChange} />
+            <input type="password" name="Password" placeholder="Contraseña" value={formData.Password} onChange={handleChange} />
+            {isLoginView === false ?
+              <>
+                <input type="text" name="Apellido" placeholder="Apellido de usuario" value={formData.Apellido} onChange={handleChange} />
+                <input type="text" name="Email" placeholder="Email" value={formData.Email} onChange={handleChange} />
+                <input type="text" name="Telefono" placeholder="Telefono" value={formData.Telefono} onChange={handleChange} />
+                <input type="text" name="Ciudad" placeholder="Ciudad" value={formData.Ciudad} onChange={handleChange} />
+              </>
+              : ""}
 
             <button type="submit">{isLoginView ? 'Iniciar Sesión' : 'Registrarse'}</button>
           </form>
 
           {message && <p className="message">{message}</p>}
         </div>
-        <pre> Datos ingresados: {JSON.stringify(formData, null, 2)} </pre>
+       
+      
       </div>
     </>
   );

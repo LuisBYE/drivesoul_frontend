@@ -1,32 +1,31 @@
-'use client'; 
+'use client'
 import React from 'react';
 import Menu from './component/Pages/menu';
-import { useState, useEffect } from 'react';
-import Vlogin from './Pages/Registro/Vlogin';
 import axios from 'axios';
 
 
 export default function Home() {
-    const [ respuesta , setRespueta] = useState('');
-    // useEffect(() => {
-    //     axios.get('http://localhost:5003/api/DatabaseTest')
-    //         .then(response => {
-    //           setRespueta(response.data);
-    //             console.log(response.data);
-    //         })
-    //         .catch(error => {
-    //             setRespueta(error);
-    //             console.log(error);
-    //         });
-    // }, []); 
+
+    const [respuesta, setRespuesta] = React.useState("");
+
+    React.useEffect(() => {
+        axios.get('http://localhost:5138/api/DatabaseTest')
+            .then((response) => {
+                setRespuesta(response.data);
+            })
+            .catch((error) => {
+                alert("Conexión fallida");
+                console.log(error);
+                setRespuesta(error);
+            });
+    }, []);
 
     return (
         <div>
               <pre> Repsuesta de coneccion de Backend - BBDD{respuesta } </pre> 
             <Menu />
-           <Vlogin/>
-          
-
+           
+           
         </div>
     );
 }

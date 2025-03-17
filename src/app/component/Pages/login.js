@@ -1,13 +1,30 @@
-let users = [
-    { username: "Unax", password: "1234" } // Usuario para probar
-];
+// Variables para mantener el estado
+let isLoggedIn = false;
+let currentUser = null;
 
-export default function login(username, password) {
-    // Validar usuario
-    const user = users.find(user => user.username === username);
-    if (user && user.password === password) {
-        return { success: true, message: "Usuario loggueado" };
-    } else {
+
+const loginService = {
+
+
+    login: (username, password) => {
+        if (username === "unax" && password === "1234") {
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('currentUser', username);
+            return { success: true, message: "Login exitoso" };
+        }
         return { success: false, message: "Usuario o contraseña incorrectos" };
+    },
+
+    getLoginStatus: () => {
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        const currentUser = localStorage.getItem('currentUser');
+        return { isLoggedIn, currentUser };
+    },
+
+    logout: () => {
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('currentUser');
     }
-}
+};
+
+export default loginService;

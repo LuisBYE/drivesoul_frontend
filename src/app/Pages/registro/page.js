@@ -1,128 +1,106 @@
 "use client";
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import MenuSimple from '../../component/Pages/MenuSimple';
+import ReqUsuarios from "../../component/AxiosResquestAll/RequestsUsuarios";
+import './css_REGISTRO_LOGG.css';
 
-// http://localhost:3000/Pages/registro
 export default function Registro() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
+  const router = useRouter();
+  // Mensaje de Resgistro o loginService
+  const [message, setMessage] = useState('Mensajes de Registro o Login');
 
-  const handleSubmit = (e) => {
+  const [isLoginView, setIsLoginView] = useState(false);
+  const [paramsLogin, setParamsLogin] = useState(
+    {
+      Nombre: '',
+      Password: ''
+    }
+  );
+  const [formData, setFormData] = useState(
+    {
+      ...paramsLogin,
+      Apellido: '',
+      Email: '',
+      Telefono: '',
+      Ciudad: '',
+      Rol: ''
+    }
+  );
+
+
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+    setParamsLogin({
+      ...paramsLogin,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Usuario:', username, 'Email:', email, 'Teléfono:', phone, 'Contraseña:', password);
+
+    if (isLoginView) {
+
+      const result = await ReqUsuarios.getLoginUser(paramsLogin);
+      if (result) {
+        setMessage('Usuario logueado correctamente');
+      }else{
+        setMessage('Usuario o contraseña incorrectos');
+      }
+    } else {
+      // Llamada a la API correctamente con await
+      const result = await ReqUsuarios.postUsuarios(formData);
+      if (result) {
+        setMessage(`Usuario Creado Correctamente: ${JSON.stringify(result)}`);
+        // setTimeout(() => {
+        //   alert(`Redirigiendo a la página principal`);
+        //   router.push('/');
+        // }, 1000);
+      } else {
+        setMessage(`Error al crear usuario.`);
+      }
+    }
   };
 
   return (
     <>
-      <div className="container">
-        <div className="registro-card">
-          <h1>Registro de Usuario</h1>
-          <form onSubmit={handleSubmit} className="registro-form">
-            <label>Nombre de usuario:</label>
-            <input
-              type="text"
-              placeholder="Nombre de usuario"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <label>Email:</label>
-            <input
-              type="email"
-              placeholder="Correo electrónico"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <label>Número de teléfono:</label>
-            <input
-              type="tel"
-              placeholder="Número de teléfono"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
-            <label>Contraseña:</label>
-            <input
-              type="password"
-              placeholder="Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button type="submit">Registrar</button>
+      <MenuSimple />
+      <div className="auth-container">
+        <div className="auth-card">
+          <div className="auth-tabs">
+            <button className={!isLoginView ? 'active' : ''} onClick={() => setIsLoginView(false)}>
+              Registro
+            </button>
+            <button className={isLoginView ? 'active' : ''} onClick={() => setIsLoginView(true)}>
+              Iniciar Sesión
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmit} className="auth-form">
+            <input type="text" name="Nombre" placeholder="Nombre de usuario" value={formData.Nombre} onChange={handleChange} />
+            <input type="password" name="Password" placeholder="Contraseña" value={formData.Password} onChange={handleChange} />
+            {isLoginView === false ?
+              <>
+                <input type="text" name="Apellido" placeholder="Apellido de usuario" value={formData.Apellido} onChange={handleChange} />
+                <input type="text" name="Email" placeholder="Email" value={formData.Email} onChange={handleChange} />
+                <input type="text" name="Telefono" placeholder="Telefono" value={formData.Telefono} onChange={handleChange} />
+                <input type="text" name="Ciudad" placeholder="Ciudad" value={formData.Ciudad} onChange={handleChange} />
+              </>
+              : ""}
+
+            <button type="submit">{isLoginView ? 'Iniciar Sesión' : 'Registrarse'}</button>
           </form>
+
+          {message && <p className="message">{message}</p>}
         </div>
+       
+      
       </div>
-
-      {/* Estilo moderno con CSS */}
-      <style jsx>{`
-        
-        :global(body) {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
-          background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-        }
-          .container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
-        }
-        .registro-card {
-          background-color: #1e1e1e;
-          border-radius: 15px;
-          padding: 40px 30px;
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
-          width: 400px;
-          color: #f5f5f5;
-          border: 1px solid #007bff;
-        }
-
-        .registro-card h1 {
-          text-align: center;
-          margin-bottom: 20px;
-          color: #007bff;
-        }
-
-        .registro-form {
-          display: flex;
-          flex-direction: column;
-        }
-
-        label {
-          margin-top: 10px;
-          font-weight: bold;
-        }
-
-        input {
-          padding: 10px;
-          margin-top: 5px;
-          border: none;
-          border-radius: 8px;
-          background-color: #333;
-          color: #fff;
-          outline: none;
-        }
-
-        input::placeholder {
-          color: #888;
-        }
-
-        button {
-          margin-top: 20px;
-          padding: 12px;
-          border-radius: 8px;
-          background-color: #007bff;
-          color: #fff;
-          font-weight: bold;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-          background-color: #0056b3;
-        }
-      `}</style>
     </>
   );
 }

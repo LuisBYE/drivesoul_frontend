@@ -1,53 +1,31 @@
 'use client'; 
 
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import loginService from './login';
 import './css.css'; 
 
   // VIDEOS BANNER
 function Menu() {
     const router = useRouter();
-    const videos = [
-        '/videos_banner/coche.mp4',
-        '/videos_banner/coche1.mp4',
-        '/videos_banner/coche2.mp4',
-        '/videos_banner/coche3.mp4',
-        '/videos_banner/coche4.mp4',
-        '/videos_banner/coche5.mp4',
-        '/videos_banner/coche6.mp4',
-        '/videos_banner/coche7.mp4',
-        '/videos_banner/coche8.mp4',
-        '/videos_banner/coche9.mp4',
-        '/videos_banner/coche10.mp4',
-        '/videos_banner/coche11.mp4',
-    ];
-
-    const videoRef = useRef(null);
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+    const [username, setUsername] = useState(null);
 
     useEffect(() => {
-        const playRandomVideo = () => {
-            if (videoRef.current) {
-                const randomIndex = Math.floor(Math.random() * videos.length);
-                videoRef.current.src = videos[randomIndex];
-                videoRef.current.play();
-            }
-        };
-
-        playRandomVideo();
-
-        if (videoRef.current) {
-            videoRef.current.addEventListener('ended', playRandomVideo);
-        }
-
-        return () => {
-            if (videoRef.current) {
-                videoRef.current.removeEventListener('ended', playRandomVideo);
-            }
-        };
+        const { isLoggedIn, currentUser } = loginService.getLoginStatus();
+        setIsUserLoggedIn(isLoggedIn);
+        setUsername(currentUser);
     }, []);
 
     const handleNavigation = (path) => {
         router.push(path);
+    };
+
+    const handleLogout = () => {
+        loginService.logout();
+        setIsUserLoggedIn(false);
+        setUsername(null);
+        router.push('/');
     };
 
     return (
@@ -63,7 +41,11 @@ function Menu() {
                     <li onClick={() => handleNavigation('/Pages/Noticias')}>Noticias del Motor</li>
                     <li onClick={() => handleNavigation('/Pages/Coches')}>Coche a medida</li>
                     <li onClick={() => handleNavigation('/Pages/Contacto')}>Contacto</li>
-                    <li onClick={() => handleNavigation('/Pages/Vlogin')}>Registro</li>
+                    {!isUserLoggedIn ? (
+                        <li onClick={() => handleNavigation('/Pages/Registro')}>Registro</li>
+                    ) : (
+                        <li onClick={handleLogout}>Cerrar Sesión ({username})</li>
+                    )}
                 </ul>
             </nav>
 
@@ -73,7 +55,8 @@ function Menu() {
                     className="video-fondo"
                     autoPlay
                     muted
-                    ref={videoRef}
+                    loop
+                    src="/VIDEOS/VIDEOBANNER.mp4"
                 />
                 <div className="contenido-hero">
                     <h2>THE NEW</h2>

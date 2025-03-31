@@ -1,0 +1,80 @@
+/* Contenedor principal */
+.noticias-container {
+    max-width: 1800px; /* Más ancho */
+    margin: 0 auto; /* Centrado */
+    padding: 20px;
+}
+
+/* Título principal */
+.titulo-container {
+    margin-top: 90px;
+    text-align: center;
+    background-color: #79947f;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.titulo {
+    font-size: 2.5rem;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Bloques de noticias */
+.noticias-bloque {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 70px;
+    margin: 40px auto;
+    border-radius: 8px;
+    min-height: 600px; /* Más largo */
+    max-width: 1600px; /* Más ancho */
+    overflow: hidden;
+}
+
+/* Fondo borroso */
+.noticias-bloque::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: inherit;
+    filter: blur(8px);
+    z-index: 0;
+}
+
+.noticias-bloque * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Subtítulos y descripciones */
+.subtitulo {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.descripcion {
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Contenedor de videos */
+.videos-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.videos-container iframe {
+    width: 350px;
+    height: 200px;
+    border-radius: 8px;
+    border: none;
+}

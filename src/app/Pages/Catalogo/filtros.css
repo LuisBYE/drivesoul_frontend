@@ -1,0 +1,122 @@
+
+
+/* BARRA LATERAL FILTROS */
+.filtros-sidebar {
+    width: 300px;
+    background: #1a1a1a;
+    height: calc(100vh - 140px);
+    position: fixed;
+    top: 90px;
+    left: 0;
+    padding: 25px;
+    color: white;
+}
+
+/* TITULO */
+.filtros-sidebar h3 {
+    color: #eee0e0;
+    font-size: 24px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #ff3333;
+    padding-bottom: 10px;
+}
+.filtro-grupo {
+    margin-bottom: 25px;
+}
+
+/* TITULOS DE FILTROS */
+.filtro-grupo label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ffffff;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* CUADRADOS ESCRIBIR */
+.filtro-grupo input,
+.filtro-grupo select {
+    width: 100%;
+    padding: 12px;
+    background: #2d2d2d;
+    border: 1px solid #3d3d3d;
+    color: white;
+    border-radius: 5px;
+    outline: none;
+}
+
+/* 'PASAE PON ENCIMA DEL CMAPO' */
+.filtro-grupo input:focus,
+.filtro-grupo select:focus {
+    border-color: #ff3333;
+    box-shadow: 0 0 0 2px rgba(255, 51, 51, 0.2);
+}
+
+/* MIN MAX */
+.rango {
+    display: flex;
+    gap: 10px;
+}
+
+.rango input {
+    width: 50%;
+}
+
+/* BOTON APLICAR FILTROS */
+.btn-filtrar {
+    width: 100%;
+    padding: 15px;
+    background: #ff3333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+/* EFECTO BOTON */
+.btn-filtrar:hover {
+    background: #cc0000;
+}
+
+
+.catalogo-contenido {
+    flex: 1;
+    margin-left: 300px;
+    padding: 20px;
+}
+
+/* COLOR LETRA BOTN */
+.filtro-grupo input::placeholder {
+    color: #666;
+}
+
+/* PERSONALIZAR  */
+.filtros-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.filtros-sidebar::-webkit-scrollbar-thumb {
+    background: #6e5050;
+    border-radius: 3px;
+}
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 768px) {
+    .filtros-sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+    }
+
+    .catalogo-contenido {
+        margin-left: 0;
+    }
+
+    .catalogo-layout {
+        flex-direction: column;
+    }
+} 

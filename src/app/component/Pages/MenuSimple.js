@@ -7,23 +7,13 @@ import './css.css';
 
 function MenuSimple() {
     const router = useRouter();
-    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-    const [username, setUsername] = useState(null);
 
-    useEffect(() => {
-        const { isLoggedIn, currentUser } = loginService.getLoginStatus();
-        setIsUserLoggedIn(isLoggedIn);
-        setUsername(currentUser);
-    }, []);
 
     const handleNavigation = (path) => {
         router.push(path);
     };
 
     const handleLogout = () => {
-        loginService.logout();
-        setIsUserLoggedIn(false);
-        setUsername(null);
         router.push('/');
     };
 
@@ -41,7 +31,7 @@ function MenuSimple() {
                 {!isUserLoggedIn ? (
                     <li onClick={() => handleNavigation('/Pages/Registro')}>Registro</li>
                 ) : (
-                    <li onClick={handleLogout}>Cerrar Sesión ({username})</li>
+                    <li onClick={handleLogout}>Cerrar Sesión </li>
                 )}
             </ul>
         </nav>

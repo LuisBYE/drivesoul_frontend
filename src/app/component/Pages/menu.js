@@ -2,29 +2,20 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import loginService from './login';
 import './css.css'; 
 
   // VIDEOS BANNER
 function Menu() {
     const router = useRouter();
-    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-    const [username, setUsername] = useState(null);
 
-    useEffect(() => {
-        const { isLoggedIn, currentUser } = loginService.getLoginStatus();
-        setIsUserLoggedIn(isLoggedIn);
-        setUsername(currentUser);
-    }, []);
+
 
     const handleNavigation = (path) => {
         router.push(path);
     };
 
     const handleLogout = () => {
-        loginService.logout();
-        setIsUserLoggedIn(false);
-        setUsername(null);
+       
         router.push('/');
     };
 
@@ -41,11 +32,9 @@ function Menu() {
                     <li onClick={() => handleNavigation('/Pages/Noticias')}>Noticias del Motor</li>
                     <li onClick={() => handleNavigation('/Pages/Coches')}>Coche a medida</li>
                     <li onClick={() => handleNavigation('/Pages/Contacto')}>Contacto</li>
-                    {!isUserLoggedIn ? (
-                        <li onClick={() => handleNavigation('/Pages/Registro')}>Registro</li>
-                    ) : (
-                        <li onClick={handleLogout}>Cerrar Sesión ({username})</li>
-                    )}
+                    <li onClick={() => handleNavigation('/Pages/Registro')}>Registro</li>
+                    <li onClick={handleLogout}>Cerrar Sesión </li>
+                
                 </ul>
             </nav>
 

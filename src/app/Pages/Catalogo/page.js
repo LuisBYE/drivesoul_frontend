@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
-import MenuSimple from '../../component/Pages/MenuSimple';
-import '../../component/Pages/css.css';
+import NavegadorMenu from '../../component/Pages/Menu/Navegador';
+
 import './filtros.css';
 import Buscador from '../../Utils/Menu/Buscador';
 
@@ -10,7 +10,7 @@ const Catalogo = () => {
     return (
         <>
             {/* MENU */}
-            <MenuSimple />
+            <NavegadorMenu />
             
             {/* Título del catálogo */}
             <h1 style={{ fontSize: '3rem', textAlign: 'center', margin: '20px 0', color: '#333' }}>Catálogo</h1>

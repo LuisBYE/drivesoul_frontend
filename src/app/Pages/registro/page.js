@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import MenuSimple from '../../component/Pages/MenuSimple';
+import NavegadorMenu from '../../component/Pages/Menu/Navegador';
 import ReqUsuarios from "../../component/AxiosResquestAll/RequestsUsuarios";
 import './css_REGISTRO_LOGG.css';
 
@@ -48,7 +48,7 @@ export default function Registro() {
     if (isLoginView) {
 
       const result = await ReqUsuarios.getLoginUser(paramsLogin);
-      result = result?.message;
+ 
       if (result) {
         alert("Login ok")
         setMessage('Usuario logueado correctamente');
@@ -59,7 +59,7 @@ export default function Registro() {
     } else {
       // Llamada a la API correctamente con await
       const result = await ReqUsuarios.postUsuarios(formData);
-      result = result?.message;
+
       if (result) {
         setMessage(`Usuario Creado Correctamente: ${JSON.stringify(result)}`);
      
@@ -71,7 +71,7 @@ export default function Registro() {
 
   return (
     <>
-      <MenuSimple />
+      <NavegadorMenu />
       <div className="auth-container">
         <div className="auth-card">
           <div className="auth-tabs">

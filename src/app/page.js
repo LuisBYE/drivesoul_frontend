@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
-import Menu from './component/Pages/menu';
 import axios from 'axios';
+import NavegadorPag from "./component/Pages/Menu/Navegador"
 
 
 export default function Home() {
@@ -11,7 +11,8 @@ export default function Home() {
     React.useEffect(() => {
         axios.get('http://localhost:5138/api/DatabaseTest')
             .then((response) => {
-                setRespuesta(response.data.message || JSON.stringify(response.data));
+                //todo:  setRespuesta(response.data.message || JSON.stringify(response.data));
+                setRespuesta("Coneccion exitosa");
             })
             .catch((error) => {
                 alert("Conexión fallida");
@@ -23,9 +24,24 @@ export default function Home() {
 
     return (
         <div>
-            <Menu />
-            <pre> Respuesta de conexión de Backend  {respuesta} </pre> 
-           
+           <NavegadorPag/>
+            {/* VIDEO BANNER */}
+            <div className="hero">
+                <video
+                    className="video-fondo"
+                    autoPlay
+                    muted
+                    loop
+                    src="/VIDEOS/VIDEOBANNER.mp4"
+                />
+                <div className="contenido-hero">
+                    <h2>THE NEW</h2>
+                    <div className="ix-logo">iX</div>
+                    <p>Nuevo BMW iX. 100% eléctrico.</p>
+                    <p>Hasta 701 km de autonomía.</p>
+                </div>
+            </div>
+            <pre> Coneccion a Base de datos :  {respuesta}</pre>
         </div>
     );
 }

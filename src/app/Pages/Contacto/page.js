@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
-import MenuSimple from "../../component/Pages/MenuSimple";
+import NavegadorMenu from '../../component/Pages/Menu/Navegador';
 import "./contacto.css";
 
 const Contacto = () => {
     return (
         <div className="contacto-container">
-            <MenuSimple />
+            <NavegadorMenu />
 
             {/* Sección principal */}
             <section className="seccion-principal">

@@ -1,10 +1,10 @@
 import React from 'react';
-import MenuSimple from '../../component/Pages/MenuSimple';
+import NavegadorMenu from '../../component/Pages/Menu/Navegador';
 
 const Novedades = () => {
     return (
         <div style={{ textAlign: 'center' }}> {/* Overall centering container */}
-            <MenuSimple />
+            <NavegadorMenu />
             <h1 style={{ fontSize: '3rem', margin: '20px 0', color: '#333' }}>Catálogo</h1>
 
             <div className="informacion-adicional" style={{ marginTop: '40px', padding: '20px', backgroundColor: '#817674', borderRadius: '8px', color: 'white', display: 'inline-block' }}>

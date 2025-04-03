@@ -11,20 +11,20 @@ export default function Home() {
     React.useEffect(() => {
         axios.get('http://localhost:5138/api/DatabaseTest')
             .then((response) => {
-                setRespuesta(response.data);
+                setRespuesta(response.data.message || JSON.stringify(response.data));
             })
             .catch((error) => {
                 alert("Conexión fallida");
-                console.log(error);
-                setRespuesta(error);
+                console.log(error.message);
+                setRespuesta(error.message);
             });
     }, []);
 
+
     return (
         <div>
-              <pre> Repsuesta de coneccion de Backend - BBDD{respuesta } </pre> 
             <Menu />
-           
+            <pre> Respuesta de conexión de Backend  {respuesta} </pre> 
            
         </div>
     );

@@ -11,6 +11,7 @@ export default function Registro() {
   const [message, setMessage] = useState('Mensajes de Registro o Login');
 
   const [isLoginView, setIsLoginView] = useState(false);
+
   const [paramsLogin, setParamsLogin] = useState(
     {
       Nombre: '',
@@ -47,20 +48,21 @@ export default function Registro() {
     if (isLoginView) {
 
       const result = await ReqUsuarios.getLoginUser(paramsLogin);
+      result = result?.message;
       if (result) {
+        alert("Login ok")
         setMessage('Usuario logueado correctamente');
       }else{
+        alert("Login no")
         setMessage('Usuario o contraseña incorrectos');
       }
     } else {
       // Llamada a la API correctamente con await
       const result = await ReqUsuarios.postUsuarios(formData);
+      result = result?.message;
       if (result) {
         setMessage(`Usuario Creado Correctamente: ${JSON.stringify(result)}`);
-        // setTimeout(() => {
-        //   alert(`Redirigiendo a la página principal`);
-        //   router.push('/');
-        // }, 1000);
+     
       } else {
         setMessage(`Error al crear usuario.`);
       }

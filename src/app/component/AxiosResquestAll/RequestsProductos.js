@@ -2,8 +2,10 @@ import axiosInstance from "../../Utils/axiosInstance";
 
 // Función para obtener productos
 const getProductos = async () => {
+    alert("getProductos")
     try {
-        const response = await axiosInstance.get('/api/productos'); // Ruta para obtener productos
+        const response = await axiosInstance.get('/Producto'); // Ruta para obtener productos
+        alert(`${JSON.stringify(response.data)}`)
         return response.data; // Devuelve los datos de los productos
     } catch (error) {
         console.error("Error obteniendo productos:", error);

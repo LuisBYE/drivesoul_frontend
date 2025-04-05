@@ -1,10 +1,9 @@
 "use client";
 import React from 'react';
 import NavegadorMenu from '../../component/Pages/Menu/Navegador';
-
 import './filtros.css';
 import Buscador from '../../Utils/Menu/Buscador';
-
+import Productos from './Productos';
 
 const Catalogo = () => {
     return (
@@ -98,6 +97,9 @@ const Catalogo = () => {
                     {/* APLICAR FILTROS */}
                     <button className="btn-filtrar">Aplicar Filtros</button>
                 </div>
+
+                {/* Aquí se mostrarán los productos */}
+                <Productos />
             </div>
         </>
     );

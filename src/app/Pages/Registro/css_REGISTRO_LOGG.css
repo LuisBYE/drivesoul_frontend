@@ -1,3 +1,4 @@
+/* ESTILOS PARA LA PÁGINA DE REGISTRO/LOGIN */
 .auth-container {
     display: flex;
     justify-content: center;
@@ -18,6 +19,7 @@
     border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
+/* PESTAÑAS DE NAVEGACIÓN */
 .auth-tabs {
     display: flex;
     margin-bottom: 20px;
@@ -39,6 +41,7 @@
     background: #007bff;
 }
 
+/* FORMULARIO */
 .auth-form {
     display: flex;
     flex-direction: column;
@@ -73,6 +76,13 @@
     background: #0056b3;
 }
 
+.auth-form button[type="submit"]:disabled {
+    background: #0056b3;
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* MENSAJES */
 .message {
     margin-top: 15px;
     text-align: center;
@@ -80,4 +90,11 @@
     padding: 10px;
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.1);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .auth-card {
+        padding: 20px;
+    }
 } 

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import NavegadorMenu from "../../component/Pages/Menu/Navegador";
 import "./filtros.css";
 import Buscador from "../../Utils/Menu/Buscador";
@@ -7,34 +7,26 @@ import Productos from "./Productos";
 import PanelFiltro from "../../component/Pages/Catalogo/PanelFiltro";
 
 const Catalogo = () => {
+  const [searchTerm, setSearchTerm] = useState(""); // ALMACENA LO QUE EL USUARIO ESCRIBE EN EL BUSCADOR
+
+  const handleSearch = (term) => {
+    setSearchTerm(term); // SE ECARGA DE "ACTIVARSE" CUANDO EL USUARIO ESCRIBE EN EL BUSCADOR
+  };
+
   return (
     <>
-      {/* MENU */}
       <NavegadorMenu />
-
-      {/* Título del catálogo */}
-      <h1
-        style={{
-          fontSize: "3rem",
-          textAlign: "center",
-          margin: "20px 0",
-          color: "#333",
-        }}
-      >
+      <h1 style={{ fontSize: "3rem", textAlign: "center", margin: "20px 0", color: "#333" }}>
         Catálogo
       </h1>
-
-      {/* Buscador colocado debajo del título */}
       <div style={{ marginBottom: "20px", textAlign: "center" }}>
-        <Buscador />
+        <Buscador onSearch={handleSearch} /> {/* Pasa la función de búsqueda */}
       </div>
-
-      {/* CONTENEDOR FILTROS (ESTILOS CSS)*/}
-      {/* <div>
-        <PanelFiltro />
-      </div> */}
       <div>
-        <Productos />
+        <Productos searchTerm={searchTerm} /> {/* Pasa el término de búsqueda */}
+      </div>
+      <div>
+        <PanelFiltro />
       </div>
     </>
   );

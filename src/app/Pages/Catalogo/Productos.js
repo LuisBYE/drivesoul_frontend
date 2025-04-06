@@ -1,31 +1,20 @@
 import React, { useEffect, useState } from "react";
-import ReqProductos from "../../component/AxiosResquestAll/RequestsProductos"; //
+import ReqCoches from "../../component/AxiosResquestAll/RequestsCoches"; //
+import CardCoches from "../../Utils/Pages/CardCoches"; // Asegúrate de que la ruta sea correcta
 
 const Productos = () => {
-  const [productos, setProductos] = useState([]);
+  const [coches, setCoches] = useState([]);
 
   useEffect(() => {
     const fetchProductos = async () => {
-      const productosObtenidos = await ReqProductos.getProductos(); // Llamada a la API
-      setProductos(productosObtenidos); // Actualiza el estado con los productos
-      alert(JSON.stringify(productosObtenidos));
+      const cochesObtenidos = await ReqCoches.getCoches(); // Llamada a la API
+      setCoches(cochesObtenidos);
     };
 
     fetchProductos(); // Ejecuta la función al cargar el componente
   }, []);
 
-  return (
-    <div className="productos-lista">
-      {JSON.stringify(productos, null, 2)}
-      {productos.map((producto) => (
-        <div key={producto.id} className="producto-item">
-          <h2>{producto.nombre}</h2>
-          <p>Precio: {producto.precio} €</p>
-          <img src={producto.imagen} alt={producto.nombre} />
-        </div>
-      ))}
-    </div>
-  );
+  return <CardCoches producto={coches}></CardCoches>;
 };
 
 export default Productos;

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { use, useContext, useEffect, useState } from "react";
 import { FormContext } from "../../context/FormContext"; // Asegúrate de que la ruta sea correcta
 
 export default function CardCoches({ producto }) {
@@ -35,48 +35,74 @@ export default function CardCoches({ producto }) {
     "Kia",
     "Peugeot",
   ];
+  const modelo = [
+    { id: 1, name: "Ibiza" },
+    { id: 2, name: "Hyundai i30 N" },
+  ];
 
+ 
+
+
+  const detailFormAnio = formValues.anio;
+  const detailFormMarca = formValues.marca; //! falta añadir al DTO de marca
+  const detailFormModelo = formValues.modelo; //! falta añadir al DTO de modelo
+  const detailFormPrecioMin = formValues.precioMin;
+  const detailFormPrecioMax = formValues.precioMax;
+  const detailFormKilometrajeMin = formValues.kilometrajeMin;
+  const detailFormKilometrajeMax = formValues.kilometrajeMax;
+  const detailFormColor = formValues.detailFormColor;
+  const detailFormCombustible = formValues.combustible;
+  const detailFormTransmision = formValues.transmision;
+
+  const comparacion = (itemId) => {
+    console.log("respuesta itemId", itemId);
+    const respuesta = modelo.some((item) => item.id === itemId);
+    console.log("respuesta comparacion", respuesta);
+    return respuesta;
+  };
+  
   useEffect(() => {
     if (
-      formValues.anio ||
-      formValues.marca ||
-      formValues.precioMin ||
-      formValues.precioMax ||
-      formValues.kilometrajeMin ||
-      formValues.kilometrajeMax ||
-      formValues.color ||
-      formValues.combustible ||
-      formValues.transmision
+      detailFormAnio ||
+      // detailFormMarca ||
+      detailFormPrecioMin ||
+      detailFormPrecioMax ||
+      detailFormModelo||
+      detailFormKilometrajeMin ||
+      detailFormKilometrajeMax||
+
+      detailFormColor ||
+      detailFormCombustible ||
+      detailFormTransmision
     ) {
-      // alert("Hay un filtro activo");
+      alert("Hay un filtro activo");
       const filtroCoche = producto.filter(
         (item) =>
-          (!formValues.anio || Number(item.anio) === Number(formValues.anio)) &&
-          (!formValues.precioMin ||
-            Number(item.precio) >= Number(formValues.precioMin)) &&
-          (!formValues.precioMax ||
-            Number(item.precio) <= Number(formValues.precioMax)) &&
-          (!formValues.kilometrajeMin ||
-            item.kilometraje >= formValues.kilometrajeMin) &&
-          (!formValues.kilometrajeMax ||
-            item.kilometraje <= formValues.kilometrajeMax) &&
-          (!formValues.color ||
-            item.color.toLowerCase() === formValues.color.toLowerCase()) &&
-          (!formValues.combustible ||
-            item.tipo_combustible.toLowerCase() ===
-              formValues.combustible.toLowerCase()) &&
-          (!formValues.transmision ||
-            item.transmision.toLowerCase() === formVcombustiblen.toLowerCase())
+          (!detailFormAnio || Number(item.anio) === Number(detailFormAnio)) &&
+          (!detailFormPrecioMin||Number(item.precio) >= Number(detailFormPrecioMin)) &&
+          (!detailFormPrecioMax ||Number(item.precio) <= Number(detailFormPrecioMax)) &&
+          (!detailFormKilometrajeMin || item.kilometraje >= detailFormKilometrajeMin) &&
+          (!detailFormKilometrajeMax || item.kilometraje <= detailFormKilometrajeMax) &&
+          (!detailFormColor || item.color.toLowerCase() === detailFormColor.toLowerCase()) &&
+          (!detailFormCombustible ||item.tipo_combustible.toLowerCase() === detailFormCombustible.toLowerCase()) &&
+          (!detailFormTransmision ||item.transmision.toLowerCase() === detailFormTransmision.toLowerCase())&&
+          // (!detailFormModelo || Number(item.modelo_id) === Number(detailFormModelo)) &&
+           comparacion(item.modelo_id) 
       );
-      console.log("filtroCoche:", filtroCoche);
+      alert("llega aqui")
       setCoche(filtroCoche);
+
     } else {
       setCoche(producto); // Si no hay filtro, muestra todos los coches
     }
-  }, [formValues, producto]);
+     
+  }, [formValues,producto]);
 
+  //! FALTA AÑADIR MARCA DE COCHE EN EL DTO DE MODELO  O OTRO  TIENE VARIAS MARCAS 
   return (
     <>
+    <pre> modelo formulario: {detailFormModelo}</pre>
+      <pre>{JSON.stringify(coche, null, 2)}</pre>
       <div className="ContainerCard">
         {coche.length > 0 ? (
           coche.map((item) => (
@@ -96,6 +122,11 @@ export default function CardCoches({ producto }) {
                     <p>Modelo: </p>
                     {item.modelo_id}
                   </div>
+
+                  {/* <div className="div_item">
+                    <p>Marca </p>
+                    {item.marca}
+                  </div> */}
                   <div className="div_item">
                     <p>Año: </p>
                     {item.anio}

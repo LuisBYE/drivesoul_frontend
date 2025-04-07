@@ -24,6 +24,17 @@ export default function PanelFiltro() {
       <div className="containerPanel">
         <h2>Filtros de búsqueda</h2>
         <form className="filtros-form" onSubmit={handleSubmit(onSubmit)}>
+        <div className="filtro-grupo">
+            <label htmlFor="modelo">Modelo:</label>
+            <input
+              type="text"
+              id="modelo"
+              name="modelo"
+              {...register("modelo", {
+                // required: "modelo es requerida"
+              })}
+            />
+          </div>
           <div className="filtro-grupo">
             <label htmlFor="marca">Marca:</label>
             <input

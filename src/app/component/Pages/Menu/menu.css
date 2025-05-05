@@ -86,3 +86,66 @@ body {
     color: #000;
     margin-bottom: 20px;
 }
+
+/* ESTILOS PARA EL MENÚ DE USUARIO */
+.user-menu {
+    position: relative;
+}
+
+/* ESTILO PARA EL NOMBRE DE USUARIO */
+.username {
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    padding: 10px 15px;
+}
+
+/* MENÚ DESPLEGABLE */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    min-width: 150px;
+    z-index: 100;
+}
+
+/* OPCIONES DEL MENÚ DESPLEGABLE */
+.dropdown-menu div {
+    padding: 10px 15px;
+    cursor: pointer;
+    color: white;
+}
+
+.dropdown-menu div:hover {
+    background-color: #444;
+}
+
+/* RESPONSIVE PARA DISPOSITIVOS MÓVILES */
+@media (max-width: 768px) {
+    .nav-principal {
+        flex-direction: column;
+        padding: 10px;
+    }
+    
+    .menu {
+        flex-direction: column;
+        width: 100%;
+        margin-top: 10px;
+    }
+    
+    .menu li {
+        border-top: 1px solid #f0f0f0;
+        text-align: center;
+    }
+    
+    .dropdown-menu {
+        width: 100%;
+        position: static;
+        box-shadow: none;
+        border: 1px solid #f0f0f0;
+        margin-top: 0;
+    }
+}

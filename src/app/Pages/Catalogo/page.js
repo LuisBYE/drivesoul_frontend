@@ -1,106 +1,60 @@
 "use client";
-import React from 'react';
-import NavegadorMenu from '../../component/Pages/Menu/Navegador';
+import React, { useState } from "react";
+import NavegadorMenu from "../../component/Pages/Menu/Navegador";
+import Buscador from "../../Utils/Menu/Buscador";
+import Productos from "./Productos";
+import PanelFiltro from "../../component/Pages/Catalogo/PanelFiltro";
 
-import './filtros.css';
-import Buscador from '../../Utils/Menu/Buscador';
-
+import { FormProvider } from "../../context/FormContext"; // Importa el contexto
+import Head from "next/head";
 
 const Catalogo = () => {
-    return (
-        <>
-            {/* MENU */}
-            <NavegadorMenu />
-            
-            {/* Título del catálogo */}
-            <h1 style={{ fontSize: '3rem', textAlign: 'center', margin: '20px 0', color: '#333' }}>Catálogo</h1>
-            
-            {/* Buscador colocado debajo del título */}
-            <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-                <Buscador />
-            </div>
-            
-            {/* CONTENEDOR FILTROS (ESTILOS CSS)*/}
-            <div className="catalogo-layout">
-                
-                {/* (ESTILOS CSS) */}
-                <div className="filtros-sidebar">
-                    <h3>Filtros</h3>
-                    
-                    {/* MARCA */}
-                    <div className="filtro-grupo">
-                        <label>Marca</label>
-                        <select>
-                            <option value="">Todas</option>
-                            <option value="audi">Audi</option>
-                            <option value="seat">Seat</option>
-                            <option value="hyundai">Hyundai</option>
-                            <option value="bmw">BMW</option>
-                            <option value="mercedes">Mercedes</option> 
-                        </select>
-                    </div>
+  const [searchTerm, setSearchTerm] = useState(""); // ALMACENA LO QUE EL USUARIO ESCRIBE EN EL BUSCADOR
 
-                    {/* PRECIOS*/}
-                    <div className="filtro-grupo">
-                        <label>Precio</label>
-                        <div className="rango">
-                            <input type="text" placeholder="Min €" />
-                            <input type="text" placeholder="Max €" />
-                        </div>
-                    </div>
+  const handleSearch = (term) => {
+    setSearchTerm(term); // SE ECARGA DE "ACTIVARSE" CUANDO EL USUARIO ESCRIBE EN EL BUSCADOR
+  };
 
-                    {/* KM */}
-                    <div className="filtro-grupo">
-                        <label>Kilometraje</label>
-                        <div className="rango">
-                            <input type="text" placeholder="Min km" />
-                            <input type="text" placeholder="Max km" />
-                        </div>
-                    </div>
+  return (
+    <>
+      <NavegadorMenu />
+      <h1 style={{ fontSize: "3rem", textAlign: "center", margin: "20px 0", color: "#333" }}>
+        Catálogo
+      </h1>
+      <div style={{ marginBottom: "20px", textAlign: "center" }}>
+        <Buscador onSearch={handleSearch} /> {/* Pasa la función de búsqueda */}
+      </div>
+      <FormProvider>
+        {/* CONTENEDOR FILTROS */}
+        <div className="containerPanel">
+          <PanelFiltro />
+        </div>
 
-                    {/* AÑO */}
-                    <div className="filtro-grupo">
-                        <label>Año</label>
-                        <select>
-                            <option value="">Seleccionar año</option>
-                            <option value="2024">2024</option>
-                            <option value="2023">2023</option>
-                            <option value="2022">2022</option>
-                        </select>
-                    </div>
+        {/* CONTENEDOR DE PRODUCTOS */}
+        <div className="container_CardProductos">
+          <Productos />
+        </div>
+      </FormProvider>
 
-                    {/* COMBUSTIBLE */}
-                    <div className="filtro-grupo">
-                        <label>Combustible</label>
-                        <select>
-                            <option value="">Todos</option>
-                            <option value="gasolina">Gasolina</option>
-                            <option value="diesel">Diésel</option>
-                            <option value="electrico">Eléctrico</option>
-                        </select>
-                    </div>
-
-                    {/* COLOR COCHE */}
-                    <div className="filtro-grupo">
-                        <label>Color</label>
-                        <select>
-                            <option value="">Todos</option>
-                            <option value="blanco">Blanco</option>
-                            <option value="negro">Negro</option>
-                            <option value="gris">Gris</option>
-                            <option value="azul">Azul</option>
-                            <option value="verde">Verde</option>
-                            <option value="amarillo">Amarillo</option>
-                            <option value="rojo">Rojo</option>  
-                        </select>
-                    </div>
-
-                    {/* APLICAR FILTROS */}
-                    <button className="btn-filtrar">Aplicar Filtros</button>
-                </div>
-            </div>
-        </>
-    );
+      <style jsx>
+        {`
+          .container_CardProductos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+          }
+          .containerPanel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+          }
+        `}
+      </style>
+    </>
+  );
 };
 
 export default Catalogo;

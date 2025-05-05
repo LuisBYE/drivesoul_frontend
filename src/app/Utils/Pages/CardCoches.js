@@ -1,56 +1,16 @@
-import React, { use, useContext, useEffect, useState } from "react";
-import { FormContext } from "../../context/FormContext"; // Asegúrate de que la ruta sea correcta
+import React, { useContext, useEffect, useState } from "react";
+import { FormContext } from "../../context/FormContext";
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 export default function CardCoches({ producto }) {
   const router = useRouter();
-  const { formValues } = useContext(FormContext); // Accede al contexto
-  const [coche, setCoche] = useState([]); // Estado para almacenar los coches filtrados
-  const [cocheId, setcocheId] = useState(null); // Estado para almacenar el filtro de coches
-  const [cocheDesplegado, setCocheDesplegado] = useState(); // Estado para almacenar el coche desplegado
-
-  const [cocheDesplegadoId, setCocheDesplegadoId] = useState(null);
-
-  // Estado para almacenar el coche desplegado por ID
-  const transitionStyle = cocheDesplegado
-    ? "max-height 0.6s ease-out"
-    : "max-height 0.3s ease-in";
-  console.log("consola producto", producto);
-  console.log("consola coche", coche);
-
-  const mostrarCocheId = (id) => {
-    setcocheId(cocheId === id ? null : id);
-    setCocheDesplegado(cocheId !== null ? true : false);
-    // alert("actualizarStateDesplegable:  " + cocheDesplegado);
-  };
-
-  const marca = [
-    "Seat",
-    "Hyundai",
-    "Audi",
-    "BMW",
-    "Mercedes-Benz",
-    "Toyota",
-    "Ford",
-    "Honda",
-    "Renault",
-    "Kia",
-    "Peugeot",
-  ];
-  const modelo = [
-    { id: 1, name: "Ibiza" },
-    { id: 2, name: "Hyundai i30 N" },
-  ];
-
- 
-
+  const { formValues } = useContext(FormContext);
+  const [coche, setCoche] = useState([]);
 
   const detailFormAnio = formValues.anio;
-  const detailFormMarca = formValues.marca; //! falta añadir al DTO de marca
-  const detailFormModelo = formValues.modelo; //! falta añadir al DTO de modelo
   const detailFormPrecioMin = formValues.precioMin;
   const detailFormPrecioMax = formValues.precioMax;
+  const detailFormModelo = formValues.modelo;
   const detailFormKilometrajeMin = formValues.kilometrajeMin;
   const detailFormKilometrajeMax = formValues.kilometrajeMax;
   const detailFormColor = formValues.detailFormColor;
@@ -58,68 +18,62 @@ export default function CardCoches({ producto }) {
   const detailFormTransmision = formValues.transmision;
 
   const comparacion = (itemId) => {
-    console.log("respuesta itemId", itemId);
-    const respuesta = modelo.some((item) => item.id === itemId);
-    console.log("respuesta comparacion", respuesta);
-    return respuesta;
+    return modelo.some((item) => item.id === itemId);
   };
   
   useEffect(() => {
     if (
       detailFormAnio ||
-      // detailFormMarca ||
       detailFormPrecioMin ||
       detailFormPrecioMax ||
-      detailFormModelo||
+      detailFormModelo ||
       detailFormKilometrajeMin ||
-      detailFormKilometrajeMax||
-
+      detailFormKilometrajeMax ||
       detailFormColor ||
       detailFormCombustible ||
       detailFormTransmision
     ) {
-      alert("Hay un filtro activo");
       const filtroCoche = producto.filter(
         (item) =>
           (!detailFormAnio || Number(item.anio) === Number(detailFormAnio)) &&
-          (!detailFormPrecioMin||Number(item.precio) >= Number(detailFormPrecioMin)) &&
-          (!detailFormPrecioMax ||Number(item.precio) <= Number(detailFormPrecioMax)) &&
+          (!detailFormPrecioMin || Number(item.precio) >= Number(detailFormPrecioMin)) &&
+          (!detailFormPrecioMax || Number(item.precio) <= Number(detailFormPrecioMax)) &&
           (!detailFormKilometrajeMin || item.kilometraje >= detailFormKilometrajeMin) &&
           (!detailFormKilometrajeMax || item.kilometraje <= detailFormKilometrajeMax) &&
           (!detailFormColor || item.color.toLowerCase() === detailFormColor.toLowerCase()) &&
-          (!detailFormCombustible ||item.tipo_combustible.toLowerCase() === detailFormCombustible.toLowerCase()) &&
-          (!detailFormTransmision ||item.transmision.toLowerCase() === detailFormTransmision.toLowerCase())&&
-          // (!detailFormModelo || Number(item.modelo_id) === Number(detailFormModelo)) &&
-           comparacion(item.modelo_id) 
+          (!detailFormCombustible || item.tipo_combustible.toLowerCase() === detailFormCombustible.toLowerCase()) &&
+          (!detailFormTransmision || item.transmision.toLowerCase() === detailFormTransmision.toLowerCase()) &&
+          comparacion(item.modelo_id)
       );
-      alert("llega aqui")
       setCoche(filtroCoche);
-
     } else {
-      setCoche(producto); // Si no hay filtro, muestra todos los coches
+      setCoche(producto);
     }
-     
-  }, [formValues,producto]);
+  }, [formValues, producto]);
 
-  //! FALTA AÑADIR MARCA DE COCHE EN EL DTO DE MODELO  O OTRO  TIENE VARIAS MARCAS 
-
-  const navegarADetalles = (cocheId) => {
-    router.push(`/Pages/Coches/${cocheId}`);
+  const navegarADetalles = (coche) => {
+    localStorage.setItem('cocheSeleccionado', JSON.stringify(coche));
+    router.push(`/Pages/Coches/${coche.modelo_id}`);
   };
 
   return (
     <div className="productos-grid">
       {coche.length > 0 ? (
         coche.map((item) => (
-          <div key={item.modelo_id} className="producto-card" onClick={() => navegarADetalles(item.modelo_id)}>
+          <div key={item.modelo_id} className="producto-card">
             <div className="producto-imagen">
               <img
-                src={`/FOTOS/COCHES/${item.modelo_id === 1 ? 'SEAT/IMG1.jpg' : 'HYUNDAI/IMG1.webp'}`}
+                src={item.modelo_id === 1 ? '/FOTOS/COCHES/SEAT/IMG1.jpg' : '/FOTOS/COCHES/HYUNDAI/IMG1.webp'}
                 alt={item.nombre}
                 className="imagen-principal"
               />
-              <div className="eco-badge">
-                <span>ECO</span>
+              {item.tipo_combustible.toLowerCase() === 'híbrido' && (
+                <div className="eco-badge">
+                  <span>ECO</span>
+                </div>
+              )}
+              <div className="estado-badge">
+                <span>{item.kilometraje === 0 ? 'NUEVO' : 'USADO'}</span>
               </div>
             </div>
 
@@ -136,23 +90,27 @@ export default function CardCoches({ producto }) {
 
               <div className="producto-specs">
                 <div className="spec-item">
+                  <i className="fas fa-calendar"></i>
                   <span>{item.anio}</span>
                 </div>
                 <div className="spec-separator">·</div>
                 <div className="spec-item">
+                  <i className="fas fa-tachometer-alt"></i>
                   <span>{item.kilometraje.toLocaleString('es-ES')} km</span>
                 </div>
                 <div className="spec-separator">·</div>
                 <div className="spec-item">
+                  <i className="fas fa-gas-pump"></i>
                   <span>{item.tipo_combustible}</span>
                 </div>
                 <div className="spec-separator">·</div>
                 <div className="spec-item">
+                  <i className="fas fa-cog"></i>
                   <span>{item.transmision}</span>
                 </div>
               </div>
 
-              <button className="ver-detalles">
+              <button className="ver-detalles" onClick={() => navegarADetalles(item)}>
                 Ver Detalles
               </button>
             </div>
@@ -166,28 +124,27 @@ export default function CardCoches({ producto }) {
         .productos-grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-          gap: 20px;
-          padding: 20px 0;
+          gap: 25px;
+          padding: 20px;
         }
 
         .producto-card {
           background: white;
-          border-radius: 8px;
+          border-radius: 12px;
           overflow: hidden;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-          transition: transform 0.2s, box-shadow 0.2s;
-          cursor: pointer;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .producto-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+          transform: translateY(-5px);
+          box-shadow: 0 8px 12px rgba(0,0,0,0.15);
         }
 
         .producto-imagen {
           position: relative;
           width: 100%;
-          height: 200px;
+          height: 220px;
           overflow: hidden;
         }
 
@@ -195,7 +152,7 @@ export default function CardCoches({ producto }) {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: transform 0.3s ease;
+          transition: transform 0.5s ease;
         }
 
         .producto-card:hover .imagen-principal {
@@ -208,14 +165,28 @@ export default function CardCoches({ producto }) {
           right: 10px;
           background: #4CAF50;
           color: white;
-          padding: 4px 8px;
-          border-radius: 4px;
+          padding: 6px 12px;
+          border-radius: 20px;
           font-size: 0.8rem;
-          font-weight: 500;
+          font-weight: 600;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .estado-badge {
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          background: #2c5282;
+          color: white;
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .producto-info {
-          padding: 15px;
+          padding: 20px;
         }
 
         .producto-header {
@@ -223,14 +194,14 @@ export default function CardCoches({ producto }) {
         }
 
         .producto-titulo {
-          font-size: 1.2rem;
+          font-size: 1.3rem;
           font-weight: 600;
-          color: #333;
-          margin: 0 0 8px 0;
+          color: #2d3748;
+          margin: 0 0 10px 0;
         }
 
         .producto-precio {
-          margin-bottom: 12px;
+          margin-bottom: 15px;
         }
 
         .precio-actual {
@@ -241,7 +212,7 @@ export default function CardCoches({ producto }) {
 
         .precio-mensual {
           font-size: 0.9rem;
-          color: #666;
+          color: #718096;
           margin-top: 4px;
         }
 
@@ -249,14 +220,24 @@ export default function CardCoches({ producto }) {
           display: flex;
           align-items: center;
           flex-wrap: wrap;
-          gap: 8px;
-          margin-bottom: 15px;
+          gap: 10px;
+          margin-bottom: 20px;
           font-size: 0.9rem;
-          color: #666;
+          color: #4a5568;
+        }
+
+        .spec-item {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+        }
+
+        .spec-item i {
+          color: #2c5282;
         }
 
         .spec-separator {
-          color: #ccc;
+          color: #cbd5e0;
         }
 
         .ver-detalles {
@@ -264,8 +245,9 @@ export default function CardCoches({ producto }) {
           background-color: #2c5282;
           color: white;
           border: none;
-          padding: 10px;
-          border-radius: 6px;
+          padding: 12px;
+          border-radius: 8px;
+          font-size: 1rem;
           font-weight: 500;
           cursor: pointer;
           transition: background-color 0.2s;
@@ -279,13 +261,21 @@ export default function CardCoches({ producto }) {
           grid-column: 1 / -1;
           text-align: center;
           padding: 40px;
-          color: #666;
+          color: #718096;
           font-size: 1.1rem;
+          background: white;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         @media (max-width: 768px) {
           .productos-grid {
             grid-template-columns: 1fr;
+            padding: 15px;
+          }
+
+          .producto-imagen {
+            height: 180px;
           }
         }
       `}</style>

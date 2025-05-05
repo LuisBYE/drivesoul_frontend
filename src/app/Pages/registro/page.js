@@ -58,6 +58,7 @@ export default function Registro() {
       const result = await ReqUsuarios.getLoginUser(paramsLogin);
       
       if (result) {
+        console.log('Datos del usuario:', result);
         // GUARDAR USUARIO EN LOCALSTORAGE (SERIAN COMO LAS COOKIES  )
         localStorage.setItem('user', JSON.stringify(result));
         setMessage('Usuario logueado correctamente');
@@ -72,8 +73,11 @@ export default function Registro() {
       const result = await ReqUsuarios.postUsuarios(formData);
       
       if (result) {
+        console.log('Usuario registrado:', result);
+        // Guardamos el usuario en localStorage inmediatamente después del registro
+        localStorage.setItem('user', JSON.stringify(result));
         setMessage('Usuario creado correctamente');
-        setTimeout(() => setIsLoginView(true), 1000);
+        setTimeout(() => router.push('/'), 1000);
       } else {
         setMessage('Error al crear usuario');
       }

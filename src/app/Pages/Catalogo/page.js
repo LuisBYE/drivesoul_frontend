@@ -7,6 +7,9 @@ import PanelFiltro from "../../component/Pages/Catalogo/PanelFiltro";
 import { FormProvider } from "../../context/FormContext";
 import Head from "next/head";
 
+const FILTRO_WIDTH = 560; // px
+const MENU_HEIGHT = 64; // px (ajusta si tu menú es más alto)
+
 const Catalogo = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -17,76 +20,70 @@ const Catalogo = () => {
   return (
     <div className="catalogo-container">
       <NavegadorMenu />
-      
-      <div className="main-content">
-        <FormProvider>
-          {/* Panel de filtros fijo */}
+      <FormProvider>
+        <div className="main-content">
           <aside className="filtros-sidebar">
             <PanelFiltro />
           </aside>
-
-          {/* Contenido principal */}
           <main className="productos-content">
             <div className="buscador-container">
-              <h1>Catálogo</h1>
               <Buscador onSearch={handleSearch} />
             </div>
             <Productos />
           </main>
-        </FormProvider>
-      </div>
+        </div>
+      </FormProvider>
 
       <style jsx>{`
         .catalogo-container {
           min-height: 100vh;
-          background-color: #f5f5f5;
+          overflow-x: hidden;
         }
-
         .main-content {
           display: flex;
-          gap: 20px;
-          padding: 0 20px;
-          margin-top: 20px;
-          position: relative;
+          width: 100%;
+          margin-top: ${MENU_HEIGHT}px;
         }
-
         .filtros-sidebar {
-          width: 280px;
-          position: sticky;
-          top: 20px;
-          height: calc(100vh - 100px);
-          overflow-y: auto;
-          background: white;
-          border-radius: 8px;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-          padding: 15px;
+          position: fixed;
+          top: ${MENU_HEIGHT}px;
+          left: 0;
+          width: ${FILTRO_WIDTH}px;
+          height: calc(100vh - ${MENU_HEIGHT}px);
+          padding: 20px;
+          z-index: 10;
         }
-
         .productos-content {
           flex: 1;
-          min-width: 0;
+          margin-left: ${FILTRO_WIDTH}px;
+          padding: 20px;
         }
-
         .buscador-container {
-          margin-bottom: 20px;
+          display: flex;
+          justify-content: center;
+          margin-bottom: 30px;
+          width: 100%;
+        }
+        .buscador-container > div {
+          background: transparent !important;
+          box-shadow: none !important;
         }
 
-        .buscador-container h1 {
-          font-size: 2rem;
-          color: #333;
-          margin-bottom: 1rem;
-        }
-
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
           .main-content {
             flex-direction: column;
+            margin-top: 0;
           }
-
           .filtros-sidebar {
-            width: 100%;
             position: relative;
-            top: 0;
+            top: auto;
+            width: 100%;
             height: auto;
+            padding: 10px;
+          }
+          .productos-content {
+            margin-left: 0;
+            padding: 10px;
           }
         }
       `}</style>

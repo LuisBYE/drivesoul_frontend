@@ -4,56 +4,93 @@ import NavegadorMenu from "../../component/Pages/Menu/Navegador";
 import Buscador from "../../Utils/Menu/Buscador";
 import Productos from "./Productos";
 import PanelFiltro from "../../component/Pages/Catalogo/PanelFiltro";
-
-import { FormProvider } from "../../context/FormContext"; // Importa el contexto
+import { FormProvider } from "../../context/FormContext";
 import Head from "next/head";
 
 const Catalogo = () => {
-  const [searchTerm, setSearchTerm] = useState(""); // ALMACENA LO QUE EL USUARIO ESCRIBE EN EL BUSCADOR
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = (term) => {
-    setSearchTerm(term); // SE ECARGA DE "ACTIVARSE" CUANDO EL USUARIO ESCRIBE EN EL BUSCADOR
+    setSearchTerm(term);
   };
 
   return (
-    <>
+    <div className="catalogo-container">
       <NavegadorMenu />
-      <h1 style={{ fontSize: "3rem", textAlign: "center", margin: "20px 0", color: "#333" }}>
-        Catálogo
-      </h1>
-      <div style={{ marginBottom: "20px", textAlign: "center" }}>
-        <Buscador onSearch={handleSearch} /> {/* Pasa la función de búsqueda */}
+      
+      <div className="main-content">
+        <FormProvider>
+          {/* Panel de filtros fijo */}
+          <aside className="filtros-sidebar">
+            <PanelFiltro />
+          </aside>
+
+          {/* Contenido principal */}
+          <main className="productos-content">
+            <div className="buscador-container">
+              <h1>Catálogo</h1>
+              <Buscador onSearch={handleSearch} />
+            </div>
+            <Productos />
+          </main>
+        </FormProvider>
       </div>
-      <FormProvider>
-        {/* CONTENEDOR FILTROS */}
-        <div className="containerPanel">
-          <PanelFiltro />
-        </div>
 
-        {/* CONTENEDOR DE PRODUCTOS */}
-        <div className="container_CardProductos">
-          <Productos />
-        </div>
-      </FormProvider>
+      <style jsx>{`
+        .catalogo-container {
+          min-height: 100vh;
+          background-color: #f5f5f5;
+        }
 
-      <style jsx>
-        {`
-          .container_CardProductos {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            padding: 20px;
-          }
-          .containerPanel {
-            display: flex;
+        .main-content {
+          display: flex;
+          gap: 20px;
+          padding: 0 20px;
+          margin-top: 20px;
+          position: relative;
+        }
+
+        .filtros-sidebar {
+          width: 280px;
+          position: sticky;
+          top: 20px;
+          height: calc(100vh - 100px);
+          overflow-y: auto;
+          background: white;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          padding: 15px;
+        }
+
+        .productos-content {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .buscador-container {
+          margin-bottom: 20px;
+        }
+
+        .buscador-container h1 {
+          font-size: 2rem;
+          color: #333;
+          margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+          .main-content {
             flex-direction: column;
-            gap: 20px;
-            padding: 20px;
           }
-        `}
-      </style>
-    </>
+
+          .filtros-sidebar {
+            width: 100%;
+            position: relative;
+            top: 0;
+            height: auto;
+          }
+        }
+      `}</style>
+    </div>
   );
 };
 

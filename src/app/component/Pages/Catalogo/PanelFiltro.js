@@ -16,10 +16,7 @@ export default function PanelFiltro() {
   return (
     <>
       {/* CONTENEDOR FILTROS */}
-      <pre>
-        {" "}
-        valor de formulario {JSON.stringify(formValues, null, 2)} hasta aqui
-      </pre>
+    
 
       <div className="containerPanel">
         <h2>Filtros de búsqueda</h2>

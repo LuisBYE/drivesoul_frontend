@@ -1,7 +1,10 @@
 import React, { use, useContext, useEffect, useState } from "react";
 import { FormContext } from "../../context/FormContext"; // Asegúrate de que la ruta sea correcta
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function CardCoches({ producto }) {
+  const router = useRouter();
   const { formValues } = useContext(FormContext); // Accede al contexto
   const [coche, setCoche] = useState([]); // Estado para almacenar los coches filtrados
   const [cocheId, setcocheId] = useState(null); // Estado para almacenar el filtro de coches
@@ -99,133 +102,193 @@ export default function CardCoches({ producto }) {
   }, [formValues,producto]);
 
   //! FALTA AÑADIR MARCA DE COCHE EN EL DTO DE MODELO  O OTRO  TIENE VARIAS MARCAS 
-  return (
-    <>
-    <pre> modelo formulario: {detailFormModelo}</pre>
-      <pre>{JSON.stringify(coche, null, 2)}</pre>
-      <div className="ContainerCard">
-        {coche.length > 0 ? (
-          coche.map((item) => (
-            <div key={item.modelo_id} className="producto-item">
-              <div className="titulo_Producto">
-                <p>{item.nombre}</p>
-              </div>
-              <div
-                className="acualizar_Detalle"
-                onClick={() => mostrarCocheId(item.modelo_id)}
-              >
-                Detalles
-              </div>
-              {cocheId === item.modelo_id ? (
-                <div className="detalle_Producto ">
-                  <div className="div_item">
-                    <p>Modelo: </p>
-                    {item.modelo_id}
-                  </div>
 
-                  {/* <div className="div_item">
-                    <p>Marca </p>
-                    {item.marca}
-                  </div> */}
-                  <div className="div_item">
-                    <p>Año: </p>
-                    {item.anio}
-                  </div>
-                  <div className="div_item">
-                    <p>Kilometraje: </p>
-                    {item.kilometraje}
-                  </div>
-                  <div className="div_item">
-                    <p>Color: </p>
-                    {item.color}
-                  </div>
-                  <div className="div_item">
-                    <p>Combustible: </p>
-                    {item.tipo_combustible}
-                  </div>
-                  <div className="div_item">
-                    <p>Transmisión: </p>
-                    {item.transmision}
-                  </div>
-                  <div className="div_item">
-                    <p>Precio: </p>
-                    {item.precio}
+  const navegarADetalles = (cocheId) => {
+    router.push(`/Pages/Coches/${cocheId}`);
+  };
+
+  return (
+    <div className="productos-grid">
+      {coche.length > 0 ? (
+        coche.map((item) => (
+          <div key={item.modelo_id} className="producto-card" onClick={() => navegarADetalles(item.modelo_id)}>
+            <div className="producto-imagen">
+              <img
+                src={`/FOTOS/COCHES/${item.modelo_id === 1 ? 'SEAT/IMG1.jpg' : 'HYUNDAI/IMG1.webp'}`}
+                alt={item.nombre}
+                className="imagen-principal"
+              />
+              <div className="eco-badge">
+                <span>ECO</span>
+              </div>
+            </div>
+
+            <div className="producto-info">
+              <div className="producto-header">
+                <h3 className="producto-titulo">{item.nombre}</h3>
+                <div className="producto-precio">
+                  <div className="precio-actual">{item.precio.toLocaleString('es-ES')} €</div>
+                  <div className="precio-mensual">
+                    Desde {Math.round(item.precio / 72).toLocaleString('es-ES')} €/mes*
                   </div>
                 </div>
-              ) : (
-                ""
-              )}
+              </div>
+
+              <div className="producto-specs">
+                <div className="spec-item">
+                  <span>{item.anio}</span>
+                </div>
+                <div className="spec-separator">·</div>
+                <div className="spec-item">
+                  <span>{item.kilometraje.toLocaleString('es-ES')} km</span>
+                </div>
+                <div className="spec-separator">·</div>
+                <div className="spec-item">
+                  <span>{item.tipo_combustible}</span>
+                </div>
+                <div className="spec-separator">·</div>
+                <div className="spec-item">
+                  <span>{item.transmision}</span>
+                </div>
+              </div>
+
+              <button className="ver-detalles">
+                Ver Detalles
+              </button>
             </div>
-          ))
-        ) : (
-          <p>No se encontraron coches para el año seleccionado.</p>
-        )}
-      </div>
+          </div>
+        ))
+      ) : (
+        <p className="no-resultados">No se encontraron coches con los filtros seleccionados.</p>
+      )}
 
       <style jsx>{`
-        .ContainerCard {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
+        .productos-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
           gap: 20px;
-          padding: 20px;
-          background-color: rgb(106, 100, 100);
-        }
-        .div_item {
-          display: flex;
-          /* justify-content: center; */
-          align-items: center;
-        }
-        .div_item p {
-          font-weight: bold;
-          margin: 8px 0;
-          font-size: 14px;
-        }
-        .titulo_Producto p {
-          font-size: 20px;
-          text-align: center;
-          margin: 10px 0;
-          border-bottom: 1px solid #ccc;
-        }
-        .acualizar_Detalle {
-          cursor: pointer;
-          background-color: rgb(152, 152, 152);
+          padding: 20px 0;
         }
 
-        .detalle_Producto {
-          display: flex;
-          flex-direction: column;
-          padding: 10px;
-          background-color: rgb(255, 255, 255);
-          maxheight: ${cocheDesplegado ? "1000px" : "0"};
+        .producto-card {
+          background: white;
           border-radius: 8px;
-          overflow: "hidden";
-          transition: ${transitionStyle};
-        }
-        .producto-item {
-          background: #ffffff;
-          border: 1px solid #e0e0e0;
-          border-radius: 12px;
-          padding: 20px;
-          text-align: left;
-          width: 250px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          overflow: hidden;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
           transition: transform 0.2s, box-shadow 0.2s;
+          cursor: pointer;
         }
 
-        .producto-item:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        .producto-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .producto-imagen {
+          position: relative;
+          width: 100%;
+          height: 200px;
+          overflow: hidden;
+        }
+
+        .imagen-principal {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+
+        .producto-card:hover .imagen-principal {
+          transform: scale(1.05);
+        }
+
+        .eco-badge {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background: #4CAF50;
+          color: white;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 0.8rem;
+          font-weight: 500;
+        }
+
+        .producto-info {
+          padding: 15px;
+        }
+
+        .producto-header {
+          margin-bottom: 15px;
         }
 
         .producto-titulo {
-          font-size: 18px;
-          font-weight: bold;
+          font-size: 1.2rem;
+          font-weight: 600;
           color: #333;
-          margin-bottom: 10px;
+          margin: 0 0 8px 0;
+        }
+
+        .producto-precio {
+          margin-bottom: 12px;
+        }
+
+        .precio-actual {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #2c5282;
+        }
+
+        .precio-mensual {
+          font-size: 0.9rem;
+          color: #666;
+          margin-top: 4px;
+        }
+
+        .producto-specs {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-bottom: 15px;
+          font-size: 0.9rem;
+          color: #666;
+        }
+
+        .spec-separator {
+          color: #ccc;
+        }
+
+        .ver-detalles {
+          width: 100%;
+          background-color: #2c5282;
+          color: white;
+          border: none;
+          padding: 10px;
+          border-radius: 6px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background-color 0.2s;
+        }
+
+        .ver-detalles:hover {
+          background-color: #2a4365;
+        }
+
+        .no-resultados {
+          grid-column: 1 / -1;
           text-align: center;
+          padding: 40px;
+          color: #666;
+          font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+          .productos-grid {
+            grid-template-columns: 1fr;
+          }
         }
       `}</style>
-    </>
+    </div>
   );
 }

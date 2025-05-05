@@ -69,6 +69,7 @@ function NavegadorMenu() {
                 <li onClick={() => handleNavigation('/Pages/Noticias')}>Noticias del Motor</li>
                 <li onClick={() => handleNavigation('/Pages/Coches')}>Coche a medida</li>
                 <li onClick={() => handleNavigation('/Pages/Contacto')}>Contacto</li>
+                <li onClick={() => handleNavigation('/Pages/Admin')}>Admin</li>
                 
                 {/* MENÚ DE USUARIO CON DESPLEGABLE PARA CERRAR SESIÓN */}
                 {isLoggedIn ? (

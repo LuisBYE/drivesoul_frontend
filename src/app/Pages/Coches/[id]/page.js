@@ -1,12 +1,22 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import NavegadorMenu from '../../../component/Pages/Menu/Navegador';
 
 export default function DetallesCoche() {
   const params = useParams();
   const coche = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('cocheSeleccionado')) : null;
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    if (coche) {
+      // Cargar las imágenes del coche según el modelo_id
+      const imagenes = getImagenesCoches(coche.modelo_id);
+      setImages(imagenes);
+    }
+  }, [coche]);
 
   // Función para obtener el gradiente según el color del coche
   const obtenerGradiente = (color) => {
@@ -64,6 +74,130 @@ export default function DetallesCoche() {
     };
   };
 
+  // Función para obtener todas las imágenes del coche según su modelo_id
+  const getImagenesCoches = (modelo_id) => {
+    const rutasImagenesPorModelo = {
+      1: [
+        '/FOTOS/COCHES/SEATIBIZAROJO/1.jpg',
+        '/FOTOS/COCHES/SEATIBIZAROJO/2.jpg',
+        '/FOTOS/COCHES/SEATIBIZAROJO/3.webp',
+        '/FOTOS/COCHES/SEATIBIZAROJO/4.png'
+      ],
+      2: [
+        '/FOTOS/COCHES/HYUNDAII30NFASTBACK/1.png',
+        '/FOTOS/COCHES/HYUNDAII30NFASTBACK/2.png',
+        '/FOTOS/COCHES/HYUNDAII30NFASTBACK/3.png',
+        '/FOTOS/COCHES/HYUNDAII30NFASTBACK/4.png'
+      ],
+      90: [
+        '/FOTOS/COCHES/SEATLEONBLANCO/1.jpg',
+        '/FOTOS/COCHES/SEATLEONBLANCO/2.jpg',
+        '/FOTOS/COCHES/SEATLEONBLANCO/3.jpg',
+        '/FOTOS/COCHES/SEATLEONBLANCO/4.jpg'
+      ],
+      91: [
+        '/FOTOS/COCHES/SEATARONAAZUL/1.jpg',
+        '/FOTOS/COCHES/SEATARONAAZUL/2.jpg',
+        '/FOTOS/COCHES/SEATARONAAZUL/3.jpg',
+        '/FOTOS/COCHES/SEATARONAAZUL/4.jpg'
+      ],
+      92: [
+        '/FOTOS/COCHES/HYUNDAITUCSONGRIS/1.jpg',
+        '/FOTOS/COCHES/HYUNDAITUCSONGRIS/2.jpg',
+        '/FOTOS/COCHES/HYUNDAITUCSONGRIS/3.jpg',
+        '/FOTOS/COCHES/HYUNDAITUCSONGRIS/4.jpg'
+      ],
+      93: [
+        '/FOTOS/COCHES/HYUNDAIKONA/1.jpg',
+        '/FOTOS/COCHES/HYUNDAIKONA/2.jpg',
+        '/FOTOS/COCHES/HYUNDAIKONA/3.jpg',
+        '/FOTOS/COCHES/HYUNDAIKONA/4.jpg'
+      ],
+      94: [
+        '/FOTOS/COCHES/AUDIA3NEGRO/1.jpg',
+        '/FOTOS/COCHES/AUDIA3NEGRO/2.jpg',
+        '/FOTOS/COCHES/AUDIA3NEGRO/3.jpg',
+        '/FOTOS/COCHES/AUDIA3NEGRO/4.jpg'
+      ],
+      95: [
+        '/FOTOS/COCHES/AUDIA4AZUL/1.jpg',
+        '/FOTOS/COCHES/AUDIA4AZUL/2.jpg',
+        '/FOTOS/COCHES/AUDIA4AZUL/3.jpg',
+        '/FOTOS/COCHES/AUDIA4AZUL/4.jpg'
+      ],
+      96: [
+        '/FOTOS/COCHES/AUDIQ5BLANCO/1.jpg',
+        '/FOTOS/COCHES/AUDIQ5BLANCO/2.jpg',
+        '/FOTOS/COCHES/AUDIQ5BLANCO/3.jpg',
+        '/FOTOS/COCHES/AUDIQ5BLANCO/4.jpg'
+      ],
+      97: [
+        '/FOTOS/COCHES/VOLKSWAGENGOLFGRIS/1.jpg',
+        '/FOTOS/COCHES/VOLKSWAGENGOLFGRIS/2.jpg',
+        '/FOTOS/COCHES/VOLKSWAGENGOLFGRIS/3.jpg',
+        '/FOTOS/COCHES/VOLKSWAGENGOLFGRIS/4.jpg'
+      ],
+      98: [
+        '/FOTOS/COCHES/VOLKSWAGENPOLOROJO/1.jpg',
+        '/FOTOS/COCHES/VOLKSWAGENPOLOROJO/2.jpg',
+        '/FOTOS/COCHES/VOLKSWAGENPOLOROJO/3.jpg',
+        '/FOTOS/COCHES/VOLKSWAGENPOLOROJO/4.jpg'
+      ],
+      99: [
+        '/FOTOS/COCHES/VOLKSWAGENTROCNEGRO/1.jpg',
+        '/FOTOS/COCHES/VOLKSWAGENTROCNEGRO/2.jpg',
+        '/FOTOS/COCHES/VOLKSWAGENTROCNEGRO/3.jpg',
+        '/FOTOS/COCHES/VOLKSWAGENTROCNEGRO/4.jpg'
+      ],
+      100: [
+        '/FOTOS/COCHES/PEUGEOT208AZUL/1.jpg',
+        '/FOTOS/COCHES/PEUGEOT208AZUL/2.jpg',
+        '/FOTOS/COCHES/PEUGEOT208AZUL/3.jpg',
+        '/FOTOS/COCHES/PEUGEOT208AZUL/4.jpg'
+      ],
+      101: [
+        '/FOTOS/COCHES/PEUGEOT3008BLANCO/1.jpg',
+        '/FOTOS/COCHES/PEUGEOT3008BLANCO/2.jpg',
+        '/FOTOS/COCHES/PEUGEOT3008BLANCO/3.jpg',
+        '/FOTOS/COCHES/PEUGEOT3008BLANCO/4.jpg'
+      ],
+      102: [
+        '/FOTOS/COCHES/PEUGEOT508GRIS2023/1.jpg',
+        '/FOTOS/COCHES/PEUGEOT508GRIS2023/2.jpg',
+        '/FOTOS/COCHES/PEUGEOT508GRIS2023/3.jpg',
+        '/FOTOS/COCHES/PEUGEOT508GRIS2023/4.jpg'
+      ],
+      103: [
+        '/FOTOS/COCHES/MERCEDESCLASEANEGRO/1.jpg',
+        '/FOTOS/COCHES/MERCEDESCLASEANEGRO/2.jpg',
+        '/FOTOS/COCHES/MERCEDESCLASEANEGRO/3.jpg',
+        '/FOTOS/COCHES/MERCEDESCLASEANEGRO/4.jpg'
+      ],
+      104: [
+        '/FOTOS/COCHES/MERCEDESCLASECROJO/1.jpg',
+        '/FOTOS/COCHES/MERCEDESCLASECROJO/2.jpg',
+        '/FOTOS/COCHES/MERCEDESCLASECROJO/3.jpg',
+        '/FOTOS/COCHES/MERCEDESCLASECROJO/4.jpg'
+      ],
+      105: [
+        '/FOTOS/COCHES/MERCEDES GLCAZUL/1.jpg',
+        '/FOTOS/COCHES/MERCEDES GLCAZUL/2.jpg',
+        '/FOTOS/COCHES/MERCEDES GLCAZUL/3.jpg',
+        '/FOTOS/COCHES/MERCEDES GLCAZUL/4.jpg'
+      ]
+    };
+    
+    return rutasImagenesPorModelo[modelo_id] || ['/FOTOS/COCHES/default.jpg'];
+  };
+
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
+
   if (!coche) {
     return (
       <div>
@@ -81,11 +215,37 @@ export default function DetallesCoche() {
       
       <div className="hero-section">
         <div className="imagen-container">
-          <img
-            src={coche.modelo_id === 1 ? '/FOTOS/COCHES/SEAT/IMG1.jpg' : '/FOTOS/COCHES/HYUNDAI/IMG1.webp'}
-            alt={coche.nombre}
-            className="imagen-principal"
-          />
+          {images.length > 0 && (
+            <>
+              <img
+                src={images[currentImageIndex]}
+                alt={`${coche.nombre} - Imagen ${currentImageIndex + 1}`}
+                className="imagen-principal"
+              />
+              
+              <div className="carousel-controls">
+                <button className="control-button prev" onClick={prevImage}>
+                  <i className="fas fa-chevron-left"></i>
+                </button>
+                <button className="control-button next" onClick={nextImage}>
+                  <i className="fas fa-chevron-right"></i>
+                </button>
+              </div>
+              
+              <div className="thumbnail-container">
+                {images.map((img, index) => (
+                  <div 
+                    key={index} 
+                    className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
+                    onClick={() => setCurrentImageIndex(index)}
+                  >
+                    <img src={img} alt={`Miniatura ${index + 1}`} />
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+          
           {coche.tipo_combustible.toLowerCase() === 'híbrido' && (
             <div className="eco-badge">ECO</div>
           )}
@@ -179,7 +339,7 @@ export default function DetallesCoche() {
 
         .hero-section {
           display: grid;
-          grid-template-columns: 1fr 1fr;
+          grid-template-columns: 65fr 35fr;
           min-height: calc(100vh - 64px);
         }
 
@@ -196,6 +356,73 @@ export default function DetallesCoche() {
           object-fit: cover;
         }
 
+        .carousel-controls {
+          position: absolute;
+          top: 50%;
+          left: 0;
+          right: 0;
+          display: flex;
+          justify-content: space-between;
+          transform: translateY(-50%);
+          padding: 0 20px;
+        }
+
+        .control-button {
+          background: rgba(0, 0, 0, 0.6);
+          color: white;
+          border: none;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          font-size: 1.2rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background 0.3s, transform 0.3s;
+        }
+
+        .control-button:hover {
+          background: rgba(0, 0, 0, 0.8);
+          transform: scale(1.1);
+        }
+
+        .thumbnail-container {
+          position: absolute;
+          bottom: 20px;
+          left: 0;
+          right: 0;
+          display: flex;
+          justify-content: center;
+          gap: 10px;
+          padding: 0 20px;
+        }
+
+        .thumbnail {
+          width: 80px;
+          height: 60px;
+          border: 2px solid transparent;
+          border-radius: 5px;
+          overflow: hidden;
+          cursor: pointer;
+          transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .thumbnail.active {
+          border-color: ${colores.acento};
+          transform: scale(1.1);
+        }
+
+        .thumbnail:hover {
+          transform: scale(1.05);
+        }
+
+        .thumbnail img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
         .eco-badge {
           position: absolute;
           top: 20px;
@@ -207,6 +434,7 @@ export default function DetallesCoche() {
           font-size: 1rem;
           font-weight: 600;
           box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+          z-index: 10;
         }
 
         .info-container {
@@ -385,4 +613,4 @@ export default function DetallesCoche() {
       `}</style>
     </div>
   );
-} 
+}

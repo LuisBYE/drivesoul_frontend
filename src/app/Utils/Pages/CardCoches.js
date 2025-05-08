@@ -17,22 +17,9 @@ export default function CardCoches({ producto }) {
   const detailFormCombustible = formValues.combustible;
   const detailFormTransmision = formValues.transmision;
 
-  const comparacion = (itemId) => {
-    return modelo.some((item) => item.id === itemId);
-  };
-  
   useEffect(() => {
-    if (
-      detailFormAnio ||
-      detailFormPrecioMin ||
-      detailFormPrecioMax ||
-      detailFormModelo ||
-      detailFormKilometrajeMin ||
-      detailFormKilometrajeMax ||
-      detailFormColor ||
-      detailFormCombustible ||
-      detailFormTransmision
-    ) {
+    if (producto && producto.length > 0) {
+      console.log("Productos recibidos:", producto);
       const filtroCoche = producto.filter(
         (item) =>
           (!detailFormAnio || Number(item.anio) === Number(detailFormAnio)) &&
@@ -42,12 +29,11 @@ export default function CardCoches({ producto }) {
           (!detailFormKilometrajeMax || item.kilometraje <= detailFormKilometrajeMax) &&
           (!detailFormColor || item.color.toLowerCase() === detailFormColor.toLowerCase()) &&
           (!detailFormCombustible || item.tipo_combustible.toLowerCase() === detailFormCombustible.toLowerCase()) &&
-          (!detailFormTransmision || item.transmision.toLowerCase() === detailFormTransmision.toLowerCase()) &&
-          comparacion(item.modelo_id)
+          (!detailFormTransmision || item.transmision.toLowerCase() === detailFormTransmision.toLowerCase())
       );
       setCoche(filtroCoche);
     } else {
-      setCoche(producto);
+      setCoche([]);
     }
   }, [formValues, producto]);
 
@@ -56,14 +42,40 @@ export default function CardCoches({ producto }) {
     router.push(`/Pages/Coches/${coche.modelo_id}`);
   };
 
+  // Obtener la imagen del coche según su modelo_id
+  const getImagenCoche = (cocheId) => {
+    const rutasImagenes = {
+      1: '/FOTOS/COCHES/SEATIBIZAROJO/1.jpg',
+      2: '/FOTOS/COCHES/HYUNDAII30NFASTBACK/1.png',
+      90: '/FOTOS/COCHES/SEATLEONBLANCO/1.jpg',
+      91: '/FOTOS/COCHES/SEATARONAAZUL/1.jpg',
+      92: '/FOTOS/COCHES/HYUNDAITUCSONGRIS/1.jpg',
+      93: '/FOTOS/COCHES/HYUNDAIKONA/1.jpg',
+      94: '/FOTOS/COCHES/AUDIA3NEGRO/1.jpg',
+      95: '/FOTOS/COCHES/AUDIA4AZUL/1.jpg',
+      96: '/FOTOS/COCHES/AUDIQ5BLANCO/1.jpg',
+      97: '/FOTOS/COCHES/VOLKSWAGENGOLFGRIS/1.jpg',
+      98: '/FOTOS/COCHES/VOLKSWAGENPOLOROJO/1.jpg',
+      99: '/FOTOS/COCHES/VOLKSWAGENTROCNEGRO/1.jpg',
+      100: '/FOTOS/COCHES/PEUGEOT208AZUL/1.jpg',
+      101: '/FOTOS/COCHES/PEUGEOT3008BLANCO/1.jpg',
+      102: '/FOTOS/COCHES/PEUGEOT508GRIS2023/1.jpg',
+      103: '/FOTOS/COCHES/MERCEDESCLASEANEGRO/1.jpg',
+      104: '/FOTOS/COCHES/MERCEDESCLASECROJO/1.jpg',
+      105: '/FOTOS/COCHES/MERCEDES GLCAZUL/1.jpg'
+    };
+    
+    return rutasImagenes[cocheId] || '/FOTOS/COCHES/default.jpg';
+  };
+
   return (
     <div className="productos-grid">
       {coche.length > 0 ? (
         coche.map((item) => (
-          <div key={item.modelo_id} className="producto-card">
+          <div key={item.id || item.modelo_id} className="producto-card">
             <div className="producto-imagen">
               <img
-                src={item.modelo_id === 1 ? '/FOTOS/COCHES/SEAT/IMG1.jpg' : '/FOTOS/COCHES/HYUNDAI/IMG1.webp'}
+                src={getImagenCoche(item.modelo_id)}
                 alt={item.nombre}
                 className="imagen-principal"
               />

@@ -38,7 +38,14 @@ export default function CardCoches({ producto }) {
   }, [formValues, producto]);
 
   const navegarADetalles = (coche) => {
+    // Guarda los datos del coche seleccionado
     localStorage.setItem('cocheSeleccionado', JSON.stringify(coche));
+    
+    // Eliminamos cualquier marcador de navegación
+    sessionStorage.removeItem('vieneDePagina');
+    sessionStorage.removeItem('ultimaNavegacion');
+    
+    // Navegar a la página de detalles
     router.push(`/Pages/Coches/${coche.modelo_id}`);
   };
 

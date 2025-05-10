@@ -1,22 +1,26 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import NavegadorMenu from '../../../component/Pages/Menu/Navegador';
 
 export default function DetallesCoche() {
   const params = useParams();
-  const coche = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('cocheSeleccionado')) : null;
+  const router = useRouter();
+  const [coche, setCoche] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [images, setImages] = useState([]);
 
   useEffect(() => {
-    if (coche) {
-      // Cargar las imágenes del coche según el modelo_id
-      const imagenes = getImagenesCoches(coche.modelo_id);
+    // Obtener los datos del coche del localStorage solo una vez al montar el componente
+    const cocheData = typeof window !== 'undefined' ? localStorage.getItem('cocheSeleccionado') : null;
+    if (cocheData) {
+      const parsedCoche = JSON.parse(cocheData);
+      setCoche(parsedCoche);
+      const imagenes = getImagenesCoches(parsedCoche.modelo_id);
       setImages(imagenes);
     }
-  }, [coche]);
+  }, []); // Solo se ejecuta al montar el componente
 
   // Función para obtener el gradiente según el color del coche
   const obtenerGradiente = (color) => {
@@ -74,7 +78,6 @@ export default function DetallesCoche() {
     };
   };
 
-  // Función para obtener todas las imágenes del coche según su modelo_id
   const getImagenesCoches = (modelo_id) => {
     const rutasImagenesPorModelo = {
       1: [
@@ -202,7 +205,23 @@ export default function DetallesCoche() {
     return (
       <div>
         <NavegadorMenu />
-        <div style={{ textAlign: 'center', padding: '20px' }}>No se encontró información del vehículo</div>
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <div>No se encontró información del vehículo</div>
+          <button 
+            onClick={() => router.push('/Pages/Catalogo')}
+            style={{
+              background: '#ff0000',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '8px',
+              marginTop: '20px',
+              cursor: 'pointer'
+            }}
+          >
+            Volver al Catálogo
+          </button>
+        </div>
       </div>
     );
   }
@@ -252,8 +271,26 @@ export default function DetallesCoche() {
         </div>
 
         <div className="info-container">
-          <div className="header-content">
+          <div className="header-content" style={{ position: 'relative', paddingRight: '120px' }}>
             <h1 className="titulo-coche">{coche.nombre}</h1>
+            <button 
+              onClick={() => router.push('/Pages/Catalogo')}
+              style={{
+                position: 'absolute',
+                right: '0',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                backgroundColor: '#ff0000',
+                color: 'white',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                cursor: 'pointer'
+              }}
+            >
+              Catálogo
+            </button>
             <div className="precio-container">
               <div className="precio-actual">{coche.precio.toLocaleString('es-ES')} €</div>
               <div className="precio-mensual">

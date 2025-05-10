@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FormContext } from "../../context/FormContext";
 import { useRouter } from 'next/navigation';
+import './tarjetas.css';
 
 export default function CardCoches({ producto }) {
   const router = useRouter();

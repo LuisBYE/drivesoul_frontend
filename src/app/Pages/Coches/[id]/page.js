@@ -13,6 +13,7 @@ export default function DetallesCoche() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [images, setImages] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
   // OBTIENE IMAAGENES SUGUN EL ID DEL COCHE
   const getImagenesCoche = (modelo_id) => {
@@ -66,17 +67,18 @@ export default function DetallesCoche() {
   };
 
   // RECARGA LAS IMAGENES
-  const precargarImagenes = (imagenes) => {
+  const precargarImagenes = async (imagenes) => {
     const promesas = imagenes.map(src => {
       return new Promise((resolve) => {
         const img = new Image();
-        img.onload = () => resolve(src);
-        img.onerror = () => resolve(null);
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
         img.src = src;
       });
     });
     
-    return Promise.all(promesas);
+    await Promise.all(promesas);
+    setImagesLoaded(true);
   };
 
   // LO INICIA Y LIMPIA LOS MARCADORES DE NAVEGACION
@@ -92,6 +94,8 @@ export default function DetallesCoche() {
   useEffect(() => {
     const cargarDatos = async () => {
       try {
+        setLoaded(false);
+        setImagesLoaded(false);
         const cocheData = localStorage.getItem('cocheSeleccionado');
         
         if (cocheData) {
@@ -99,9 +103,8 @@ export default function DetallesCoche() {
           setCoche(parsedCoche);
           
           const imagenesDelCoche = getImagenesCoche(parsedCoche.modelo_id);
-          // CONTROL DE ERRORES PARA LAS IMAGENES
-          await precargarImagenes(imagenesDelCoche);
           setImages(imagenesDelCoche);
+          await precargarImagenes(imagenesDelCoche);
           setLoaded(true);
         }
       } catch (error) {
@@ -110,7 +113,6 @@ export default function DetallesCoche() {
       }
     };
     
-    setLoaded(false);
     cargarDatos();
   }, [params.id]);
   
@@ -156,11 +158,14 @@ export default function DetallesCoche() {
             <>
               <div className="imagen-container">
                 <div className="imagen-wrapper">
-                  <img
-                    src={images[currentImageIndex]}
-                    alt={`${coche.nombre} - Imagen ${currentImageIndex + 1}`}
-                    className="imagen-principal"
-                  />
+                  {imagesLoaded && (
+                    <img
+                      src={images[currentImageIndex]}
+                      alt={`${coche.nombre} - Imagen ${currentImageIndex + 1}`}
+                      className="imagen-principal"
+                      loading="eager"
+                    />
+                  )}
                 </div>
                 
                 <div className="carousel-controls">
@@ -179,7 +184,7 @@ export default function DetallesCoche() {
                       className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
                       onClick={() => setCurrentImageIndex(index)}
                     >
-                      <img src={img} alt={`Miniatura ${index + 1}`} />
+                      <img src={img} alt={`Miniatura ${index + 1}`} loading="eager" />
                     </div>
                   ))}
                 </div>

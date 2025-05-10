@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import NavegadorMenu from '../../../component/Pages/Menu/Navegador';
-import { getImagenesCoches } from '../../../Utils/Coches/imagenesCoches';
 import { obtenerGradiente } from '../../../Utils/Coches/coloresCoches';
 import './detalles.css';
 
@@ -13,13 +12,63 @@ export default function DetallesCoche() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [images, setImages] = useState([]);
 
+  const getImagenesCoche = (modelo_id) => {
+    const rutasBase = {
+      1: 'SEATIBIZAROJO',
+      2: 'HYUNDAII30NFASTBACK',
+      90: 'SEATLEONBLANCO',
+      91: 'SEATARONAAZUL',
+      92: 'HYUNDAITUCSONGRIS',
+      93: 'HYUNDAIKONA',
+      94: 'AUDIA3NEGRO',
+      95: 'AUDIA4AZUL',
+      96: 'AUDIQ5BLANCO',
+      97: 'VOLKSWAGENGOLFGRIS',
+      98: 'VOLKSWAGENPOLOROJO',
+      99: 'VOLKSWAGENTROCNEGRO',
+      100: 'PEUGEOT208AZUL',
+      101: 'PEUGEOT3008BLANCO',
+      102: 'PEUGEOT508GRIS2023',
+      103: 'MERCEDESCLASEANEGRO',
+      104: 'MERCEDESCLASECROJO',
+      105: 'MERCEDES GLCAZUL'
+    };
+
+    const extensiones = {
+      1: ['.jpg', '.jpg', '.webp', '.png'],
+      2: ['.png', '.png', '.png', '.png'],
+      90: ['.jpg', '.jpg', '.jpg', '.jpg'],
+      91: ['.png', '.png', '.png', '.png'],
+      92: ['.png', '.png', '.png', '.png'],
+      93: ['.jpg', '.jpg', '.png', '.jpg'],
+      94: ['.png', '.png', '.png', '.png'],
+      95: ['.png', '.png', '.png', '.png'],
+      96: ['.png', '.png', '.png', '.png'],
+      97: ['.png', '.png', '.png', '.png'],
+      98: ['.png', '.png', '.png', '.png'],
+      99: ['.png', '.png', '.png', '.png'],
+      100: ['.png', '.png', '.png', '.png'],
+      101: ['.png', '.png', '.png', '.png'],
+      102: ['.png', '.png', '.png', '.png'],
+      103: ['.png', '.png', '.png', '.png'],
+      104: ['.jpeg', '.jpeg', '.jpeg', '.png'],
+      105: ['.png', '.png', '.png', '.png']
+    };
+
+    if (!rutasBase[modelo_id]) return ['/FOTOS/COCHES/default.jpg'];
+
+    return [1, 2, 3, 4].map((num, index) => 
+      `/FOTOS/COCHES/${rutasBase[modelo_id]}/${num}${extensiones[modelo_id][index]}`
+    );
+  };
+
   // CARGA INICIAL DE DATOS
   useEffect(() => {
     const cocheData = localStorage.getItem('cocheSeleccionado');
     if (cocheData) {
       const parsedCoche = JSON.parse(cocheData);
       setCoche(parsedCoche);
-      setImages(getImagenesCoches(parsedCoche.modelo_id));
+      setImages(getImagenesCoche(parsedCoche.modelo_id));
     }
   }, []);
 
@@ -45,7 +94,7 @@ export default function DetallesCoche() {
               background: '#ff0000',
               color: 'white',
               border: 'none',
-              padding: '10px 20px',
+              padding: '12px 24px',
               borderRadius: '8px',
               marginTop: '20px',
               cursor: 'pointer'
@@ -100,19 +149,7 @@ export default function DetallesCoche() {
           )}
           
           {coche.tipo_combustible.toLowerCase() === 'híbrido' && (
-            <div style={{
-              position: 'absolute',
-              top: '20px',
-              right: '20px',
-              background: '#4CAF50',
-              color: 'white',
-              padding: '8px 16px',
-              borderRadius: '25px',
-              fontSize: '1rem',
-              fontWeight: '600',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.2)',
-              zIndex: '10'
-            }}>
+            <div className="eco-badge">
               ECO
             </div>
           )}

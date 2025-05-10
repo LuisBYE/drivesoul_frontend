@@ -20,7 +20,6 @@ export default function CardCoches({ producto }) {
 
   useEffect(() => {
     if (producto && producto.length > 0) {
-      console.log("Productos recibidos:", producto);
       const filtroCoche = producto.filter(
         (item) =>
           (!detailFormAnio || Number(item.anio) === Number(detailFormAnio)) &&
@@ -43,37 +42,36 @@ export default function CardCoches({ producto }) {
     router.push(`/Pages/Coches/${coche.modelo_id}`);
   };
 
-  // Obtener la imagen del coche según su modelo_id
-  const getImagenCoche = (cocheId) => {
+  const getImagenCoche = (modelo_id) => {
     const rutasImagenes = {
       1: '/FOTOS/COCHES/SEATIBIZAROJO/1.jpg',
       2: '/FOTOS/COCHES/HYUNDAII30NFASTBACK/1.png',
       90: '/FOTOS/COCHES/SEATLEONBLANCO/1.jpg',
-      91: '/FOTOS/COCHES/SEATARONAAZUL/1.jpg',
-      92: '/FOTOS/COCHES/HYUNDAITUCSONGRIS/1.jpg',
+      91: '/FOTOS/COCHES/SEATARONAAZUL/1.png',
+      92: '/FOTOS/COCHES/HYUNDAITUCSONGRIS/1.png',
       93: '/FOTOS/COCHES/HYUNDAIKONA/1.jpg',
-      94: '/FOTOS/COCHES/AUDIA3NEGRO/1.jpg',
-      95: '/FOTOS/COCHES/AUDIA4AZUL/1.jpg',
-      96: '/FOTOS/COCHES/AUDIQ5BLANCO/1.jpg',
-      97: '/FOTOS/COCHES/VOLKSWAGENGOLFGRIS/1.jpg',
-      98: '/FOTOS/COCHES/VOLKSWAGENPOLOROJO/1.jpg',
-      99: '/FOTOS/COCHES/VOLKSWAGENTROCNEGRO/1.jpg',
-      100: '/FOTOS/COCHES/PEUGEOT208AZUL/1.jpg',
-      101: '/FOTOS/COCHES/PEUGEOT3008BLANCO/1.jpg',
-      102: '/FOTOS/COCHES/PEUGEOT508GRIS2023/1.jpg',
-      103: '/FOTOS/COCHES/MERCEDESCLASEANEGRO/1.jpg',
-      104: '/FOTOS/COCHES/MERCEDESCLASECROJO/1.jpg',
-      105: '/FOTOS/MERCEDES GLCAZUL/1.jpg'
+      94: '/FOTOS/COCHES/AUDIA3NEGRO/1.png',
+      95: '/FOTOS/COCHES/AUDIA4AZUL/1.png',
+      96: '/FOTOS/COCHES/AUDIQ5BLANCO/1.png',
+      97: '/FOTOS/COCHES/VOLKSWAGENGOLFGRIS/1.png',
+      98: '/FOTOS/COCHES/VOLKSWAGENPOLOROJO/1.png',
+      99: '/FOTOS/COCHES/VOLKSWAGENTROCNEGRO/1.png',
+      100: '/FOTOS/COCHES/PEUGEOT208AZUL/1.png',
+      101: '/FOTOS/COCHES/PEUGEOT3008BLANCO/1.png',
+      102: '/FOTOS/COCHES/PEUGEOT508GRIS2023/1.png',
+      103: '/FOTOS/COCHES/MERCEDESCLASEANEGRO/1.png',
+      104: '/FOTOS/COCHES/MERCEDESCLASECROJO/1.jpeg',
+      105: '/FOTOS/COCHES/MERCEDES GLCAZUL/1.png'
     };
     
-    return rutasImagenes[cocheId] || '/FOTOS/COCHES/default.jpg';
+    return rutasImagenes[modelo_id] || '/FOTOS/COCHES/default.jpg';
   };
 
   return (
     <div className="productos-grid">
       {coche.length > 0 ? (
         coche.map((item) => (
-          <div key={item.id || item.modelo_id} className="producto-card">
+          <div key={item.modelo_id} className="producto-card">
             <div className="producto-imagen">
               <img
                 src={getImagenCoche(item.modelo_id)}
@@ -122,7 +120,6 @@ export default function CardCoches({ producto }) {
                   <span>{item.transmision}</span>
                 </div>
               </div>
-
               <button className="ver-detalles" onClick={() => navegarADetalles(item)}>
                 Ver Detalles
               </button>

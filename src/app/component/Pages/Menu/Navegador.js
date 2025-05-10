@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { useCart } from '../../../context/CartContext';
 import './menu.css'; 
 
 function NavegadorMenu() {
@@ -10,6 +11,7 @@ function NavegadorMenu() {
     const [username, setUsername] = useState("");
     const [showDropdown, setShowDropdown] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const { cartCount } = useCart();
 
     useEffect(() => {
         const user = localStorage.getItem('user');
@@ -82,6 +84,13 @@ function NavegadorMenu() {
                     Contacto
                 </li>
                 
+                <li onClick={() => handleNavigation('/Pages/cart')} className="cart-icon-container">
+                    <div className="cart-icon">
+                        <i className="fas fa-shopping-cart"></i>
+                        {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+                    </div>
+                </li>
+                
                 {isLoggedIn ? (
                     <li className="user-menu">
                         <div onClick={toggleDropdown} className="username">
@@ -89,6 +98,9 @@ function NavegadorMenu() {
                         </div>
                         {showDropdown && (
                             <div className="dropdown-menu">
+                                <div onClick={() => handleNavigation('/Pages/Perfil')}>
+                                    Mi Perfil
+                                </div>
                                 <div onClick={handleLogout}>
                                     Cerrar Sesión
                                 </div>

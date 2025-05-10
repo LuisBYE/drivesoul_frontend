@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import NavegadorMenu from '../../../component/Pages/Menu/Navegador';
 import { obtenerGradiente } from '../../../Utils/Coches/coloresCoches';
+import { useCart } from '../../../context/CartContext';
 import './detalles.css';
 
 export default function DetallesCoche() {
@@ -14,6 +15,8 @@ export default function DetallesCoche() {
   const [images, setImages] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const { addToCart } = useCart();
 
   // OBTIENE IMAAGENES SUGUN EL ID DEL COCHE
   const getImagenesCoche = (modelo_id) => {
@@ -132,6 +135,19 @@ export default function DetallesCoche() {
     router.push('/Pages/Catalogo');
   };
 
+  // FUNCIÓN PARA AÑADIR AL CARRITO
+  const handleAddToCart = () => {
+    if (coche) {
+      addToCart(coche);
+      setAddedToCart(true);
+      
+      // Mostrar mensaje de éxito durante 2 segundos
+      setTimeout(() => {
+        setAddedToCart(false);
+      }, 2000);
+    }
+  };
+
   // LAYAUT
   return (
     <div className="detalles-container">
@@ -236,10 +252,15 @@ export default function DetallesCoche() {
                   ))}
                 </div>
 
-                <button className="btn-interesa" style={{
-                  background: obtenerGradiente(coche.color).acento
-                }}>
-                  Me interesa
+                <button 
+                  className="btn-interesa" 
+                  style={{
+                    background: obtenerGradiente(coche.color).acento
+                  }}
+                  onClick={handleAddToCart}
+                  disabled={addedToCart}
+                >
+                  {addedToCart ? '¡Añadido al carrito!' : 'Añadir al carrito'}
                 </button>
               </div>
             </>

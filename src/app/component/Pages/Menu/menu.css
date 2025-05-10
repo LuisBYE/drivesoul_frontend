@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
 /* ESTILOS GENERALES */
 * {
     margin: 0;
@@ -9,38 +11,188 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* MENU */
+/* MENU PRINCIPAL */
 .nav-principal {
-    background-color: black;
-    padding: 15px 30px;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.98), rgba(0, 0, 0, 0.95));
+    padding: 1.5rem 3rem;
     position: fixed;
     width: 100%;
     top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 100;
+    height: 90px;
 }
 
 /* LOGO */
+.logo-container {
+    cursor: pointer;
+}
+
 .logo {
-    height: 65px;
+    height: 50px;
+    width: auto;
 }
 
 /* MENU ITEMS */
 .menu {
     display: flex;
-    gap: 30px;
+    align-items: center;
+    gap: 3rem;
     list-style: none;
 }
 
 .menu li {
     color: white;
+    text-transform: uppercase;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
     cursor: pointer;
+    position: relative;
 }
 
-.menu li:hover {
-    opacity: 0.8;
+.menu li:not(.user-menu):hover {
+    color: #ff3333;
+}
+
+.menu li:not(.user-menu):after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    bottom: -8px;
+    left: 0;
+    background: linear-gradient(90deg, #ff3333, #ff0000);
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+}
+
+.menu li:not(.user-menu):hover:after {
+    transform: scaleX(1);
+}
+
+/* BOTÓN DE REGISTRO */
+.register-button {
+    color: white;
+    background: linear-gradient(135deg, #ff3333, #cc0000);
+    padding: 0.8rem 2rem !important;
+    border-radius: 25px;
+    font-weight: 800 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.register-button:hover {
+    background: linear-gradient(135deg, #ff4444, #ff0000);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+}
+
+/* MENÚ DE USUARIO */
+.user-menu {
+    position: relative;
+}
+
+.username {
+    color: white;
+    padding: 0.8rem 0;
+    display: flex;
+    align-items: center;
+    font-weight: 800;
+    position: relative;
+}
+
+.username:after {
+    content: '▼';
+    font-size: 0.8em;
+    margin-left: 8px;
+    transition: transform 0.2s ease;
+}
+
+.username:hover:after {
+    transform: translateY(2px);
+}
+
+/* MENÚ DESPLEGABLE */
+.dropdown-menu {
+    position: absolute;
+    top: 130%;
+    right: 0;
+    background: rgba(0, 0, 0, 0.98);
+    border-radius: 8px;
+    padding: 0.5rem;
+    min-width: 200px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.dropdown-menu div {
+    padding: 1rem 1.5rem;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+}
+
+.dropdown-menu div:hover {
+    background: #ff3333;
+    color: white;
+    padding-left: 2rem;
+}
+
+/* BOTÓN MENÚ MÓVIL */
+.mobile-menu-button {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.hamburger {
+    display: block;
+    width: 30px;
+    height: 3px;
+    background: #ff3333;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.hamburger:before,
+.hamburger:after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 3px;
+    background: #ff3333;
+    transition: all 0.2s ease;
+}
+
+.hamburger:before {
+    top: -10px;
+}
+
+.hamburger:after {
+    bottom: -10px;
+}
+
+.hamburger.active {
+    background: transparent;
+}
+
+.hamburger.active:before {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+.hamburger.active:after {
+    transform: rotate(-45deg);
+    bottom: 0;
 }
 
 /* SECCION VIDEO */
@@ -87,65 +239,61 @@ body {
     margin-bottom: 20px;
 }
 
-/* ESTILOS PARA EL MENÚ DE USUARIO */
-.user-menu {
-    position: relative;
-}
-
-/* ESTILO PARA EL NOMBRE DE USUARIO */
-.username {
-    cursor: pointer;
-    font-weight: bold;
-    color: white;
-    padding: 10px 15px;
-}
-
-/* MENÚ DESPLEGABLE */
-.dropdown-menu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: #333;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-    min-width: 150px;
-    z-index: 100;
-}
-
-/* OPCIONES DEL MENÚ DESPLEGABLE */
-.dropdown-menu div {
-    padding: 10px 15px;
-    cursor: pointer;
-    color: white;
-}
-
-.dropdown-menu div:hover {
-    background-color: #444;
-}
-
-/* RESPONSIVE PARA DISPOSITIVOS MÓVILES */
+/* RESPONSIVE */
 @media (max-width: 768px) {
     .nav-principal {
-        flex-direction: column;
-        padding: 10px;
+        padding: 1rem 2rem;
+        height: 80px;
     }
-    
+
+    .mobile-menu-button {
+        display: block;
+    }
+
     .menu {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 80px);
+        background: rgba(0, 0, 0, 0.98);
         flex-direction: column;
-        width: 100%;
-        margin-top: 10px;
+        padding: 2rem;
+        gap: 2rem;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        overflow-y: auto;
     }
-    
+
+    .menu.active {
+        transform: translateX(0);
+    }
+
     .menu li {
-        border-top: 1px solid #f0f0f0;
+        font-size: 1.2rem;
         text-align: center;
-    }
-    
-    .dropdown-menu {
         width: 100%;
+    }
+
+    .dropdown-menu {
         position: static;
+        background: transparent;
         box-shadow: none;
-        border: 1px solid #f0f0f0;
-        margin-top: 0;
+        padding: 1rem 0;
+        width: 100%;
+    }
+
+    .username {
+        justify-content: center;
+    }
+
+    .username:after {
+        margin-left: 8px;
+    }
+
+    .register-button {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
     }
 }

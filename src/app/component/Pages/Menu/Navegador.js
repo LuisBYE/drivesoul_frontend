@@ -11,19 +11,42 @@ function NavegadorMenu() {
     const [username, setUsername] = useState("");
     const [showDropdown, setShowDropdown] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const { cartCount } = useCart();
+    const { cartCount, setCartCount } = useCart();
 
-    useEffect(() => {
+    // Función para verificar y actualizar el estado de autenticación
+    const checkAuthStatus = () => {
         const user = localStorage.getItem('user');
         if (user) {
             try {
                 const userData = JSON.parse(user);
                 setIsLoggedIn(true);
                 setUsername(userData.nombre);
-            } catch {
+            } catch (error) {
+                console.error('Error al parsear datos de usuario:', error);
                 localStorage.removeItem('user');
+                setIsLoggedIn(false);
+                setUsername("");
             }
+        } else {
+            setIsLoggedIn(false);
+            setUsername("");
         }
+    };
+
+    // Verificar autenticación al cargar el componente
+    useEffect(() => {
+        checkAuthStatus();
+        
+        // Escuchar eventos de login y logout
+        window.addEventListener('login', checkAuthStatus);
+        window.addEventListener('logout', checkAuthStatus);
+        window.addEventListener('storage', checkAuthStatus);
+        
+        return () => {
+            window.removeEventListener('login', checkAuthStatus);
+            window.removeEventListener('logout', checkAuthStatus);
+            window.removeEventListener('storage', checkAuthStatus);
+        };
     }, []);
 
     const handleNavigation = (path) => {
@@ -34,6 +57,12 @@ function NavegadorMenu() {
 
     const handleLogout = () => {
         localStorage.removeItem('user');
+        localStorage.removeItem('drivesoulCart'); // Limpiar el carrito al cerrar sesión
+        
+        // Disparar evento de logout
+        const logoutEvent = new Event('logout');
+        window.dispatchEvent(logoutEvent);
+        
         setIsLoggedIn(false);
         setUsername("");
         setShowDropdown(false);
@@ -87,7 +116,9 @@ function NavegadorMenu() {
                 <li onClick={() => handleNavigation('/Pages/cart')} className="cart-icon-container">
                     <div className="cart-icon">
                         <i className="fas fa-shopping-cart"></i>
-                        {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+                        {isLoggedIn && cartCount > 0 && (
+                            <span className="cart-count">{cartCount}</span>
+                        )}
                     </div>
                 </li>
                 

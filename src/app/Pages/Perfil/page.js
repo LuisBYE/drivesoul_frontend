@@ -11,45 +11,41 @@ export default function PerfilPage() {
   const [user, setUser] = useState(null);
   const [pedidos, setPedidos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
 
+  // CARGAR DATOS DEL USUARIO Y PEDIDOS
   useEffect(() => {
-    // Verificar si el usuario está autenticado
+    // Verificar autenticación
     const userData = localStorage.getItem('user');
-    
     if (!userData) {
       router.push('/Pages/Registro');
       return;
     }
 
-    try {
-      setUser(JSON.parse(userData));
-      fetchPedidos();
-    } catch (error) {
-      setError('Error al cargar los datos del usuario');
-      setIsLoading(false);
-    }
+    // Cargar datos del usuario
+    setUser(JSON.parse(userData));
+    
+    // Cargar pedidos
+    const cargarPedidos = async () => {
+      try {
+        const data = await ReqPedidos.getPedidosUsuario();
+        setPedidos(data || []);
+      } catch (error) {
+        console.error("Error al cargar pedidos:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    cargarPedidos();
   }, [router]);
 
-  const fetchPedidos = async () => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const data = await ReqPedidos.getPedidosUsuario();
-      setPedidos(data || []);
-    } catch (error) {
-      setError('No se pudieron cargar los pedidos');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+  // FORMATEAR FECHA
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('es-ES', options);
   };
 
+  // PANTALLA DE CARGA
   if (isLoading) {
     return (
       <>
@@ -64,27 +60,12 @@ export default function PerfilPage() {
     );
   }
 
-  if (error) {
-    return (
-      <>
-        <NavegadorPag />
-        <div className="perfil-container">
-          <div className="error-container">
-            <h1>Error</h1>
-            <p>{error}</p>
-            <button onClick={() => fetchPedidos()} className="retry-button">
-              Intentar nuevamente
-            </button>
-          </div>
-        </div>
-      </>
-    );
-  }
-
+  // PANTALLA PRINCIPAL
   return (
     <div className="perfil-page">
       <NavegadorPag />
       <div className="perfil-container">
+        {/* SECCIÓN DE INFORMACIÓN DEL USUARIO */}
         <div className="perfil-header">
           <h1>Mi Perfil</h1>
         </div>
@@ -99,9 +80,11 @@ export default function PerfilPage() {
           </div>
         )}
         
+        {/* SECCIÓN DE PEDIDOS */}
         <div className="pedidos-section">
           <h2>Mis Pedidos</h2>
           
+          {/* MENSAJE SI NO HAY PEDIDOS */}
           {pedidos.length === 0 ? (
             <div className="no-pedidos">
               <p>No tienes pedidos realizados</p>
@@ -110,9 +93,11 @@ export default function PerfilPage() {
               </button>
             </div>
           ) : (
+            /* LISTA DE PEDIDOS */
             <div className="pedidos-list">
               {pedidos.map(pedido => (
                 <div key={pedido.id} className="pedido-card">
+                  {/* CABECERA DEL PEDIDO */}
                   <div className="pedido-header">
                     <h3>Pedido #{pedido.id}</h3>
                     <span className={`estado ${pedido.estado?.toLowerCase() || 'pendiente'}`}>
@@ -120,36 +105,13 @@ export default function PerfilPage() {
                     </span>
                   </div>
                   
+                  {/* INFORMACIÓN BÁSICA DEL PEDIDO */}
                   <div className="pedido-info">
                     <p><strong>Fecha:</strong> {formatDate(pedido.fecha || new Date())}</p>
                     <p><strong>Total:</strong> {(pedido.total || 0).toFixed(2)}€</p>
-                    <p><strong>Dirección de envío:</strong> {pedido.direccion_envio || 'No especificada'}</p>
-                    <p><strong>Método de pago:</strong> {pedido.metodo_pago || 'No especificado'}</p>
                   </div>
                   
-                  <div className="pedido-items">
-                    <h4>Coches en este pedido:</h4>
-                    <ul>
-                      {pedido.items && pedido.items.length > 0 ? pedido.items.map(item => (
-                        <li key={item.id} className="pedido-item">
-                          <div className="item-image">
-                            <img 
-                              src={item.coche?.imagen || '/FOTOS/default-car.jpg'} 
-                              alt={`${item.coche?.marca || ''} ${item.coche?.modelo || ''}`} 
-                              onError={(e) => e.target.src = '/FOTOS/default-car.jpg'}
-                            />
-                          </div>
-                          <div className="item-details">
-                            <p className="item-name">{item.coche?.marca || ''} {item.coche?.modelo || ''}</p>
-                            <p className="item-price">{(item.precio_unitario || 0).toFixed(2)}€ x {item.cantidad || 1}</p>
-                          </div>
-                        </li>
-                      )) : (
-                        <li className="no-items">No hay detalles disponibles</li>
-                      )}
-                    </ul>
-                  </div>
-                  
+                  {/* BOTÓN PARA VER DETALLES */}
                   <button 
                     className="view-details-btn"
                     onClick={() => router.push(`/Pages/Pedidos/${pedido.id}`)}

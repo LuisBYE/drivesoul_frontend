@@ -1,286 +1,280 @@
 'use client';
 
+/* CONTEXTO DEL CARRITO DE COMPRAS
+ * ESTE ARCHIVO CONTIENE TODA LA LÓGICA PARA GESTIONAR EL CARRITO DE COMPRAS
+ * SE ENCARGA DE ALMACENAR LOS PRODUCTOS, CALCULAR TOTALES Y PROPORCIONAR
+ * FUNCIONES PARA AÑADIR, ELIMINAR Y ACTUALIZAR PRODUCTOS
+ */
+
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
-// Configuración de Axios
-const api = axios.create({
-  baseURL: 'http://localhost:5138/api',
-  timeout: 5000
-});
-
-// Interceptor para añadir el token de autenticación
-api.interceptors.request.use(config => {
-  const token = localStorage.getItem('authToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-// Creamos el contexto del carrito
+// CREACIÓN DEL CONTEXTO
 export const CartContext = createContext();
 
-// Proveedor del contexto del carrito
+// PROVEEDOR DEL CONTEXTO
 export const CartProvider = ({ children }) => {
-  // Estado para almacenar los items del carrito
+  const router = useRouter();
   const [cartItems, setCartItems] = useState([]);
   const [cartCount, setCartCount] = useState(0);
   const [cartTotal, setCartTotal] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Comprobar si el usuario está autenticado
+  // VERIFICAR AUTENTICACIÓN DEL USUARIO
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    setIsLoggedIn(!!token);
+    const checkAuth = () => {
+      const user = localStorage.getItem('user');
+      setIsLoggedIn(!!user);
+    };
+    
+    checkAuth();
+    
+    window.addEventListener('storage', checkAuth);
+    window.addEventListener('login', checkAuth);
+    window.addEventListener('logout', checkAuth);
+    
+    return () => {
+      window.removeEventListener('storage', checkAuth);
+      window.removeEventListener('login', checkAuth);
+      window.removeEventListener('logout', checkAuth);
+    };
   }, []);
 
-  // Cargar el carrito al iniciar
+  // CARGAR CARRITO DESDE LOCALSTORAGE
   useEffect(() => {
-    if (isLoggedIn) {
-      // Si está autenticado, cargar desde el servidor
-      fetchCartFromServer();
-    } else {
-      // Si no está autenticado, cargar desde localStorage
-      const storedCart = localStorage.getItem('drivesoulCart');
-      if (storedCart) {
+    const loadCart = () => {
+      if (isLoggedIn) {
         try {
-          const parsedCart = JSON.parse(storedCart);
-          setCartItems(parsedCart || []);
+          const storedCart = localStorage.getItem('drivesoulCart');
+          if (storedCart) {
+            const parsedCart = JSON.parse(storedCart);
+            setCartItems(parsedCart);
+          } else {
+            setCartItems([]);
+          }
         } catch (error) {
           setCartItems([]);
         }
+      } else {
+        setCartItems([]);
       }
-    }
+    };
+    
+    loadCart();
+    
+    const handleStorageChange = () => loadCart();
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, [isLoggedIn]);
 
-  // Actualizar localStorage cuando cambie el carrito
+  // ACTUALIZAR CONTADOR Y TOTAL
   useEffect(() => {
-    if (!isLoggedIn && cartItems.length > 0) {
-      localStorage.setItem('drivesoulCart', JSON.stringify(cartItems));
-    }
-    
-    // Actualizar el contador y el total
+    // Calcular cantidad total de items
     const count = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
     setCartCount(count);
     
+    // Calcular precio total
     const total = cartItems.reduce((total, item) => {
       return total + (item.precio * (item.quantity || 1));
     }, 0);
     setCartTotal(total);
+    
+    // Guardar en localStorage si está autenticado
+    if (isLoggedIn && cartItems.length > 0) {
+      localStorage.setItem('drivesoulCart', JSON.stringify(cartItems));
+    }
   }, [cartItems, isLoggedIn]);
 
-  // Sincronizar carrito cuando el usuario inicie sesión
-  useEffect(() => {
-    if (isLoggedIn) {
-      syncCartWithServer();
-    }
-  }, [isLoggedIn]);
-
-  // Función para cargar el carrito desde el servidor
-  const fetchCartFromServer = async () => {
-    if (!isLoggedIn) return;
-    
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await api.get('/carrito');
-      
-      if (response.data && response.data.success) {
-        setCartItems(response.data.data || []);
-      } else if (Array.isArray(response.data)) {
-        setCartItems(response.data);
-      }
-    } catch (error) {
-      setError('No se pudo cargar el carrito');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Añadir un item al carrito
-  const addToCart = async (coche) => {
-    if (isLoggedIn) {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await api.post('/carrito', {
-          coche_id: coche.id,
-          cantidad: 1
-        });
-        
-        if (response.data.success) {
-          fetchCartFromServer();
-        }
-      } catch (error) {
-        setError('No se pudo añadir al carrito');
-      } finally {
-        setIsLoading(false);
-      }
-    } else {
-      setCartItems(prevItems => {
-        const existingItemIndex = prevItems.findIndex(item => item.id === coche.id);
-        
-        if (existingItemIndex !== -1) {
-          const updatedItems = [...prevItems];
-          updatedItems[existingItemIndex] = {
-            ...updatedItems[existingItemIndex],
-            quantity: updatedItems[existingItemIndex].quantity + 1
-          };
-          return updatedItems;
-        } else {
-          return [...prevItems, { ...coche, quantity: 1 }];
-        }
-      });
-    }
-  };
-
-  // Eliminar un item del carrito
-  const removeFromCart = async (cocheId) => {
-    if (isLoggedIn) {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await api.delete(`/carrito/item/${cocheId}`);
-        if (response.data.success) {
-          fetchCartFromServer();
-        }
-      } catch (error) {
-        setError('No se pudo eliminar del carrito');
-      } finally {
-        setIsLoading(false);
-      }
-    } else {
-      setCartItems(prevItems => prevItems.filter(item => item.id !== cocheId));
-    }
-  };
-
-  // Actualizar la cantidad de un item
-  const updateQuantity = async (cocheId, quantity) => {
-    if (quantity <= 0) {
-      removeFromCart(cocheId);
+  // AÑADIR PRODUCTO AL CARRITO
+  const addToCart = (coche) => {
+    // Verificar autenticación
+    if (!isLoggedIn) {
+      router.push('/Pages/cart');
       return;
     }
     
-    if (isLoggedIn) {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await api.put(`/carrito/item/${cocheId}`, { cantidad: quantity });
-        if (response.data.success) {
-          fetchCartFromServer();
-        }
-      } catch (error) {
-        setError('No se pudo actualizar la cantidad');
-      } finally {
-        setIsLoading(false);
-      }
-    } else {
-      setCartItems(prevItems => 
-        prevItems.map(item => 
-          item.id === cocheId ? { ...item, quantity } : item
-        )
-      );
-    }
-  };
-
-  // Limpiar el carrito
-  const clearCart = async () => {
-    if (isLoggedIn) {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await api.delete('/carrito');
-        if (response.data.success) {
-          setCartItems([]);
-        }
-      } catch (error) {
-        setError('No se pudo vaciar el carrito');
-      } finally {
-        setIsLoading(false);
-      }
-    } else {
-      setCartItems([]);
-    }
-  };
-
-  // Sincronizar carrito local con el servidor al iniciar sesión
-  const syncCartWithServer = async () => {
-    if (!isLoggedIn || cartItems.length === 0) return;
-    
-    setIsLoading(true);
-    setError(null);
-    try {
-      for (const item of cartItems) {
-        await api.post('/carrito', {
-          coche_id: item.id,
-          cantidad: item.quantity
-        });
-      }
-      localStorage.removeItem('drivesoulCart');
-      fetchCartFromServer();
-    } catch (error) {
-      setError('No se pudo sincronizar el carrito');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Crear un pedido con los items del carrito
-  const createOrder = async (orderData) => {
-    if (!isLoggedIn) {
-      setError('Debes iniciar sesión para realizar un pedido');
-      return { success: false, error: 'Autenticación requerida' };
+    // Asegurarse de que los campos obligatorios existan
+    if (!coche.modelo_id || !coche.precio) {
+      console.error('Error: El coche no tiene modelo_id o precio');
+      return;
     }
     
-    setIsLoading(true);
-    setError(null);
-    try {
-      const pedidoData = {
-        direccion_envio: orderData.direccion_envio || orderData.direccionEnvio,
-        metodo_pago: orderData.metodo_pago || orderData.metodoPago
+    // Obtener nombre real del coche según modelo_id
+    const getNombreCoche = (modelo_id) => {
+      const nombresCoches = {
+        1: 'Seat Ibiza',
+        2: 'Hyundai i30 N Fastback',
+        3: 'Seat Leon',
+        4: 'Seat Arona',
+        90: 'Seat Leon',
+        91: 'Seat Arona',
+        92: 'Hyundai Tucson',
+        93: 'Hyundai Kona',
+        94: 'Audi A3',
+        95: 'Audi A4',
+        96: 'Audi Q5',
+        97: 'Volkswagen Golf',
+        98: 'Volkswagen Polo',
+        99: 'Volkswagen T-Roc',
+        100: 'Peugeot 208',
+        101: 'Peugeot 3008',
+        102: 'Peugeot 508',
+        103: 'Mercedes Clase A',
+        104: 'Mercedes Clase C',
+        105: 'Mercedes GLC'
       };
-      
-      const response = await api.post('/pedidos', pedidoData);
-      
-      if (response.data && response.data.success) {
-        clearCart();
-        return { success: true, order: response.data.data };
-      }
-      return { success: false, error: 'Error al crear el pedido' };
-    } catch (error) {
-      setError('No se pudo crear el pedido');
-      return { success: false, error: 'Error desconocido' };
-    } finally {
-      setIsLoading(false);
+      return nombresCoches[modelo_id] || `Coche ${modelo_id}`;
+    };
+    
+    // Obtener marca del coche según modelo_id
+    const getMarcaCoche = (modelo_id) => {
+      const marcasCoches = {
+        1: 'Seat',
+        2: 'Hyundai',
+        3: 'Seat',
+        4: 'Seat',
+        90: 'Seat',
+        91: 'Seat',
+        92: 'Hyundai',
+        93: 'Hyundai',
+        94: 'Audi',
+        95: 'Audi',
+        96: 'Audi',
+        97: 'Volkswagen',
+        98: 'Volkswagen',
+        99: 'Volkswagen',
+        100: 'Peugeot',
+        101: 'Peugeot',
+        102: 'Peugeot',
+        103: 'Mercedes',
+        104: 'Mercedes',
+        105: 'Mercedes'
+      };
+      return marcasCoches[modelo_id] || 'Marca';
+    };
+    
+    // Obtener modelo del coche según modelo_id
+    const getModeloCoche = (modelo_id) => {
+      const modelosCoches = {
+        1: 'Ibiza',
+        2: 'i30 N Fastback',
+        3: 'Leon',
+        4: 'Arona',
+        90: 'Leon',
+        91: 'Arona',
+        92: 'Tucson',
+        93: 'Kona',
+        94: 'A3',
+        95: 'A4',
+        96: 'Q5',
+        97: 'Golf',
+        98: 'Polo',
+        99: 'T-Roc',
+        100: '208',
+        101: '3008',
+        102: '508',
+        103: 'Clase A',
+        104: 'Clase C',
+        105: 'GLC'
+      };
+      return modelosCoches[modelo_id] || 'Modelo';
+    };
+    
+    // Preparar objeto del coche con valores por defecto para evitar undefined
+    const cocheCompleto = {
+      id: coche.modelo_id,
+      modelo_id: coche.modelo_id,
+      marca: coche.marca || getMarcaCoche(coche.modelo_id),
+      modelo: coche.modelo || getModeloCoche(coche.modelo_id),
+      nombre: coche.nombre || getNombreCoche(coche.modelo_id),
+      precio: coche.precio || 0,
+      anio: coche.anio || coche.año || '2023',
+      color: coche.color || 'No especificado',
+      tipo_combustible: coche.tipo_combustible || coche.combustible || 'Gasolina',
+      imagen: coche.imagen || '/FOTOS/COCHES/default.jpg',
+      quantity: 1
+    };
+    
+    // Verificar si ya existe
+    const existingItemIndex = cartItems.findIndex(item => item.modelo_id === coche.modelo_id);
+    
+    let updatedItems = [];
+    
+    if (existingItemIndex !== -1) {
+      // Si existe, incrementar cantidad
+      updatedItems = [...cartItems];
+      updatedItems[existingItemIndex] = {
+        ...updatedItems[existingItemIndex],
+        quantity: (updatedItems[existingItemIndex].quantity || 1) + 1
+      };
+    } else {
+      // Si no existe, añadirlo
+      updatedItems = [...cartItems, { ...cocheCompleto, quantity: 1 }];
     }
+    
+    // Actualizar estado y localStorage
+    setCartItems(updatedItems);
+    localStorage.setItem('drivesoulCart', JSON.stringify(updatedItems));
+    window.dispatchEvent(new Event('storage'));
+    
+    // Redirigir al carrito
+    router.push('/Pages/cart');
   };
 
-  // Valor del contexto
-  const contextValue = {
-    cartItems,
-    cartCount,
-    cartTotal,
-    isLoading,
-    error,
-    isLoggedIn,
-    addToCart,
-    removeFromCart,
-    updateQuantity,
-    clearCart,
-    createOrder
+  // ELIMINAR PRODUCTO DEL CARRITO
+  const removeFromCart = (coche) => {
+    const updatedItems = cartItems.filter(item => item.modelo_id !== coche.modelo_id);
+    setCartItems(updatedItems);
+    localStorage.setItem('drivesoulCart', JSON.stringify(updatedItems));
+    window.dispatchEvent(new Event('storage'));
   };
 
+  // ACTUALIZAR CANTIDAD DE UN PRODUCTO
+  const updateQuantity = (coche, quantity) => {
+    if (quantity <= 0) {
+      removeFromCart(coche);
+      return;
+    }
+    
+    const updatedItems = cartItems.map(item => 
+      item.modelo_id === coche.modelo_id ? { ...item, quantity } : item
+    );
+    
+    setCartItems(updatedItems);
+    localStorage.setItem('drivesoulCart', JSON.stringify(updatedItems));
+    window.dispatchEvent(new Event('storage'));
+  };
+
+  // VACIAR CARRITO
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem('drivesoulCart');
+    window.dispatchEvent(new Event('storage'));
+  };
+
+  // VALORES PROPORCIONADOS POR EL CONTEXTO
   return (
-    <CartContext.Provider value={contextValue}>
+    <CartContext.Provider value={{
+      cartItems,
+      cartCount,
+      cartTotal,
+      isLoggedIn,
+      isLoading,
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart
+    }}>
       {children}
     </CartContext.Provider>
   );
 };
 
-// Hook personalizado para usar el contexto del carrito
+// HOOK PARA USAR EL CONTEXTO
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {

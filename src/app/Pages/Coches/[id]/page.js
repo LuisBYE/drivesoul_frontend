@@ -18,7 +18,7 @@ export default function DetallesCoche() {
   const [addedToCart, setAddedToCart] = useState(false);
   const { addToCart } = useCart();
 
-  // OBTIENE IMAAGENES SUGUN EL ID DEL COCHE
+  // OBTIENE IMAGENES SEGÚN EL ID DEL COCHE
   const getImagenesCoche = (modelo_id) => {
     const rutasBase = {
       1: 'SEATIBIZAROJO',
@@ -67,6 +67,12 @@ export default function DetallesCoche() {
     return [1, 2, 3, 4].map((num, index) => 
       `/FOTOS/COCHES/${rutasBase[modelo_id]}/${num}${extensiones[modelo_id][index]}`
     );
+  };
+
+  // OBTIENE LA PRIMERA IMAGEN DEL COCHE
+  const getImagenCoche = (modelo_id) => {
+    const imagenes = getImagenesCoche(modelo_id);
+    return imagenes[0] || '/FOTOS/COCHES/default.jpg';
   };
 
   // RECARGA LAS IMAGENES
@@ -135,17 +141,126 @@ export default function DetallesCoche() {
     router.push('/Pages/Catalogo');
   };
 
-  // FUNCIÓN PARA AÑADIR AL CARRITO
+  /* FUNCIÓN PARA AÑADIR AL CARRITO
+   * ESTA FUNCIÓN SE ENCARGA DE AÑADIR UN PRODUCTO AL CARRITO
+   * UTILIZANDO LA FUNCIÓN addToCart DEL CONTEXTO
+   */
   const handleAddToCart = () => {
-    if (coche) {
-      addToCart(coche);
-      setAddedToCart(true);
-      
-      // Mostrar mensaje de éxito durante 2 segundos
-      setTimeout(() => {
-        setAddedToCart(false);
-      }, 2000);
+    // VERIFICAR AUTENTICACIÓN
+    const user = localStorage.getItem('user');
+    if (!user) {
+      router.push('/Pages/cart');
+      return;
     }
+    
+    // VERIFICAR QUE TENEMOS DATOS DEL COCHE
+    if (!coche || !coche.modelo_id) {
+      console.error('Error: No hay datos del coche para añadir al carrito');
+      return;
+    }
+    
+    // OBTENER NOMBRE REAL DEL COCHE SEGÚN MODELO_ID
+    const getNombreCoche = (modelo_id) => {
+      const nombresCoches = {
+        1: 'Seat Ibiza',
+        2: 'Hyundai i30 N Fastback',
+        3: 'Seat Leon',
+        4: 'Seat Arona',
+        90: 'Seat Leon',
+        91: 'Seat Arona',
+        92: 'Hyundai Tucson',
+        93: 'Hyundai Kona',
+        94: 'Audi A3',
+        95: 'Audi A4',
+        96: 'Audi Q5',
+        97: 'Volkswagen Golf',
+        98: 'Volkswagen Polo',
+        99: 'Volkswagen T-Roc',
+        100: 'Peugeot 208',
+        101: 'Peugeot 3008',
+        102: 'Peugeot 508',
+        103: 'Mercedes Clase A',
+        104: 'Mercedes Clase C',
+        105: 'Mercedes GLC'
+      };
+      return nombresCoches[modelo_id] || `Coche ${modelo_id}`;
+    };
+    
+    // OBTENER MARCA DEL COCHE SEGÚN MODELO_ID
+    const getMarcaCoche = (modelo_id) => {
+      const marcasCoches = {
+        1: 'Seat',
+        2: 'Hyundai',
+        3: 'Seat',
+        4: 'Seat',
+        90: 'Seat',
+        91: 'Seat',
+        92: 'Hyundai',
+        93: 'Hyundai',
+        94: 'Audi',
+        95: 'Audi',
+        96: 'Audi',
+        97: 'Volkswagen',
+        98: 'Volkswagen',
+        99: 'Volkswagen',
+        100: 'Peugeot',
+        101: 'Peugeot',
+        102: 'Peugeot',
+        103: 'Mercedes',
+        104: 'Mercedes',
+        105: 'Mercedes'
+      };
+      return marcasCoches[modelo_id] || 'Marca';
+    };
+    
+    // OBTENER MODELO DEL COCHE SEGÚN MODELO_ID
+    const getModeloCoche = (modelo_id) => {
+      const modelosCoches = {
+        1: 'Ibiza',
+        2: 'i30 N Fastback',
+        3: 'Leon',
+        4: 'Arona',
+        90: 'Leon',
+        91: 'Arona',
+        92: 'Tucson',
+        93: 'Kona',
+        94: 'A3',
+        95: 'A4',
+        96: 'Q5',
+        97: 'Golf',
+        98: 'Polo',
+        99: 'T-Roc',
+        100: '208',
+        101: '3008',
+        102: '508',
+        103: 'Clase A',
+        104: 'Clase C',
+        105: 'GLC'
+      };
+      return modelosCoches[modelo_id] || 'Modelo';
+    };
+    
+    // PREPARAR DATOS DEL COCHE CON VALORES REALES
+    const cocheParaCarrito = {
+      id: coche.modelo_id,
+      modelo_id: coche.modelo_id,
+      marca: coche.marca || getMarcaCoche(coche.modelo_id),
+      modelo: coche.modelo || getModeloCoche(coche.modelo_id),
+      nombre: coche.nombre || getNombreCoche(coche.modelo_id),
+      precio: coche.precio || 0,
+      anio: coche.anio || coche.año || '2023',
+      color: coche.color || 'No especificado',
+      tipo_combustible: coche.tipo_combustible || coche.combustible || 'Gasolina',
+      imagen: getImagenCoche(coche.modelo_id)
+    };
+    
+    // MOSTRAR MENSAJE DE CONFIRMACIÓN
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
+    
+    // USAR LA FUNCIÓN DEL CONTEXTO PARA AÑADIR AL CARRITO
+    // ESTA FUNCIÓN YA SE ENCARGA DE TODO: ACTUALIZAR ESTADO, LOCALSTORAGE Y REDIRECCIONAR
+    addToCart(cocheParaCarrito);
   };
 
   // LAYAUT

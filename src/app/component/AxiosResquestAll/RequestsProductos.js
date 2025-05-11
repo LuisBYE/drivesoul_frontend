@@ -1,7 +1,6 @@
 import axiosInstance from "../../Utils/axiosInstance";
 
 // Función para obtener productos
-// Función para obtener productos
 const getProductos = async () => {
   try {
     const response = await axiosInstance.get("/Producto"); // Ruta para obtener productos

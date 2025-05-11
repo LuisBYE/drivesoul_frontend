@@ -35,13 +35,11 @@ export default function CardCoches({ producto }) {
     "Kia",
     "Peugeot",
   ];
+
   const modelo = [
     { id: 1, name: "Ibiza" },
     { id: 2, name: "Hyundai i30 N" },
   ];
-
- 
-
 
   const detailFormAnio = formValues.anio;
   const detailFormMarca = formValues.marca; //! falta añadir al DTO de marca
@@ -60,17 +58,16 @@ export default function CardCoches({ producto }) {
     console.log("respuesta comparacion", respuesta);
     return respuesta;
   };
-  
+
   useEffect(() => {
     if (
       detailFormAnio ||
       // detailFormMarca ||
       detailFormPrecioMin ||
       detailFormPrecioMax ||
-      detailFormModelo||
+      detailFormModelo ||
       detailFormKilometrajeMin ||
-      detailFormKilometrajeMax||
-
+      detailFormKilometrajeMax ||
       detailFormColor ||
       detailFormCombustible ||
       detailFormTransmision
@@ -79,29 +76,36 @@ export default function CardCoches({ producto }) {
       const filtroCoche = producto.filter(
         (item) =>
           (!detailFormAnio || Number(item.anio) === Number(detailFormAnio)) &&
-          (!detailFormPrecioMin||Number(item.precio) >= Number(detailFormPrecioMin)) &&
-          (!detailFormPrecioMax ||Number(item.precio) <= Number(detailFormPrecioMax)) &&
-          (!detailFormKilometrajeMin || item.kilometraje >= detailFormKilometrajeMin) &&
-          (!detailFormKilometrajeMax || item.kilometraje <= detailFormKilometrajeMax) &&
-          (!detailFormColor || item.color.toLowerCase() === detailFormColor.toLowerCase()) &&
-          (!detailFormCombustible ||item.tipo_combustible.toLowerCase() === detailFormCombustible.toLowerCase()) &&
-          (!detailFormTransmision ||item.transmision.toLowerCase() === detailFormTransmision.toLowerCase())&&
+          (!detailFormPrecioMin ||
+            Number(item.precio) >= Number(detailFormPrecioMin)) &&
+          (!detailFormPrecioMax ||
+            Number(item.precio) <= Number(detailFormPrecioMax)) &&
+          (!detailFormKilometrajeMin ||
+            item.kilometraje >= detailFormKilometrajeMin) &&
+          (!detailFormKilometrajeMax ||
+            item.kilometraje <= detailFormKilometrajeMax) &&
+          (!detailFormColor ||
+            item.color.toLowerCase() === detailFormColor.toLowerCase()) &&
+          (!detailFormCombustible ||
+            item.tipo_combustible.toLowerCase() ===
+              detailFormCombustible.toLowerCase()) &&
+          (!detailFormTransmision ||
+            item.transmision.toLowerCase() ===
+              detailFormTransmision.toLowerCase()) &&
           // (!detailFormModelo || Number(item.modelo_id) === Number(detailFormModelo)) &&
-           comparacion(item.modelo_id) 
+          comparacion(item.modelo_id)
       );
-      alert("llega aqui")
+      alert("llega aqui");
       setCoche(filtroCoche);
-
     } else {
       setCoche(producto); // Si no hay filtro, muestra todos los coches
     }
-     
-  }, [formValues,producto]);
+  }, [formValues, producto]);
 
-  //! FALTA AÑADIR MARCA DE COCHE EN EL DTO DE MODELO  O OTRO  TIENE VARIAS MARCAS 
+  //! FALTA AÑADIR MARCA DE COCHE EN EL DTO DE MODELO  O OTRO  TIENE VARIAS MARCAS
   return (
     <>
-    <pre> modelo formulario: {detailFormModelo}</pre>
+      <pre> modelo formulario: {detailFormModelo}</pre>
       <pre>{JSON.stringify(coche, null, 2)}</pre>
       <div className="ContainerCard">
         {coche.length > 0 ? (

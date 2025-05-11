@@ -337,34 +337,55 @@ export default function DetallesCoche() {
                     Catálogo
                   </button>
                   <div className="precio-info">
-                    <div className="precio-actual" style={{ color: obtenerGradiente(coche.color).acento }}>
-                      {coche.precio.toLocaleString('es-ES')} €
-                    </div>
-                    <div className="precio-mensual">
-                      Desde {Math.round(coche.precio / 72).toLocaleString('es-ES')} €/mes*
-                    </div>
+                    {coche.en_oferta ? (
+                      <>
+                        <div className="precio-oferta">
+                          <span className="precio-original" style={{ textDecoration: 'line-through', color: '#999', fontSize: '0.9em' }}>
+                            {coche.precioOriginal ? coche.precioOriginal.toLocaleString('es-ES') : (coche.precio ? coche.precio.toLocaleString('es-ES') : '0')} €
+                          </span>
+                          <div className="precio-actual" style={{ color: '#ff3a3a', fontWeight: 'bold' }}>
+                            {coche.precio ? coche.precio.toLocaleString('es-ES') : '0'} € 
+
+                          </div>
+                        </div>
+                        <div className="precio-mensual">
+                          Desde {Math.round((coche.precio || 0) / 72).toLocaleString('es-ES')} €/mes*
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="precio-actual" style={{ color: obtenerGradiente(coche.color || 'blanco').acento }}>
+                          {coche.precio ? coche.precio.toLocaleString('es-ES') : '0'} €
+                        </div>
+                        <div className="precio-mensual">
+                          Desde {Math.round((coche.precio || 0) / 72).toLocaleString('es-ES')} €/mes*
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
 
                 <div className="specs-grid">
                   {[
-                    { icon: 'calendar-alt', label: 'Año', value: coche.anio },
-                    { icon: 'road', label: 'Kilómetros', value: `${coche.kilometraje.toLocaleString('es-ES')} km` },
-                    { icon: 'gas-pump', label: 'Combustible', value: coche.tipo_combustible },
-                    { icon: 'cog', label: 'Transmisión', value: coche.transmision },
-                    { icon: 'palette', label: 'Color', value: coche.color },
-                    { icon: 'car', label: 'Estado', value: coche.kilometraje === 0 ? 'Nuevo' : 'Usado' }
+                    { icon: 'calendar-alt', label: 'Año', value: coche.anio || '2023' },
+                    { icon: 'road', label: 'Kilómetros', value: `${coche.kilometraje ? coche.kilometraje.toLocaleString('es-ES') : '0'} km` },
+                    { icon: 'gas-pump', label: 'Combustible', value: coche.tipo_combustible || 'Gasolina' },
+                    { icon: 'cog', label: 'Transmisión', value: coche.transmision || 'Manual' },
+                    { icon: 'palette', label: 'Color', value: coche.color || 'No especificado' },
+                    { icon: 'bolt', label: 'Potencia', value: coche.potencia || 'N/A' },
+                    { icon: 'gauge-high', label: 'Velocidad Máx.', value: coche.velocidad_maxima || 'N/A' },
+                    { icon: 'gas-pump', label: 'Consumo', value: coche.consumo || 'N/A' }
                   ].map((spec, index) => (
                     <div key={index} className="spec-item">
                       <div className="spec-icon" style={{ background: obtenerGradiente(coche.color).acento }}>
                         <i className={`fas fa-${spec.icon}`}></i>
                       </div>
                       <div className="spec-content">
-                        <span className="spec-label">{spec.label}</span>
-                        <span className="spec-value">{spec.value}</span>
-                      </div>
+                      <span className="spec-label">{spec.label}</span>
+                      <span className="spec-value">{spec.value}</span>
                     </div>
-                  ))}
+                  </div>
+                ))}
                 </div>
 
                 <button 

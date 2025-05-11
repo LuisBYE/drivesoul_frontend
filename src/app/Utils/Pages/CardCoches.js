@@ -52,10 +52,30 @@ export default function CardCoches({ producto }) {
   const detailFormCombustible = formValues.combustible;
   const detailFormTransmision = formValues.transmision;
 
+  // IDs de los coches que están en oferta y deben ocultarse en el catálogo
+  // Estos son los IDs de producto (no de modelo)
+  const cochesEnOferta = [2, 10, 17]; // Hyundai i30 N Fastback, Volkswagen Golf, Mercedes Clase C
+  
+  // IDs de modelo de los coches en oferta
+  const modelosEnOferta = [2, 97, 104]; // Modelo IDs correspondientes a los coches en oferta
+
   useEffect(() => {
     if (producto && producto.length > 0) {
+      console.log("Productos antes de filtrar:", producto);
+      
       const filtroCoche = producto.filter((item) => {
+        // Verificamos si el ID del producto o el ID del modelo está en la lista de coches en oferta
+        const estaEnOferta = 
+          cochesEnOferta.includes(item.id) || 
+          cochesEnOferta.includes(Number(item.id)) || 
+          modelosEnOferta.includes(item.modelo_id) || 
+          modelosEnOferta.includes(Number(item.modelo_id));
+        
+        console.log(`Coche ${item.id} (modelo ${item.modelo_id}): ${estaEnOferta ? 'Está en oferta' : 'No está en oferta'}`);
+        
         return (
+          // Si está en oferta, no lo mostramos en el catálogo
+          !estaEnOferta &&
           (!detailFormAnio || Number(item.anio) === Number(detailFormAnio)) &&
           (!detailFormPrecioMin ||
             Number(item.precio) >= Number(detailFormPrecioMin)) &&
@@ -76,6 +96,7 @@ export default function CardCoches({ producto }) {
         );
       });
 
+      console.log("Productos después de filtrar:", filtroCoche);
       setCoche(filtroCoche);
     } else {
       setCoche([]);

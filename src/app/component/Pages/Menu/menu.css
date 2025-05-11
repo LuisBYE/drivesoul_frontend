@@ -23,7 +23,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 90px;
+    z-index: 100;
+    
 }
 
 /* LOGO */

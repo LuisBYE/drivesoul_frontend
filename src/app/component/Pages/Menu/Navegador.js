@@ -60,27 +60,13 @@ function NavegadorMenu() {
             <div onClick={() => handleNavigation('/')} className="logo-container">
                 <img src="/FOTOS/logo.png" alt="DriveSoul Logo" className="logo" />
             </div>
-
-            <button className="mobile-menu-button" onClick={toggleMobileMenu} aria-label="Menú">
-                <span className={`hamburger ${isMobileMenuOpen ? 'active' : ''}`}></span>
-            </button>
-
-            <ul className={`menu ${isMobileMenuOpen ? 'active' : ''}`}>
-                <li onClick={() => handleNavigation('/Pages/Novedades')}>
-                    Novedades
-                </li>
-                <li onClick={() => handleNavigation('/Pages/Catalogo')}>
-                    Catálogo Coches
-                </li>
-                <li onClick={() => handleNavigation('/Pages/Noticias')}>
-                    Noticias del Motor
-                </li>
-                <li onClick={() => handleNavigation('/Pages/Coches')}>
-                    Coche a medida
-                </li>
-                <li onClick={() => handleNavigation('/Pages/Contacto')}>
-                    Contacto
-                </li>
+            <ul className="menu">
+                <li onClick={() => handleNavigation('/Pages/Novedades')}>Novedades</li>
+                <li onClick={() => handleNavigation('/Pages/Catalogo')}>Catálogo Coches</li>
+                <li onClick={() => handleNavigation('/Pages/Noticias')}>Noticias del Motor</li>
+                <li onClick={() => handleNavigation('/Pages/Coches')}>Coche a medida</li>
+                <li onClick={() => handleNavigation('/Pages/Contacto')}>Contacto</li>
+                <li onClick={() => handleNavigation('/Pages/Admin')}>Admin</li>
                 
                 {isLoggedIn ? (
                     <li className="user-menu">

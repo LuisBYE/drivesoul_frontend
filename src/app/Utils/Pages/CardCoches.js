@@ -8,6 +8,40 @@ export default function CardCoches({ producto }) {
   const { formValues } = useContext(FormContext);
   const [coche, setCoche] = useState([]);
 
+  const [cocheDesplegadoId, setCocheDesplegadoId] = useState(null);
+
+  // Estado para almacenar el coche desplegado por ID
+  const transitionStyle = cocheDesplegado
+    ? "max-height 0.6s ease-out"
+    : "max-height 0.3s ease-in";
+  console.log("consola producto", producto);
+  console.log("consola coche", coche);
+
+  const mostrarCocheId = (id) => {
+    setcocheId(cocheId === id ? null : id);
+    setCocheDesplegado(cocheId !== null ? true : false);
+    // alert("actualizarStateDesplegable:  " + cocheDesplegado);
+  };
+
+  const marca = [
+    "Seat",
+    "Hyundai",
+    "Audi",
+    "BMW",
+    "Mercedes-Benz",
+    "Toyota",
+    "Ford",
+    "Honda",
+    "Renault",
+    "Kia",
+    "Peugeot",
+  ];
+
+  const modelo = [
+    { id: 1, name: "Ibiza" },
+    { id: 2, name: "Hyundai i30 N" },
+  ];
+
   const detailFormAnio = formValues.anio;
   const detailFormPrecioMin = formValues.precioMin;
   const detailFormPrecioMax = formValues.precioMax;
@@ -19,6 +53,19 @@ export default function CardCoches({ producto }) {
   const detailFormTransmision = formValues.transmision;
 
   useEffect(() => {
+    if (
+      detailFormAnio ||
+      // detailFormMarca ||
+      detailFormPrecioMin ||
+      detailFormPrecioMax ||
+      detailFormModelo ||
+      detailFormKilometrajeMin ||
+      detailFormKilometrajeMax ||
+      detailFormColor ||
+      detailFormCombustible ||
+      detailFormTransmision
+    ) {
+      alert("Hay un filtro activo");
     if (producto && producto.length > 0) {
       const filtroCoche = producto.filter(
         (item) =>

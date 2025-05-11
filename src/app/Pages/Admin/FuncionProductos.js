@@ -8,14 +8,21 @@ export default function FormProductos() {
   const [productos, setProductos] = useState();
 
   const addProduct = optionProducto === "Agregar Producto";
-  const deleteProduct = optionProducto === "Eliminar Producto";
-  const editProduct = optionProducto === "Editar Producto";
   const verProduct = optionProducto === "Ver Producto";
 
-  const agregarProductos = async () => {};
+  const agregarProductos = async (formData) => {
+    console.log("Datos del formulario antes:", formData);
+    const response = await ReqProductos.postProductos(formData);
+
+    if (response.success) {
+      //! AQUI AÑADIR UN POPUP CON EL MENSAJE
+      alert("Producto agregado correctamente");
+    } else {
+      alert(`Error: ${response.error}`);
+    }
+  };
 
   const listarProductos = async () => {
-    alert("Función de listar productos async");
     const productos = await ReqProductos.getProductos();
     setProductos(productos);
   };
@@ -44,10 +51,11 @@ export default function FormProductos() {
         </div>
 
         <FuncionesAdminForm
-          imputValue={["nombre", "descripcion", "precio", "categoria"]}
-          onClick={() => agregarProductos()}
+          imputValue={["id", "Nombre", "Descripcion", "Precio", "Categoria"]}
+          onSubmit={(data) => agregarProductos(data)}
           display={addProduct ? "" : "none"}
-          titlePage="Agregar Producto"
+          titlePage="Agrega tu Producto"
+          nameButton="Crear Producto"
         />
         {verProduct && <CardProducto productos={productos} />}
       </div>

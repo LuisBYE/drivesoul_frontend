@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import NavegadorMenu from '../../../component/Pages/Menu/Navegador';
 import { obtenerGradiente } from '../../../Utils/Coches/coloresCoches';
+import { useCart } from '../../../context/CartContext';
 import './detalles.css';
 
 export default function DetallesCoche() {
@@ -13,8 +14,11 @@ export default function DetallesCoche() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [images, setImages] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const { addToCart } = useCart();
 
-  // OBTIENE IMAAGENES SUGUN EL ID DEL COCHE
+  // OBTIENE IMAGENES SEGÚN EL ID DEL COCHE
   const getImagenesCoche = (modelo_id) => {
     const rutasBase = {
       1: 'SEATIBIZAROJO',
@@ -65,18 +69,25 @@ export default function DetallesCoche() {
     );
   };
 
+  // OBTIENE LA PRIMERA IMAGEN DEL COCHE
+  const getImagenCoche = (modelo_id) => {
+    const imagenes = getImagenesCoche(modelo_id);
+    return imagenes[0] || '/FOTOS/COCHES/default.jpg';
+  };
+
   // RECARGA LAS IMAGENES
-  const precargarImagenes = (imagenes) => {
+  const precargarImagenes = async (imagenes) => {
     const promesas = imagenes.map(src => {
       return new Promise((resolve) => {
         const img = new Image();
-        img.onload = () => resolve(src);
-        img.onerror = () => resolve(null);
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
         img.src = src;
       });
     });
     
-    return Promise.all(promesas);
+    await Promise.all(promesas);
+    setImagesLoaded(true);
   };
 
   // LO INICIA Y LIMPIA LOS MARCADORES DE NAVEGACION
@@ -92,6 +103,8 @@ export default function DetallesCoche() {
   useEffect(() => {
     const cargarDatos = async () => {
       try {
+        setLoaded(false);
+        setImagesLoaded(false);
         const cocheData = localStorage.getItem('cocheSeleccionado');
         
         if (cocheData) {
@@ -99,9 +112,8 @@ export default function DetallesCoche() {
           setCoche(parsedCoche);
           
           const imagenesDelCoche = getImagenesCoche(parsedCoche.modelo_id);
-          // CONTROL DE ERRORES PARA LAS IMAGENES
-          await precargarImagenes(imagenesDelCoche);
           setImages(imagenesDelCoche);
+          await precargarImagenes(imagenesDelCoche);
           setLoaded(true);
         }
       } catch (error) {
@@ -110,7 +122,6 @@ export default function DetallesCoche() {
       }
     };
     
-    setLoaded(false);
     cargarDatos();
   }, [params.id]);
   
@@ -128,6 +139,128 @@ export default function DetallesCoche() {
   // FUNCION QUE VUELVE AL CATALOGO
   const volverACatalogo = () => {
     router.push('/Pages/Catalogo');
+  };
+
+  /* FUNCIÓN PARA AÑADIR AL CARRITO
+   * ESTA FUNCIÓN SE ENCARGA DE AÑADIR UN PRODUCTO AL CARRITO
+   * UTILIZANDO LA FUNCIÓN addToCart DEL CONTEXTO
+   */
+  const handleAddToCart = () => {
+    // VERIFICAR AUTENTICACIÓN
+    const user = localStorage.getItem('user');
+    if (!user) {
+      router.push('/Pages/cart');
+      return;
+    }
+    
+    // VERIFICAR QUE TENEMOS DATOS DEL COCHE
+    if (!coche || !coche.modelo_id) {
+      console.error('Error: No hay datos del coche para añadir al carrito');
+      return;
+    }
+    
+    // OBTENER NOMBRE REAL DEL COCHE SEGÚN MODELO_ID
+    const getNombreCoche = (modelo_id) => {
+      const nombresCoches = {
+        1: 'Seat Ibiza',
+        2: 'Hyundai i30 N Fastback',
+        3: 'Seat Leon',
+        4: 'Seat Arona',
+        90: 'Seat Leon',
+        91: 'Seat Arona',
+        92: 'Hyundai Tucson',
+        93: 'Hyundai Kona',
+        94: 'Audi A3',
+        95: 'Audi A4',
+        96: 'Audi Q5',
+        97: 'Volkswagen Golf',
+        98: 'Volkswagen Polo',
+        99: 'Volkswagen T-Roc',
+        100: 'Peugeot 208',
+        101: 'Peugeot 3008',
+        102: 'Peugeot 508',
+        103: 'Mercedes Clase A',
+        104: 'Mercedes Clase C',
+        105: 'Mercedes GLC'
+      };
+      return nombresCoches[modelo_id] || `Coche ${modelo_id}`;
+    };
+    
+    // OBTENER MARCA DEL COCHE SEGÚN MODELO_ID
+    const getMarcaCoche = (modelo_id) => {
+      const marcasCoches = {
+        1: 'Seat',
+        2: 'Hyundai',
+        3: 'Seat',
+        4: 'Seat',
+        90: 'Seat',
+        91: 'Seat',
+        92: 'Hyundai',
+        93: 'Hyundai',
+        94: 'Audi',
+        95: 'Audi',
+        96: 'Audi',
+        97: 'Volkswagen',
+        98: 'Volkswagen',
+        99: 'Volkswagen',
+        100: 'Peugeot',
+        101: 'Peugeot',
+        102: 'Peugeot',
+        103: 'Mercedes',
+        104: 'Mercedes',
+        105: 'Mercedes'
+      };
+      return marcasCoches[modelo_id] || 'Marca';
+    };
+    
+    // OBTENER MODELO DEL COCHE SEGÚN MODELO_ID
+    const getModeloCoche = (modelo_id) => {
+      const modelosCoches = {
+        1: 'Ibiza',
+        2: 'i30 N Fastback',
+        3: 'Leon',
+        4: 'Arona',
+        90: 'Leon',
+        91: 'Arona',
+        92: 'Tucson',
+        93: 'Kona',
+        94: 'A3',
+        95: 'A4',
+        96: 'Q5',
+        97: 'Golf',
+        98: 'Polo',
+        99: 'T-Roc',
+        100: '208',
+        101: '3008',
+        102: '508',
+        103: 'Clase A',
+        104: 'Clase C',
+        105: 'GLC'
+      };
+      return modelosCoches[modelo_id] || 'Modelo';
+    };
+    
+    // PREPARAR DATOS DEL COCHE CON VALORES REALES
+    const cocheParaCarrito = {
+      id: coche.modelo_id,
+      modelo_id: coche.modelo_id,
+      marca: coche.marca || getMarcaCoche(coche.modelo_id),
+      modelo: coche.modelo || getModeloCoche(coche.modelo_id),
+      nombre: coche.nombre || getNombreCoche(coche.modelo_id),
+      precio: coche.precio || 0,
+      anio: coche.anio || coche.año || '2023',
+      color: coche.color || 'No especificado',
+      tipo_combustible: coche.tipo_combustible || coche.combustible || 'Gasolina',
+      imagen: getImagenCoche(coche.modelo_id)
+    };
+    
+    // MOSTRAR MENSAJE DE CONFIRMACIÓN
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
+    
+    // USAR LA FUNCIÓN DEL CONTEXTO PARA AÑADIR AL CARRITO
+    // ESTA FUNCIÓN YA SE ENCARGA DE TODO: ACTUALIZAR ESTADO, LOCALSTORAGE Y REDIRECCIONAR
+    addToCart(cocheParaCarrito);
   };
 
   // LAYAUT
@@ -156,11 +289,14 @@ export default function DetallesCoche() {
             <>
               <div className="imagen-container">
                 <div className="imagen-wrapper">
-                  <img
-                    src={images[currentImageIndex]}
-                    alt={`${coche.nombre} - Imagen ${currentImageIndex + 1}`}
-                    className="imagen-principal"
-                  />
+                  {imagesLoaded && (
+                    <img
+                      src={images[currentImageIndex]}
+                      alt={`${coche.nombre} - Imagen ${currentImageIndex + 1}`}
+                      className="imagen-principal"
+                      loading="eager"
+                    />
+                  )}
                 </div>
                 
                 <div className="carousel-controls">
@@ -179,7 +315,7 @@ export default function DetallesCoche() {
                       className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
                       onClick={() => setCurrentImageIndex(index)}
                     >
-                      <img src={img} alt={`Miniatura ${index + 1}`} />
+                      <img src={img} alt={`Miniatura ${index + 1}`} loading="eager" />
                     </div>
                   ))}
                 </div>
@@ -231,10 +367,15 @@ export default function DetallesCoche() {
                   ))}
                 </div>
 
-                <button className="btn-interesa" style={{
-                  background: obtenerGradiente(coche.color).acento
-                }}>
-                  Me interesa
+                <button 
+                  className="btn-interesa" 
+                  style={{
+                    background: obtenerGradiente(coche.color).acento
+                  }}
+                  onClick={handleAddToCart}
+                  disabled={addedToCart}
+                >
+                  {addedToCart ? '¡Añadido al carrito!' : 'Añadir al carrito'}
                 </button>
               </div>
             </>

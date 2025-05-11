@@ -1,0 +1,479 @@
+/* Estilos generales */
+/* Contenedor para la página de perfil */
+.perfil-page {
+  padding-top: 90px; /* Añadimos padding igual a la altura del menú fijo */
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.perfil-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  margin-top: 1rem;
+}
+
+/* Encabezado de perfil */
+.perfil-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+
+.perfil-header h1 {
+  color: #333;
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  position: relative;
+  display: inline-block;
+}
+
+.perfil-header h1::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #e30613, #ff3b3b);
+  border-radius: 2px;
+}
+
+/* Información del usuario */
+.user-info {
+  background-color: #f9f9f9;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.user-info:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.user-details {
+  flex: 1;
+}
+
+.user-details h2 {
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.user-details p {
+  font-size: 1.1rem;
+  margin: 0.8rem 0;
+  color: #555;
+  display: flex;
+  align-items: center;
+}
+
+.user-details p strong {
+  margin-right: 0.5rem;
+  color: #333;
+}
+
+/* Sección de pedidos */
+.pedidos-section {
+  margin-top: 2.5rem;
+}
+
+/* Estilo para el botón de explorar catálogo */
+.shop-now-button {
+  padding: 0.8rem 2rem;
+  background-color: #e30613; /* Cambiado a rojo */
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(227, 6, 19, 0.3); /* Ajustado para el color rojo */
+  margin-top: 1rem;
+  display: inline-block;
+}
+
+.shop-now-button:hover {
+  background-color: #c10000; /* Rojo más oscuro para hover */
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(227, 6, 19, 0.4); /* Ajustado para el color rojo */
+}
+
+.pedidos-section h2 {
+  font-size: 2.2rem;
+  color: #333;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 0.8rem;
+}
+
+.pedidos-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background-color: #ff3300;
+  border-radius: 1.5px;
+}
+
+/* Mensaje de no pedidos */
+.no-pedidos {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  padding: 3rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-pedidos p {
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+}
+
+.shop-now-button {
+  padding: 0.8rem 2rem;
+  background-color: #ff0000;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(132, 143, 155, 0.3);
+}
+
+.shop-now-button:hover {
+  background-color: #b33900;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+}
+
+/* Lista de pedidos */
+.pedidos-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.pedido-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  transition: all 0.3s ease;
+  border: 1px solid #eee;
+}
+
+.pedido-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: #ddd;
+}
+
+.pedido-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.pedido-header h3 {
+  font-size: 1.6rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.estado {
+  padding: 0.5rem 1rem;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.estado.pendiente {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+}
+
+.estado.completado, .estado.entregado {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.estado.cancelado {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.estado.procesando {
+  background-color: #e0f7fa;
+  color: #01579b;
+  border: 1px solid #b2ebf2;
+}
+
+.pedido-info {
+  margin-bottom: 2rem;
+  background-color: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.pedido-info p {
+  margin: 0.8rem 0;
+  font-size: 1.1rem;
+  color: #555;
+  display: flex;
+  justify-content: space-between;
+}
+
+.pedido-info p strong {
+  color: #333;
+}
+
+.pedido-items h4 {
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.pedido-items ul {
+  list-style: none;
+  padding: 0;
+}
+
+.pedido-item {
+  display: flex;
+  align-items: center;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.pedido-item:hover {
+  transform: translateX(5px);
+  background-color: #f0f0f0;
+}
+
+.item-image {
+  width: 100px;
+  height: 70px;
+  margin-right: 1.5rem;
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.item-image:hover img {
+  transform: scale(1.1);
+}
+
+.item-details {
+  flex: 1;
+}
+
+.item-name {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.item-price {
+  color: #666;
+  font-size: 1rem;
+}
+
+.no-items {
+  text-align: center;
+  padding: 1.5rem;
+  color: #888;
+  font-style: italic;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+}
+
+.view-details-btn {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  margin-top: 2rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  text-align: center;
+}
+
+.view-details-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+}
+
+/* Estilos para el loader */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+}
+
+.loader {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #007bff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 2rem auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilos para el mensaje de error */
+.error-container {
+  text-align: center;
+  padding: 3rem;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.error-container h1 {
+  color: #dc3545;
+  margin-bottom: 1rem;
+}
+
+.error-container p {
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+}
+
+.retry-button {
+  padding: 0.8rem 2rem;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.retry-button:hover {
+  background-color: #c82333;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(220, 53, 69, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .perfil-container {
+    margin: 1.5rem;
+    padding: 1.5rem;
+  }
+  
+  .user-info {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .user-avatar {
+    margin: 0 auto 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .perfil-container {
+    padding: 1rem;
+    margin: 1rem;
+  }
+  
+  .perfil-header h1 {
+    font-size: 2.2rem;
+  }
+  
+  .user-details h2 {
+    font-size: 1.8rem;
+  }
+  
+  .pedido-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .estado {
+    margin-top: 0.8rem;
+  }
+  
+  .pedido-info p {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .pedido-info p strong {
+    margin-bottom: 0.3rem;
+  }
+  
+  .pedido-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .item-image {
+    margin-bottom: 1rem;
+    width: 100%;
+    height: 150px;
+  }
+}

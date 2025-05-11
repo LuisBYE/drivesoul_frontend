@@ -1,7 +1,6 @@
 import axiosInstance from "../../Utils/axiosInstance";
 
 // Función para obtener productos
-// Función para obtener productos
 const getProductos = async () => {
   alert("Función de obtener productos async");
   try {

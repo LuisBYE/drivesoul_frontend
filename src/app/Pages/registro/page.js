@@ -61,6 +61,12 @@ export default function Registro() {
         console.log('Datos del usuario:', result);
         // GUARDAR USUARIO EN LOCALSTORAGE (SERIAN COMO LAS COOKIES  )
         localStorage.setItem('user', JSON.stringify(result));
+        
+        // Disparar evento personalizado de login
+        const loginEvent = new Event('login');
+        window.dispatchEvent(loginEvent);
+        console.log('Evento de login disparado');
+        
         setMessage('Usuario logueado correctamente');
         
         // REDIRECCIONAR A INICIO
@@ -76,6 +82,12 @@ export default function Registro() {
         console.log('Usuario registrado:', result);
         // Guardamos el usuario en localStorage inmediatamente después del registro
         localStorage.setItem('user', JSON.stringify(result));
+        
+        // Disparar evento personalizado de login
+        const loginEvent = new Event('login');
+        window.dispatchEvent(loginEvent);
+        console.log('Evento de login disparado');
+        
         setMessage('Usuario creado correctamente');
         setTimeout(() => router.push('/'), 1000);
       } else {

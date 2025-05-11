@@ -10,7 +10,7 @@
 
 /* PAG DETALLES*/
 .detalles-page {
-  padding-top: 90px; 
+  padding-top: 90px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -23,7 +23,6 @@
   flex: 1;
   min-height: calc(100vh - 90px);
 }
-
 
 .placeholder-estado {
   grid-column: 1 / -1;
@@ -43,10 +42,13 @@
 }
 
 .btn-catalogo {
+  position: absolute;
+  right: 0;
+  top: 20px;
   background-color: #ff0000;
   color: white;
   border: none;
-  padding: 12px 24px;
+  padding: 8px 16px;
   border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
@@ -55,37 +57,37 @@
 
 .btn-catalogo:hover {
   background-color: #cc0000;
-  transform: translateY(-2px);
 }
 
 /* Contenedor de imagen */
 .imagen-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
   background-color: #1a1a1a;
   overflow: hidden;
-  min-height: calc(100vh - 90px);
+  min-height: calc(100vh - 90px) !important;
+  grid-column: 1 / 2 !important;
 }
 
 .imagen-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: inherit;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: inherit !important;
 }
 
 .imagen-principal {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  min-height: inherit;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  min-height: inherit !important;
 }
 
 /* Controles de carrusel */
@@ -153,7 +155,6 @@
   object-fit: cover;
 }
 
-
 .eco-badge {
   position: absolute;
   top: 20px;
@@ -189,7 +190,7 @@
   background: linear-gradient(45deg, #ffffff 30%, #90CAF9 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  padding-right: 120px; 
+  padding-right: 120px;
 }
 
 .precio-info {
@@ -206,26 +207,6 @@
   font-size: 1.1rem;
   color: #90CAF9;
 }
-
-/* Botón de catálogo */
-.btn-catalogo {
-  position: absolute;
-  right: 0;
-  top: 20px;
-  background-color: #ff0000;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-catalogo:hover {
-  background-color: #cc0000;
-}
-
 
 .specs-grid {
   display: grid;
@@ -268,7 +249,6 @@
   font-weight: 600;
 }
 
-
 .btn-interesa {
   color: white;
   border: none;
@@ -287,13 +267,13 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .hero-section {
+  .detalles-container {
     grid-template-columns: 1fr;
-    min-height: auto;
   }
-  
+
   .imagen-container {
     height: 50vh;
+    min-height: 50vh;
   }
 
   .info-container {
@@ -303,9 +283,9 @@
   .titulo-coche {
     font-size: 2.5rem;
     padding-right: 0;
-    margin-top: 60px; 
+    margin-top: 60px;
   }
-  
+
   .btn-catalogo {
     right: auto;
     left: 0;

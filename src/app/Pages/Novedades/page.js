@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import NavegadorMenu from '../../component/Pages/Menu/Navegador';
+import Footer from "../../component/footer";
 import { useCart } from '../../context/CartContext';
 import { obtenerGradiente } from '../../Utils/Coches/coloresCoches';
 import './ofertas.css';
@@ -153,27 +154,28 @@ const Novedades = () => {
     };
 
     return (
-        <div className="novedades-container">
-            <NavegadorMenu />
-            
-            <div className="banner-container">
-                <img 
-                    src="/FOTOS/BANNEROFERTAS.png" 
-                    alt="Ofertas especiales" 
-                    className="banner-image"
-                />
-                <div className="banner-overlay">
-                    <div>
-                        <h1 className="banner-title">OFERTAS EXCLUSIVAS</h1>
-                        <p className="banner-subtitle">Descubre nuestras mejores promociones</p>
+        <>
+            <div className="novedades-container">
+                <NavegadorMenu />
+                
+                <div className="banner-container">
+                    <img 
+                        src="/FOTOS/BANNEROFERTAS.png" 
+                        alt="Ofertas especiales" 
+                        className="banner-image"
+                    />
+                    <div className="banner-overlay">
+                        <div>
+                            <h1 className="banner-title">OFERTAS EXCLUSIVAS</h1>
+                            <p className="banner-subtitle">Descubre nuestras mejores promociones</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div className="ofertas-content" style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
                 
-                <div className="productos-grid">
-                    {cochesEnOferta.map((coche) => (
+                <div className="ofertas-content" style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
+                    
+                    <div className="productos-grid">
+                        {cochesEnOferta.map((coche) => (
                         <div key={coche.id} className="producto-card">
                             <div className="producto-imagen">
                                 <img
@@ -260,9 +262,11 @@ const Novedades = () => {
                             </div>
                         </div>
                     ))}
+                    </div>
                 </div>
             </div>
-        </div>
+            <Footer />
+        </>
     );
 };
 

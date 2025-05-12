@@ -1,5 +1,6 @@
 import React from 'react';
 import NavegadorMenu from '../../component/Pages/Menu/Navegador';
+import Footer from "../../component/footer";
 
 const Coche = () => {
     return (
@@ -10,10 +11,7 @@ const Coche = () => {
             <div className="informacion-adicional" style={{ marginTop: '40px', padding: '20px', backgroundColor: '#817674', borderRadius: '8px' }}>
                 <h2>COCHES A MEDIDA</h2>    
             </div>
-            
-           
-
-            
+            <Footer />
         </div>
     );
 };

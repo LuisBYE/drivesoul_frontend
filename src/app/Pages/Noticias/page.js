@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import NavegadorMenu from '../../component/Pages/Menu/Navegador';
+import Footer from "../../component/footer";
 import "./noticias.css";
 
 
@@ -42,6 +43,7 @@ export default function Noticias() {
 
         
       </div>
+      <Footer />
     </>
   );
 }

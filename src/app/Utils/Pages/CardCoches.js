@@ -14,14 +14,17 @@ export default function CardCoches({ producto }) {
   const transitionStyle = cocheDesplegado
     ? "max-height 0.6s ease-out"
     : "max-height 0.3s ease-in";
-  console.log("consola producto", producto);
-  console.log("consola coche", coche);
+
 
   const mostrarCocheId = (id) => {
     setcocheId(cocheId === id ? null : id);
     setCocheDesplegado(cocheId !== null ? true : false);
     // alert("actualizarStateDesplegable:  " + cocheDesplegado);
   };
+  useEffect(() => {
+    console.log("consola producto", JSON.stringify(producto));
+   
+  }, [coche]);
 
   const marca = [
     "Seat",
@@ -121,8 +124,8 @@ export default function CardCoches({ producto }) {
   return (
     <div className="productos-grid">
       {coche.length > 0 ? (
-        coche.map((item) => (
-          <div key={item.modelo_id} className="producto-card">
+        coche.map((item , index) => (
+          <div key={` ${index}-${item.modelo_id}`} className="producto-card">
             <div className="producto-imagen">
               <img
                 src={getImagenCoche(item.modelo_id)}

@@ -38,7 +38,7 @@ export default function EditarUsuarioPag({ params }) {
 
     try {
       const response = await ReqUsuarios.updateUsuario(id, filledFormData); // Pasa el ID y los datos del usuario
-      alert("Función de editar usuario async");
+      // alert("Función de editar usuario async");
       console.log("Respuesta de la API:", response);
 
       if (response) {

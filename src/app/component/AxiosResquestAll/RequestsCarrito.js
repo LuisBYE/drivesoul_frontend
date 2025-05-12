@@ -13,7 +13,7 @@ const getCarritoUsuario = async () => {
     if (!userData) return null;
 
     const userObj = JSON.parse(userData);
-    alert("llega aqui ");
+   
     console.log(`aqui usuario ${JSON.stringify(userData)}`);
 
     if (!userObj?.id) {

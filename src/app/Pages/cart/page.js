@@ -41,96 +41,8 @@ export default function CartPage() {
     };
   }, []);
 
-  /* FUNCIÓN PARA OBTENER LA IMAGEN DEL COCHE
-   * DEVUELVE LA RUTA DE LA IMAGEN PRINCIPAL DEL COCHE SEGÚN SU MODELO_ID
-   * SI NO ENCUENTRA LA IMAGEN, DEVUELVE UNA IMAGEN POR DEFECTO
-   */
-  const getImagenCoche = (modelo_id) => {
-    // MAPA DE IMÁGENES POR MODELO
-    const rutasImagenes = {
-      1: "/FOTOS/COCHES/SEATIBIZAROJO/1.jpg",
-      2: "/FOTOS/COCHES/HYUNDAII30NFASTBACK/1.png",
-      3: "/FOTOS/COCHES/SEATLEONBLANCO/1.jpg",
-      4: "/FOTOS/COCHES/SEATARONAAZUL/1.png",
-      90: "/FOTOS/COCHES/SEATLEONBLANCO/1.jpg",
-      91: "/FOTOS/COCHES/SEATARONAAZUL/1.png",
-    };
-
-    // DEVOLVER IMAGEN SEGÚN MODELO_ID O IMAGEN POR DEFECTO
-    return rutasImagenes[modelo_id] || "/FOTOS/COCHES/default.jpg";
-  };
-
-  /* FUNCIÓN PARA CONTINUAR COMPRANDO
-   * REDIRIGE AL USUARIO AL CATÁLOGO DE PRODUCTOS
-   */
   const continuarComprando = () => {
     router.push("/Pages/Catalogo");
-  };
-
-  /* FUNCIÓN PARA PROCESAR EL PEDIDO
-   * ESTA FUNCIÓN SE ENCARGA DE FINALIZAR LA COMPRA
-   * EN EL FUTURO AQUÍ SE HARÁ LA LLAMADA AL BACKEND
-   *
-   * BACKEND TODO:
-   * 1. CREAR ENDPOINT PARA GUARDAR PEDIDO EN BASE DE DATOS
-   * 2. ENVIAR DATOS DEL CARRITO (cartItems) AL BACKEND
-   * 3. PROCESAR PAGO Y CONFIRMACIÓN
-   */
-  const procesarPedido = () => {
-    // VERIFICAR SI HAY PRODUCTOS
-    if (cartItems.length === 0) {
-      return;
-    }
-
-    // VERIFICAR AUTENTICACIÓN
-    if (!isLoggedIn) {
-      router.push("/Pages/Registro");
-      return;
-    }
-
-    // MOSTRAR MENSAJE DE PROCESAMIENTO
-    setIsProcessing(true);
-
-    // SIMULAR PROCESO DE PEDIDO
-    // AQUÍ ES DONDE SE HARÁ LA LLAMADA AL BACKEND EN EL FUTURO
-    setTimeout(() => {
-      // LIMPIAR CARRITO
-      clearCart();
-
-      // FINALIZAR PROCESAMIENTO
-      setIsProcessing(false);
-
-      // REDIRIGIR A INICIO
-      router.push("/");
-    }, 1000);
-  };
-
-  /* FUNCIÓN PARA ACTUALIZAR CANTIDAD
-   * UTILIZA LA FUNCIÓN updateQuantity DEL CONTEXTO
-   * PERMITE AUMENTAR O DISMINUIR LA CANTIDAD DE UN PRODUCTO
-   *
-   * BACKEND TODO:
-   * EN EL FUTURO, ESTA FUNCIÓN DEBERÁ ACTUALIZAR LA CANTIDAD
-   * EN LA BASE DE DATOS A TRAVÉS DE UNA LLAMADA AL BACKEND
-   */
-  const handleQuantityChange = (item, newQuantity) => {
-    // VALIDAR CANTIDAD MÍNIMA
-    if (newQuantity < 1) newQuantity = 1;
-
-    // ACTUALIZAR USANDO LA FUNCIÓN DEL CONTEXTO
-    updateQuantity(item, newQuantity);
-  };
-
-  /* FUNCIÓN PARA ELIMINAR PRODUCTO
-   * UTILIZA LA FUNCIÓN removeFromCart DEL CONTEXTO
-   * ELIMINA COMPLETAMENTE UN PRODUCTO DEL CARRITO
-   *
-   * BACKEND TODO:
-   * EN EL FUTURO, ESTA FUNCIÓN DEBERÁ ELIMINAR EL PRODUCTO
-   * DE LA BASE DE DATOS A TRAVÉS DE UNA LLAMADA AL BACKEND
-   */
-  const handleRemoveItem = (item) => {
-    removeFromCart(item);
   };
   const [productosCarrito, setProductosCarrito] = useState([]);
 
@@ -139,19 +51,27 @@ export default function CartPage() {
     // Traera todo los prductos de carrito_item
     const response = await ReqCarrito.getCarritoUsuario();
     if (response) {
+   
       setCarritoItems(response);
-      console.log(`datos de carrito ${JSON.stringify(response)}`);
+      console.log(`datos de carrito 2 ${JSON.stringify(response)}`);
     } else {
-      console.log(" Error no han cargado los datos del carrito ");
+      alert("error al peticion ger")
+
     }
   };
 
-  const searchProductos = async (id) => {
-    console.log(`idUSUARIO ${JSON.stringify(carritoItems)}`);
-
+  const searchProductos = async (id, ItemId, CantidadItem) => {
+    // console.log(`idUSUARIO ${JSON.stringify(id)}`);
+    // console.log(`aqui xd:  ${JSON.stringify(ItemId)}`)
     const response = await ReqProductos.getProductoById(id);
     if (response) {
-      setProductosCarrito((prevProductos) => [...prevProductos, response]); // Agrega el producto al estado
+      const productoConItemId = {
+        ...response,
+        carritoItemId: ItemId,
+        cantidad:CantidadItem, // Este ID debe ser único por item en el carrito
+      };
+      // console.log("aqui", JSON.stringify(productoConItemId,null,2))
+      setProductosCarrito((prevProductos) => [...prevProductos, productoConItemId]);
     } else {
       alert("No se encontró producto por ID");
     }
@@ -164,9 +84,8 @@ export default function CartPage() {
   useEffect(() => {
     if (carritoItems !== 0) {
       carritoItems.map((item) => {
-        alert("rellan los datos");
-        console.log(`idUSUARIO ${JSON.stringify(item.usuarioId)}`);
-        searchProductos(item.usuarioId);
+      
+        searchProductos(item.usuarioId, item.id, item.cantidad);
       });
     } else {
       alert("no hay datos de carrito_Items");
@@ -180,14 +99,10 @@ export default function CartPage() {
   return (
     <div className="cart-page">
       <NavegadorMenu />
-
+      <pre>productosCarrito {JSON.stringify(productosCarrito)}</pre>
       <div className="cart-container">
         <h1 className="cart-title">Mi Carrito</h1>
-        {/* <pre> {JSON.stringify(cartItems)}</pre>
-        <pre> carritoItems {JSON.stringify(carritoItems)}</pre>
-        <pre> datos buenos {JSON.stringify(productosCarrito)}</pre>
-        <pre> mostrarContenido {JSON.stringify(mostrarContenido)}</pre>
-        <pre> isLoggedIn {JSON.stringify(isLoggedIn)}</pre> */}
+        {/* <pre> {JSON.stringify(cartItems)}</pre> */}
         {noLogeado && (
           <div className="login-required">
             <i className="fas fa-user-lock login-icon"></i>
@@ -201,17 +116,16 @@ export default function CartPage() {
             </button>
           </div>
         )}
-        {cartItems === 0 ||
-          (productosCarrito.length === 0 && (
-            <div className="empty-cart">
-              <i className="fas fa-shopping-cart empty-cart-icon"></i>
-              <p>Tu carrito está vacío</p>
-              <button onClick={continuarComprando} className="btn-continuar">
-                Explorar catálogo
-              </button>
-            </div>
-          ))}
+        {!noLogeado && productosCarrito.length === 0 && (
+          <div className="empty-cart">
+            <i className="fas fa-shopping-cart empty-cart-icon"></i>
+            <p>Tu carrito está vacío</p>
 
+          </div>
+        )}
+        <button onClick={continuarComprando} className="btn-continuar">
+          Explorar catálogo
+        </button>
         {mostrarContenido && (
           <ProductosCesta productoCesta={productosCarrito || []} />
         )}

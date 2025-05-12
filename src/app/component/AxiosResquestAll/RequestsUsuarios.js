@@ -64,7 +64,7 @@ const getLoginUser = async (params) => {
 };
 
 const validateUsuario = (usuario) => {
-  alert("Validando usuario...");
+  // alert("Validando usuario...");
   const errors = {};
 
   if (!usuario.nombre || usuario.nombre.trim() === "") {

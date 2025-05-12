@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import NavegadorMenu from "../../../component/Pages/Menu/Navegador";
 import { obtenerGradiente } from "../../../Utils/Coches/coloresCoches";
 import { useCart } from "../../../context/CartContext";
+import RequestsCarrito from "../../../component/AxiosResquestAll/RequestsCarrito"
 import "./detalles.css";
 
 export default function DetallesCoche() {
@@ -17,6 +18,8 @@ export default function DetallesCoche() {
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
   const { addToCart } = useCart();
+  const cocheData = localStorage.getItem("cocheSeleccionado");
+
 
   // OBTIENE IMAGENES SEGÚN EL ID DEL COCHE
   const getImagenesCoche = (modelo_id) => {
@@ -105,7 +108,7 @@ export default function DetallesCoche() {
       try {
         setLoaded(false);
         setImagesLoaded(false);
-        const cocheData = localStorage.getItem("cocheSeleccionado");
+      
 
         if (cocheData) {
           const parsedCoche = JSON.parse(cocheData);
@@ -264,13 +267,27 @@ export default function DetallesCoche() {
     addToCart(cocheParaCarrito);
   };
 
-  const enviarACarrito = () => {
-    alert("El coche ha sido añadido al carrito base de datos POST ");
+  const enviarACarrito = async () => {
+    const user = localStorage.getItem("user");
+    if (!user) {
+      router.push("/Pages/cart");
+      return;
+    }
+
+    const cocheAlmacenado = await RequestsCarrito.addItemToCart();
+
+    if(cocheAlmacenado){
+      alert("El coche ha sido añadido al carrito base de datos POST ");
+    }else{
+      alert("coche no se almaceno ")
+    }
+   
   };
 
   // LAYAUT
   return (
     <div className="detalles-container">
+      
       <NavegadorMenu />
       <div className="detalles-page">
         <div className="hero-section">
@@ -428,6 +445,7 @@ export default function DetallesCoche() {
           )}
         </div>
       </div>
+      <pre>{`datos de coche Selecionado : ${JSON.stringify(cocheData,null,2)}`}</pre>
     </div>
   );
 }

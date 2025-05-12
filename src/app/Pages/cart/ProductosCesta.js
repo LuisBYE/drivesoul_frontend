@@ -4,20 +4,27 @@ export default function ProductosCesta({ productoCesta = [] }) {
     ? productoCesta
     : [productoCesta];
 
-  const eliminarProductoCesta = async (id) => {
+  const eliminarProductoCesta = async (itemId) => {
     alert(
       "falta meter id de carritoItems en Productos cesta en el componete Page de Cart "
     );
-    console.log(`ID PARA ELIMINAR ${id}`);
-    // const response = await ReqCarrito.removeCartItem(id);
+    console.log(`ID PARA ELIMINAR ${itemId}`);
+    // Elimina el Item de la Cesta
+    const itemEliminado = await ReqCarrito.removeCartItem(itemId)
+    if(itemEliminado){
+      alert("se ha eliminado ITEM DE CESTA")
+    }else{
+      alert("error al eliminar ITEM DE CESTA")
+    }
   };
 
   return (
     <>
       <div className="cesta-container">
         {productos.length > 0 ? (
-          productos.map((item) => (
-            <div key={item.id} className="producto-card">
+          productos.map((item, index) => (
+            <div key={`${item.id}-${index}`} className="producto-card">
+              <pre> {JSON.stringify(item.carritoItemId,null,2)}</pre>
               <div className="imagen">
                 <img
                   src={item.imagen || "/FOTOS/COCHES/ImgProductosDefault.png"}
@@ -40,7 +47,7 @@ export default function ProductosCesta({ productoCesta = [] }) {
                 <button
                   className="btn-eliminar"
                   aria-label="Eliminar"
-                  onClick={() => eliminarProductoCesta(item.id)}
+                  onClick={() => eliminarProductoCesta(item.carritoItemId)}
                 >
                   <i className="fas fa-trash" />
                 </button>
@@ -48,7 +55,7 @@ export default function ProductosCesta({ productoCesta = [] }) {
                   <button className="btn-cantidad">
                     <i className="fas fa-minus" />
                   </button>
-                  <span className="cantidad">1</span>
+                  <span className="cantidad">{item.cantidad}</span>
                   <button className="btn-cantidad">
                     <i className="fas fa-plus" />
                   </button>

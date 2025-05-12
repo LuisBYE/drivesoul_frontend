@@ -9,18 +9,20 @@ function NavegadorMenu() {
     const router = useRouter();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [username, setUsername] = useState("");
+    const [rol, setRol]= useState("");
     const [showDropdown, setShowDropdown] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { cartCount, setCartCount } = useCart();
-
+    const user = localStorage.getItem('user');
     // Función para verificar y actualizar el estado de autenticación
     const checkAuthStatus = () => {
-        const user = localStorage.getItem('user');
+        
         if (user) {
             try {
                 const userData = JSON.parse(user);
                 setIsLoggedIn(true);
                 setUsername(userData.nombre);
+                setRol(userData.rol)
             } catch (error) {
                 console.error('Error al parsear datos de usuario:', error);
                 localStorage.removeItem('user');
@@ -96,9 +98,9 @@ function NavegadorMenu() {
                 <li onClick={() => handleNavigation('/Pages/Catalogo')}>Catálogo Coches</li>
                 <li onClick={() => handleNavigation('/Pages/Noticias')}>Noticias del Motor</li>
                 <li onClick={() => handleNavigation('/Pages/Coches')}>Coche a medida</li>
-                <li onClick={() => handleNavigation('/Pages/Contacto')}>Contacto</li>
-                <li onClick={() => handleNavigation('/Pages/Admin')}>Admin</li>
-                
+              <li onClick={() => handleNavigation('/Pages/Contacto')}>Contacto</li>
+              {rol === "administrador" && user !== null && <li onClick={() => handleNavigation('/Pages/Admin')}>Admin</li>}
+              
                 <li onClick={() => handleNavigation('/Pages/cart')} className="cart-icon-container">
                     <div className="cart-icon">
                         <i className="fas fa-shopping-cart"></i>

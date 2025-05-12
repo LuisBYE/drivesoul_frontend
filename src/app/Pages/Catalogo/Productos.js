@@ -9,7 +9,7 @@ const Productos = () => {
     const fetchProductos = async () => {
       const cochesObtenidos = await ReqCoches.getCoches(); // Llamada a la API
       setCoches(cochesObtenidos);
-      alert("hace peticion a backend ")
+      // alert("hace peticion a backend ")
       console.log(`coches ${JSON.stringify(cochesObtenidos)}`)
     };
 

@@ -112,6 +112,7 @@ export default function Home() {
     return rutasImagenes[modelo_id] || "/FOTOS/COCHES/default.jpg";
   };
 
+
   return (
     <div className="min-h-screen bg-black text-white">
       <NavegadorPag />

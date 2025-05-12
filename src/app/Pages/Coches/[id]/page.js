@@ -138,7 +138,8 @@ export default function DetallesCoche() {
 
   // FUNCION QUE VUELVE AL CATALOGO
   const volverACatalogo = () => {
-    router.push('/Pages/Catalogo');
+    // Usar window.location.href para forzar una recarga completa
+    window.location.href = '/Pages/Catalogo';
   };
 
   /* FUNCIÓN PARA AÑADIR AL CARRITO

@@ -181,6 +181,9 @@
   transition: background-color 0.3s ease;
   width: 100%;
   text-align: center;
+  display: inline-block;
+  text-decoration: none;
+  box-sizing: border-box;
 }
 
 .ver-detalles:hover {
@@ -341,8 +344,12 @@
 
 /* Estilos responsivos */
 @media (max-width: 992px) {
-  .ofertas-grid {
+  .productos-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .novedades-page-active .productos-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
   }
   
   .banner-title {
@@ -355,8 +362,12 @@
 }
 
 @media (max-width: 768px) {
-  .ofertas-grid {
+  .productos-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .novedades-page-active .productos-grid {
+    grid-template-columns: 1fr !important;
   }
   
   .banner-title {

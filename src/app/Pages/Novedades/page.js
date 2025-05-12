@@ -89,6 +89,8 @@ const Novedades = () => {
         setCocheDesplegado(cocheId !== id);
     };
     
+
+    
     // Función para navegar a la página de detalles del coche
     const navegarADetalles = (coche) => {
         // Guardar los datos del coche seleccionado con precio de oferta
@@ -102,12 +104,9 @@ const Novedades = () => {
         
         localStorage.setItem('cocheSeleccionado', JSON.stringify(cocheConOferta));
         
-        // Eliminamos cualquier marcador de navegación
-        sessionStorage.removeItem('vieneDePagina');
-        sessionStorage.removeItem('ultimaNavegacion');
-        
-        // Navegar a la página de detalles
-        router.push(`/Pages/Coches/${coche.modelo_id}`);
+        // Navegar a la página de detalles usando window.location para forzar una recarga completa
+        // Esto asegura que al volver, la página se recargue completamente y no haya problemas de diseño
+        window.location.href = `/Pages/Coches/${coche.modelo_id}`;
     };
 
     // Función para añadir al carrito
@@ -236,13 +235,27 @@ const Novedades = () => {
                                 </div>
                                 
                                 <div className="producto-acciones">
-                                    <button
+                                    <a
+                                        href={`/Pages/Coches/${coche.modelo_id}`}
                                         className="ver-detalles"
-                                        onClick={() => navegarADetalles(coche)}
-                                        style={{ width: '100%' }}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            // Guardar los datos del coche en localStorage antes de navegar
+                                            const cocheConOferta = {
+                                                ...coche,
+                                                precioOriginal: coche.precio,
+                                                precio: coche.precio_oferta,
+                                                en_oferta: true,
+                                                porcentaje_descuento: coche.porcentaje_descuento
+                                            };
+                                            localStorage.setItem('cocheSeleccionado', JSON.stringify(cocheConOferta));
+                                            
+                                            // Navegar directamente usando window.location para forzar una recarga completa
+                                            window.location.href = `/Pages/Coches/${coche.modelo_id}`;
+                                        }}
                                     >
                                         Ver Detalles
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>

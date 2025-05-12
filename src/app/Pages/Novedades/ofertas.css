@@ -378,3 +378,100 @@
     font-size: 1.1rem;
   }
 }
+@media (max-width: 768px) {
+  .lanzamientos-grid,
+  .consejos-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .banner-title {
+    font-size: 2.5rem;
+  }
+  
+  .banner-subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .seccion-titulo {
+    font-size: 1.8rem;
+  }
+}
+
+.oferta-old-price {
+  font-size: 1.1rem;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.oferta-new-price {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ff3a3a;
+}
+
+.oferta-button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+}
+
+.oferta-button:hover {
+  background-color: #ff3a3a;
+}
+
+.oferta-categoria {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+/* Estilos responsivos */
+@media (max-width: 992px) {
+  .productos-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .novedades-page-active .productos-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .banner-title {
+    font-size: 2.5rem;
+  }
+  
+  .banner-subtitle {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .productos-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .novedades-page-active .productos-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .banner-title {
+    font-size: 2rem;
+  }
+  
+  .banner-subtitle {
+    font-size: 1.1rem;
+  }
+}

@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { FormContext } from "../../../context/FormContext";
 
 export default function PanelFiltro() {
-  const { register, handleSubmit, watch } = useForm();
+  const { register, handleSubmit, watch, reset } = useForm();
   const { setFormValues } = useContext(FormContext);
 
   const formValues = watch();
@@ -11,6 +11,12 @@ export default function PanelFiltro() {
   const onSubmit = (data) => {
     setFormValues(data);
     console.log("Formulario enviado:", data);
+  };
+  
+  const limpiarFiltros = () => {
+    reset(); // Reinicia los campos del formulario
+    setFormValues({}); // Limpia los valores en el contexto
+    console.log("Filtros limpiados");
   };
 
   return (
@@ -211,7 +217,7 @@ export default function PanelFiltro() {
           </div>
           
           <div className="buttons-container">
-            <button type="reset" className="button-reset">
+            <button type="button" className="button-reset" onClick={limpiarFiltros}>
               <span>Limpiar</span>
             </button>
             <button type="submit" className="button-search">

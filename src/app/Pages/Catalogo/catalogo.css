@@ -14,9 +14,9 @@
   top: 64px;
   left: 0;
   width: 400px;
-  height: calc(100vh - 64px);
+
   padding: 20px;
-  z-index: 10;
+
   display: flex;
   justify-content: center;
   align-items: flex-start;

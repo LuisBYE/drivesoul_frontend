@@ -5,9 +5,11 @@ import Productos from "./Productos";
 import PanelFiltro from "../../component/Pages/Catalogo/PanelFiltro";
 import { FormProvider } from "../../context/FormContext";
 import "./catalogo.css";
+import Footer from "../../component/footer";
 
 const Catalogo = () => {
   return (
+    <>
     <div className="catalogo-container">
       <NavegadorMenu />
       <FormProvider>
@@ -17,10 +19,13 @@ const Catalogo = () => {
           </aside>
           <main className="productos-content">
             <Productos />
+           
           </main>
         </div>
       </FormProvider>
     </div>
+    <Footer />
+    </>
   );
 };
 

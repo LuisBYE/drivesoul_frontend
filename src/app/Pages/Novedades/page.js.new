@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import NavegadorMenu from '../../component/Pages/Menu/Navegador';
-import Footer from "../../component/footer";
 import { useCart } from '../../context/CartContext';
 import { obtenerGradiente } from '../../Utils/Coches/coloresCoches';
 import './ofertas.css';
+import '../Catalogo/Productos.css';
 import '../../Utils/Pages/tarjetas.css';
 
 const Novedades = () => {
@@ -27,15 +27,11 @@ const Novedades = () => {
             porcentaje_descuento: 15,
             anio: "2023",
             kilometraje: 0,
-            color: "Azul Performance",
+            color: "Azul",
             tipo_combustible: "Gasolina",
-            transmision: "Manual 6 velocidades",
-            potencia: "280 CV",
-            aceleracion: "5.9 segundos (0-100 km/h)",
-            velocidad_maxima: "250 km/h",
-            consumo: "8.4 l/100km",
+            transmision: "Manual",
             categoria_oferta: 1,
-            descripcion: "Hyundai i30 N Fastback Performance, 280CV, increíble rendimiento, deportivo compacto con acabados premium y tecnología de competición. Incluye diferencial autoblocante electrónico, escape deportivo variable y modos de conducción configurables."
+            descripcion: "Hyundai i30 N Fastback Performance, 280CV, increíble rendimiento, deportivo compacto con acabados premium."
         },
         {
             id: 10,
@@ -46,15 +42,11 @@ const Novedades = () => {
             porcentaje_descuento: 15,
             anio: "2023",
             kilometraje: 0,
-            color: "Gris Piedra Lunar",
+            color: "Gris",
             tipo_combustible: "Gasolina",
-            transmision: "DSG 7 velocidades",
-            potencia: "150 CV",
-            aceleracion: "8.5 segundos (0-100 km/h)",
-            velocidad_maxima: "224 km/h",
-            consumo: "5.7 l/100km",
+            transmision: "Manual",
             categoria_oferta: 2,
-            descripcion: "Volkswagen Golf 2023, motor 1.5 TSI, 150CV, compacto alemán con tecnología de última generación. Equipado con sistema de infoentretenimiento de 10 pulgadas, asistentes de conducción avanzados y conectividad Car-Net."
+            descripcion: "Volkswagen Golf 2023, motor 1.5 TSI, 150CV, compacto alemán con tecnología de última generación."
         },
         {
             id: 17,
@@ -65,15 +57,11 @@ const Novedades = () => {
             porcentaje_descuento: 20,
             anio: "2023",
             kilometraje: 0,
-            color: "Rojo Jacinto",
+            color: "Rojo",
             tipo_combustible: "Gasolina",
-            transmision: "Automática 9G-TRONIC",
-            potencia: "204 CV",
-            aceleracion: "7.3 segundos (0-100 km/h)",
-            velocidad_maxima: "246 km/h",
-            consumo: "6.2 l/100km",
+            transmision: "Automática",
             categoria_oferta: 3,
-            descripcion: "Mercedes Clase C 2023, motor 2.0, 204CV, berlina premium con acabados de lujo y tecnología avanzada. Incluye sistema MBUX con pantalla de 11.9 pulgadas, iluminación ambiental personalizable y paquete de asistencia a la conducción."
+            descripcion: "Mercedes Clase C 2023, motor 2.0, 204CV, berlina premium con acabados de lujo y tecnología avanzada."
         }
     ];
 
@@ -90,8 +78,6 @@ const Novedades = () => {
         setCocheDesplegado(cocheId !== id);
     };
     
-
-    
     // Función para navegar a la página de detalles del coche
     const navegarADetalles = (coche) => {
         // Guardar los datos del coche seleccionado con precio de oferta
@@ -105,9 +91,12 @@ const Novedades = () => {
         
         localStorage.setItem('cocheSeleccionado', JSON.stringify(cocheConOferta));
         
-        // Navegar a la página de detalles usando window.location para forzar una recarga completa
-        // Esto asegura que al volver, la página se recargue completamente y no haya problemas de diseño
-        window.location.href = `/Pages/Coches/${coche.modelo_id}`;
+        // Eliminamos cualquier marcador de navegación
+        sessionStorage.removeItem('vieneDePagina');
+        sessionStorage.removeItem('ultimaNavegacion');
+        
+        // Navegar a la página de detalles
+        router.push(`/Pages/Coches/${coche.modelo_id}`);
     };
 
     // Función para añadir al carrito
@@ -126,7 +115,7 @@ const Novedades = () => {
         addToCart(cocheParaCarrito);
         setAddedToCart({ ...addedToCart, [coche.id]: true });
     };
-
+    
     // Función para obtener la imagen del coche
     const getImagenCoche = (modelo_id) => {
         const rutasImagenes = {
@@ -154,28 +143,17 @@ const Novedades = () => {
     };
 
     return (
-        <>
-            <div className="novedades-container">
-                <NavegadorMenu />
-                
-                <div className="banner-container">
-                    <img 
-                        src="/FOTOS/BANNEROFERTAS.png" 
-                        alt="Ofertas especiales" 
-                        className="banner-image"
-                    />
-                    <div className="banner-overlay">
-                        <div>
-                            <h1 className="banner-title">OFERTAS EXCLUSIVAS</h1>
-                            <p className="banner-subtitle">Descubre nuestras mejores promociones</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div className="ofertas-content" style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
-                    
-                    <div className="productos-grid">
-                        {cochesEnOferta.map((coche) => (
+        <div className="novedades-container">
+            <NavegadorMenu />
+            
+            <div className="ofertas-banner">
+                <h1 className="ofertas-titulo">OFERTAS EXCLUSIVAS</h1>
+                <p className="ofertas-subtitulo">Descubre nuestras ofertas especiales por tiempo limitado. ¡No te las pierdas!</p>
+            </div>
+            
+            <div className="ofertas-content">
+                <div className="productos-grid">
+                    {cochesEnOferta.map((coche) => (
                         <div key={coche.id} className="producto-card">
                             <div className="producto-imagen">
                                 <img
@@ -189,6 +167,9 @@ const Novedades = () => {
                                         <span>ECO</span>
                                     </div>
                                 )}
+                                <div className="estado-badge">
+                                    <span>{coche.kilometraje === 0 ? "NUEVO" : "USADO"}</span>
+                                </div>
                                 <div className="descuento-badge">
                                     <span>-{coche.porcentaje_descuento}%</span>
                                 </div>
@@ -198,14 +179,10 @@ const Novedades = () => {
                                 <div className="producto-header">
                                     <h3 className="producto-titulo">{coche.nombre}</h3>
                                     <div className="producto-precio">
-                                        <div className="precio-original" style={{ 
-                                            textDecoration: 'line-through', 
-                                            color: '#999', 
-                                            fontSize: '0.9em' 
-                                        }}>
+                                        <div className="precio-original">
                                             {coche.precio.toLocaleString("es-ES")} €
                                         </div>
-                                        <div className="precio-actual" style={{ color: '#ff3a3a', fontWeight: 'bold' }}>
+                                        <div className="precio-actual" style={{ color: '#ff3a3a' }}>
                                             {coche.precio_oferta.toLocaleString("es-ES")} €
                                         </div>
                                         <div className="precio-mensual">
@@ -236,37 +213,33 @@ const Novedades = () => {
                                     </div>
                                 </div>
                                 
-                                <div className="producto-acciones">
-                                    <a
-                                        href={`/Pages/Coches/${coche.modelo_id}`}
+                                <div className="producto-acciones" style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
+                                    <button
                                         className="ver-detalles"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            // Guardar los datos del coche en localStorage antes de navegar
-                                            const cocheConOferta = {
-                                                ...coche,
-                                                precioOriginal: coche.precio,
-                                                precio: coche.precio_oferta,
-                                                en_oferta: true,
-                                                porcentaje_descuento: coche.porcentaje_descuento
-                                            };
-                                            localStorage.setItem('cocheSeleccionado', JSON.stringify(cocheConOferta));
-                                            
-                                            // Navegar directamente usando window.location para forzar una recarga completa
-                                            window.location.href = `/Pages/Coches/${coche.modelo_id}`;
-                                        }}
+                                        onClick={() => navegarADetalles(coche)}
+                                        style={{ flex: '1' }}
                                     >
                                         Ver Detalles
-                                    </a>
+                                    </button>
+                                    <button 
+                                        className="ver-detalles" 
+                                        onClick={() => agregarAlCarrito(coche)}
+                                        style={{ 
+                                            flex: '1', 
+                                            backgroundColor: addedToCart[coche.id] ? '#4CAF50' : '#ff3a3a',
+                                            color: 'white'
+                                        }}
+                                        disabled={addedToCart[coche.id]}
+                                    >
+                                        {addedToCart[coche.id] ? 'Añadido' : 'Añadir'}
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     ))}
-                    </div>
                 </div>
             </div>
-            <Footer />
-        </>
+        </div>
     );
 };
 

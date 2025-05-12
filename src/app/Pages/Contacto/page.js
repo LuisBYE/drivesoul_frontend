@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import NavegadorMenu from '../../component/Pages/Menu/Navegador';
+import Footer from "../../component/footer";
 import "./contacto.css";
 
 const Contacto = () => {
@@ -81,6 +82,7 @@ const Contacto = () => {
                     </div>
                 </div>
             </section>
+            <Footer />
         </div>
     );
 };

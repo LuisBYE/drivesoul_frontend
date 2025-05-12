@@ -1,0 +1,246 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import NavegadorMenu from '../../component/Pages/Menu/Navegador';
+import { useCart } from '../../context/CartContext';
+import { obtenerGradiente } from '../../Utils/Coches/coloresCoches';
+import './ofertas.css';
+import '../Catalogo/Productos.css';
+import '../../Utils/Pages/tarjetas.css';
+
+const Novedades = () => {
+    const router = useRouter();
+    const { addToCart } = useCart();
+    const [addedToCart, setAddedToCart] = useState({});
+    const [cocheDesplegado, setCocheDesplegado] = useState(null);
+    const [cocheId, setCocheId] = useState(null);
+
+    // Datos de los coches en oferta
+    const cochesEnOferta = [
+        {
+            id: 2,
+            modelo_id: 2,
+            nombre: "Hyundai i30 N Fastback",
+            precio: 39000,
+            precio_oferta: 33150,
+            porcentaje_descuento: 15,
+            anio: "2023",
+            kilometraje: 0,
+            color: "Azul",
+            tipo_combustible: "Gasolina",
+            transmision: "Manual",
+            categoria_oferta: 1,
+            descripcion: "Hyundai i30 N Fastback Performance, 280CV, increíble rendimiento, deportivo compacto con acabados premium."
+        },
+        {
+            id: 10,
+            modelo_id: 97,
+            nombre: "Volkswagen Golf",
+            precio: 28000,
+            precio_oferta: 23800,
+            porcentaje_descuento: 15,
+            anio: "2023",
+            kilometraje: 0,
+            color: "Gris",
+            tipo_combustible: "Gasolina",
+            transmision: "Manual",
+            categoria_oferta: 2,
+            descripcion: "Volkswagen Golf 2023, motor 1.5 TSI, 150CV, compacto alemán con tecnología de última generación."
+        },
+        {
+            id: 17,
+            modelo_id: 104,
+            nombre: "Mercedes Clase C",
+            precio: 45000,
+            precio_oferta: 36000,
+            porcentaje_descuento: 20,
+            anio: "2023",
+            kilometraje: 0,
+            color: "Rojo",
+            tipo_combustible: "Gasolina",
+            transmision: "Automática",
+            categoria_oferta: 3,
+            descripcion: "Mercedes Clase C 2023, motor 2.0, 204CV, berlina premium con acabados de lujo y tecnología avanzada."
+        }
+    ];
+
+    // Categorías de ofertas
+    const categoriasOfertas = {
+        1: 'Promoción Especial',
+        2: 'Liquidación',
+        3: 'Descuento Financiación'
+    };
+
+    // Función para mostrar/ocultar detalles del coche
+    const mostrarCocheId = (id) => {
+        setCocheId(cocheId === id ? null : id);
+        setCocheDesplegado(cocheId !== id);
+    };
+    
+    // Función para navegar a la página de detalles del coche
+    const navegarADetalles = (coche) => {
+        // Guardar los datos del coche seleccionado con precio de oferta
+        const cocheConOferta = {
+            ...coche,
+            precioOriginal: coche.precio,  // Guardamos el precio original
+            precio: coche.precio_oferta,   // Reemplazamos el precio por el precio de oferta
+            en_oferta: true,               // Marcamos que está en oferta
+            porcentaje_descuento: coche.porcentaje_descuento  // Guardamos el porcentaje de descuento
+        };
+        
+        localStorage.setItem('cocheSeleccionado', JSON.stringify(cocheConOferta));
+        
+        // Eliminamos cualquier marcador de navegación
+        sessionStorage.removeItem('vieneDePagina');
+        sessionStorage.removeItem('ultimaNavegacion');
+        
+        // Navegar a la página de detalles
+        router.push(`/Pages/Coches/${coche.modelo_id}`);
+    };
+
+    // Función para añadir al carrito
+    const agregarAlCarrito = (coche) => {
+        const cocheParaCarrito = {
+            id: coche.id,
+            modelo_id: coche.modelo_id,
+            nombre: coche.nombre,
+            precio: coche.precio_oferta,
+            anio: coche.anio,
+            color: coche.color,
+            tipo_combustible: coche.tipo_combustible,
+            imagen: getImagenCoche(coche.modelo_id)
+        };
+        
+        addToCart(cocheParaCarrito);
+        setAddedToCart({ ...addedToCart, [coche.id]: true });
+    };
+    
+    // Función para obtener la imagen del coche
+    const getImagenCoche = (modelo_id) => {
+        const rutasImagenes = {
+            1: "/FOTOS/COCHES/SEATIBIZAROJO/1.jpg",
+            2: "/FOTOS/COCHES/HYUNDAII30NFASTBACK/1.png",
+            90: "/FOTOS/COCHES/SEATLEONBLANCO/1.jpg",
+            91: "/FOTOS/COCHES/SEATARONAAZUL/1.png",
+            92: "/FOTOS/COCHES/HYUNDAITUCSONGRIS/1.png",
+            93: "/FOTOS/COCHES/HYUNDAIKONA/1.jpg",
+            94: "/FOTOS/COCHES/AUDIA3NEGRO/1.png",
+            95: "/FOTOS/COCHES/AUDIA4AZUL/1.png",
+            96: "/FOTOS/COCHES/AUDIQ5BLANCO/1.png",
+            97: "/FOTOS/COCHES/VOLKSWAGENGOLFGRIS/1.png",
+            98: "/FOTOS/COCHES/VOLKSWAGENPOLOROJO/1.png",
+            99: "/FOTOS/COCHES/VOLKSWAGENTROCNEGRO/1.png",
+            100: "/FOTOS/COCHES/PEUGEOT208AZUL/1.png",
+            101: "/FOTOS/COCHES/PEUGEOT3008BLANCO/1.png",
+            102: "/FOTOS/COCHES/PEUGEOT508GRIS2023/1.png",
+            103: "/FOTOS/COCHES/MERCEDESCLASEANEGRO/1.png",
+            104: "/FOTOS/COCHES/MERCEDESCLASECROJO/1.jpeg",
+            105: "/FOTOS/COCHES/MERCEDES GLCAZUL/1.png",
+        };
+
+        return rutasImagenes[modelo_id] || "/FOTOS/COCHES/default.jpg";
+    };
+
+    return (
+        <div className="novedades-container">
+            <NavegadorMenu />
+            
+            <div className="ofertas-banner">
+                <h1 className="ofertas-titulo">OFERTAS EXCLUSIVAS</h1>
+                <p className="ofertas-subtitulo">Descubre nuestras ofertas especiales por tiempo limitado. ¡No te las pierdas!</p>
+            </div>
+            
+            <div className="ofertas-content">
+                <div className="productos-grid">
+                    {cochesEnOferta.map((coche) => (
+                        <div key={coche.id} className="producto-card">
+                            <div className="producto-imagen">
+                                <img
+                                    src={getImagenCoche(coche.modelo_id)}
+                                    alt={coche.nombre}
+                                    className="imagen-principal"
+                                    onError={(e) => { e.target.src = '/FOTOS/COCHES/default.jpg' }}
+                                />
+                                {coche.tipo_combustible && coche.tipo_combustible.toLowerCase() === "híbrido" && (
+                                    <div className="eco-badge">
+                                        <span>ECO</span>
+                                    </div>
+                                )}
+                                <div className="estado-badge">
+                                    <span>{coche.kilometraje === 0 ? "NUEVO" : "USADO"}</span>
+                                </div>
+                                <div className="descuento-badge">
+                                    <span>-{coche.porcentaje_descuento}%</span>
+                                </div>
+                            </div>
+
+                            <div className="producto-info">
+                                <div className="producto-header">
+                                    <h3 className="producto-titulo">{coche.nombre}</h3>
+                                    <div className="producto-precio">
+                                        <div className="precio-original">
+                                            {coche.precio.toLocaleString("es-ES")} €
+                                        </div>
+                                        <div className="precio-actual" style={{ color: '#ff3a3a' }}>
+                                            {coche.precio_oferta.toLocaleString("es-ES")} €
+                                        </div>
+                                        <div className="precio-mensual">
+                                            Desde {Math.round(coche.precio_oferta / 72).toLocaleString("es-ES")} €/mes*
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="producto-specs">
+                                    <div className="spec-item">
+                                        <i className="fas fa-calendar"></i>
+                                        <span>{coche.anio}</span>
+                                    </div>
+                                    <div className="spec-separator">·</div>
+                                    <div className="spec-item">
+                                        <i className="fas fa-tachometer-alt"></i>
+                                        <span>{coche.kilometraje ? coche.kilometraje.toLocaleString("es-ES") : '0'} km</span>
+                                    </div>
+                                    <div className="spec-separator">·</div>
+                                    <div className="spec-item">
+                                        <i className="fas fa-gas-pump"></i>
+                                        <span>{coche.tipo_combustible}</span>
+                                    </div>
+                                    <div className="spec-separator">·</div>
+                                    <div className="spec-item">
+                                        <i className="fas fa-cog"></i>
+                                        <span>{coche.transmision}</span>
+                                    </div>
+                                </div>
+                                
+                                <div className="producto-acciones" style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
+                                    <button
+                                        className="ver-detalles"
+                                        onClick={() => navegarADetalles(coche)}
+                                        style={{ flex: '1' }}
+                                    >
+                                        Ver Detalles
+                                    </button>
+                                    <button 
+                                        className="ver-detalles" 
+                                        onClick={() => agregarAlCarrito(coche)}
+                                        style={{ 
+                                            flex: '1', 
+                                            backgroundColor: addedToCart[coche.id] ? '#4CAF50' : '#ff3a3a',
+                                            color: 'white'
+                                        }}
+                                        disabled={addedToCart[coche.id]}
+                                    >
+                                        {addedToCart[coche.id] ? 'Añadido' : 'Añadir'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Novedades;

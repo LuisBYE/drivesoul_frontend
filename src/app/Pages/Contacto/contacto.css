@@ -2,23 +2,30 @@
 .contacto-container {
     width: 100%;
     font-family: Arial, sans-serif;
+    padding-top: 90px; 
+    min-height: 100vh;
+    position: relative;
 }
 
 /* Sección principal */
 .seccion-principal {
     display: flex;
     align-items: stretch;
-    margin-top: 90px;
+    position: relative;
+    min-height: 400px;
 }
 
 .imagen-container {
     width: 65%;
+    height: 400px;
+    position: relative;
 }
 
 .imagen-izquierda {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
 }
 
 .texto-derecha {
@@ -29,6 +36,11 @@
     flex-direction: column;
     justify-content: center;
     padding: 40px;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
 }
 
 .texto-derecha h1 {
@@ -81,6 +93,10 @@
     .imagen-container, .texto-derecha {
         width: 100%;
     }
+    .texto-derecha {
+        position: relative;
+        height: auto;
+    }
     .seccion-guia {
         flex-direction: column;
         padding: 40px;
@@ -106,8 +122,8 @@
 /* Contenedor principal */
 .contenedor-contacto {
     display: flex;
-    width: 1190%;
-    max-width: 12100px;
+    width: 100%;
+    max-width: 1200px;
     gap: 40px;
 }
 
@@ -170,6 +186,27 @@ input, textarea {
 
 /* Responsive */
 @media (max-width: 768px) {
+    .seccion-principal {
+        flex-direction: column;
+    }
+    .imagen-container, .texto-derecha {
+        width: 100%;
+    }
+    .texto-derecha {
+        position: relative;
+        height: auto;
+    }
+    .seccion-guia {
+        flex-direction: column;
+        padding: 40px;
+    }
+    .guia-texto {
+        width: 100%;
+        margin-right: 0; 
+    }
+    .imagen-derecha {
+        width: 100%;
+    }
     .contenedor-contacto {
         flex-direction: column;
     }

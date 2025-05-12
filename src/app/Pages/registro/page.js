@@ -7,66 +7,95 @@ import './css_REGISTRO_LOGG.css';
 
 export default function Registro() {
   const router = useRouter();
-  // Mensaje de Resgistro o loginService
-  const [message, setMessage] = useState('Mensajes de Registro o Login');
-
+  const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [isLoginView, setIsLoginView] = useState(false);
 
-  const [paramsLogin, setParamsLogin] = useState(
-    {
-      Nombre: '',
-      Password: ''
-    }
-  );
-  const [formData, setFormData] = useState(
-    {
-      ...paramsLogin,
-      Apellido: '',
-      Email: '',
-      Telefono: '',
-      Ciudad: '',
-      Rol: ''
-    }
-  );
+  // ESTADO PARA LOGIN CON USUARIO O EMAIL
+  const [paramsLogin, setParamsLogin] = useState({
+    Identificador: '',
+    Password: ''
+  });
 
+  // DATOS DEL FORMULARIO DE REGISTRO
+  const [formData, setFormData] = useState({
+    Nombre: '',
+    Password: '',
+    Apellido: '',
+    Email: '',
+    Telefono: '',
+    Ciudad: '',
+    Rol: ''
+  });
 
-
+  // MANEJO DE CAMBIOS EN LOS CAMPOS DEL FORMULARIO
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-    setParamsLogin({
-      ...paramsLogin,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    
+    if (isLoginView) {
+      // ACTUALIZAR ESTADO DE LOGIN
+      setParamsLogin({
+        ...paramsLogin,
+        [name]: value
+      });
+    } else {
+      // ACTUALIZAR ESTADO DE REGISTRO
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
   };
 
+  // ENVÍO DEL FORMULARIO - LOGIN O REGISTRO
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setMessage('');
 
     if (isLoginView) {
-
+      // PROCESO DE LOGIN
       const result = await ReqUsuarios.getLoginUser(paramsLogin);
- 
+      
       if (result) {
-        alert("Login ok")
+        console.log('Datos del usuario:', result);
+        // GUARDAR USUARIO EN LOCALSTORAGE (SERIAN COMO LAS COOKIES  )
+        localStorage.setItem('user', JSON.stringify(result));
+        
+        // Disparar evento personalizado de login
+        const loginEvent = new Event('login');
+        window.dispatchEvent(loginEvent);
+        console.log('Evento de login disparado');
+        
         setMessage('Usuario logueado correctamente');
-      }else{
-        alert("Login no")
-        setMessage('Usuario o contraseña incorrectos');
+        
+        // REDIRECCIONAR A INICIO
+        setTimeout(() => router.push('/'), 1000);
+      } else {
+        setMessage('Usuario/Email o contraseña incorrectos');
       }
     } else {
-      // Llamada a la API correctamente con await
+      // REGISTRO DE USUARIO
       const result = await ReqUsuarios.postUsuarios(formData);
-
+      
       if (result) {
-        setMessage(`Usuario Creado Correctamente: ${JSON.stringify(result)}`);
-     
+        console.log('Usuario registrado:', result);
+        // Guardamos el usuario en localStorage inmediatamente después del registro
+        localStorage.setItem('user', JSON.stringify(result));
+        
+        // Disparar evento personalizado de login
+        const loginEvent = new Event('login');
+        window.dispatchEvent(loginEvent);
+        console.log('Evento de login disparado');
+        
+        setMessage('Usuario creado correctamente');
+        setTimeout(() => router.push('/'), 1000);
       } else {
-        setMessage(`Error al crear usuario.`);
+        setMessage('Error al crear usuario');
       }
     }
+    
+    setIsLoading(false);
   };
 
   return (
@@ -74,34 +103,106 @@ export default function Registro() {
       <NavegadorMenu />
       <div className="auth-container">
         <div className="auth-card">
+          {/* BOTONES PARA CAMBIAR ENTRE REGISTRO Y LOGIN */}
           <div className="auth-tabs">
-            <button className={!isLoginView ? 'active' : ''} onClick={() => setIsLoginView(false)}>
+            <button 
+              className={!isLoginView ? 'active' : ''} 
+              onClick={() => setIsLoginView(false)}
+            >
               Registro
             </button>
-            <button className={isLoginView ? 'active' : ''} onClick={() => setIsLoginView(true)}>
+            <button 
+              className={isLoginView ? 'active' : ''} 
+              onClick={() => setIsLoginView(true)}
+            >
               Iniciar Sesión
             </button>
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
-            <input type="text" name="Nombre" placeholder="Nombre de usuario" value={formData.Nombre} onChange={handleChange} />
-            <input type="password" name="Password" placeholder="Contraseña" value={formData.Password} onChange={handleChange} />
-            {isLoginView === false ?
+            {/* FORMULARIO DE LOGIN */}
+            {isLoginView ? (
               <>
-                <input type="text" name="Apellido" placeholder="Apellido de usuario" value={formData.Apellido} onChange={handleChange} />
-                <input type="text" name="Email" placeholder="Email" value={formData.Email} onChange={handleChange} />
-                <input type="text" name="Telefono" placeholder="Telefono" value={formData.Telefono} onChange={handleChange} />
-                <input type="text" name="Ciudad" placeholder="Ciudad" value={formData.Ciudad} onChange={handleChange} />
+                <input 
+                  type="text" 
+                  name="Identificador" 
+                  placeholder="Nombre de usuario o Email" 
+                  value={paramsLogin.Identificador} 
+                  onChange={handleChange} 
+                  required 
+                />
+                <input 
+                  type="password" 
+                  name="Password" 
+                  placeholder="Contraseña" 
+                  value={paramsLogin.Password} 
+                  onChange={handleChange} 
+                  required 
+                />
               </>
-              : ""}
+            ) : (
+              /* FORMULARIO DE REGISTRO */
+              <>
+                <input 
+                  type="text" 
+                  name="Nombre" 
+                  placeholder="Nombre de usuario" 
+                  value={formData.Nombre} 
+                  onChange={handleChange} 
+                  required 
+                />
+                <input 
+                  type="password" 
+                  name="Password" 
+                  placeholder="Contraseña" 
+                  value={formData.Password} 
+                  onChange={handleChange} 
+                  required 
+                />
+                <input 
+                  type="text" 
+                  name="Apellido" 
+                  placeholder="Apellido de usuario" 
+                  value={formData.Apellido} 
+                  onChange={handleChange} 
+                  required 
+                />
+                <input 
+                  type="email" 
+                  name="Email" 
+                  placeholder="Email" 
+                  value={formData.Email} 
+                  onChange={handleChange} 
+                  required 
+                />
+                <input 
+                  type="tel" 
+                  name="Telefono" 
+                  placeholder="Telefono" 
+                  value={formData.Telefono} 
+                  onChange={handleChange} 
+                  required 
+                />
+                <input 
+                  type="text" 
+                  name="Ciudad" 
+                  placeholder="Ciudad" 
+                  value={formData.Ciudad} 
+                  onChange={handleChange} 
+                  required 
+                />
+              </>
+            )}
 
-            <button type="submit">{isLoginView ? 'Iniciar Sesión' : 'Registrarse'}</button>
+            {/* BOTÓN DE ENVÍO CON ESTADO DE CARGA */}
+            <button type="submit" disabled={isLoading}>
+              {isLoading ? 'Procesando...' : isLoginView ? 'Iniciar Sesión' : 'Registrarse'}
+            </button>
           </form>
 
+          {/* MENSAJES DE FEEDBACK AL USUARIO */}
           {message && <p className="message">{message}</p>}
         </div>
-       
-      
       </div>
     </>
   );

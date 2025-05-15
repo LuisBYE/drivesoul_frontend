@@ -6,20 +6,20 @@
 .main-content {
   display: flex;
   width: 100%;
-  margin-top: 64px;
+  margin-top: 127px;
 }
 
 .filtros-sidebar {
   position: fixed;
-  top: 64px;
+  top: 100px;
   left: 0;
   width: 400px;
-
+  height: calc(100vh - 100px);
   padding: 20px;
 
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   background-color: rgba(0, 0, 0, 0.03);
 }
 
@@ -40,11 +40,15 @@
     top: auto;
     width: 100%;
     height: auto;
+    min-height: 650px;
     padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   
   .productos-content {
     margin-left: 0;
     padding: 15px;
   }
-} 
+}

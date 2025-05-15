@@ -1,0 +1,293 @@
+/* Estilos fijos para mantener el diseño consistente en toda la aplicación */
+
+/* Estilos fijos para las tarjetas de productos */
+.producto-card {
+  width: 100% !important;
+  height: 520px !important;
+  background: linear-gradient(145deg, #1a1a1a, #2a2020) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 10px rgba(255, 0, 0, 0.2) !important;
+  border: 1px solid rgba(255, 0, 0, 0.15) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+}
+
+.producto-card:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 8px 20px rgba(255, 0, 0, 0.3) !important;
+  border-color: rgba(255, 0, 0, 0.3) !important;
+  background: linear-gradient(145deg, #202020, #2d2323) !important;
+}
+
+.ver-detalles {
+  width: 100% !important;
+  background-color: #cc0000 !important;
+  color: white !important;
+  border: none !important;
+  padding: 10px !important;
+  border-radius: 8px !important;
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s, transform 0.2s !important;
+  margin-top: auto !important;
+  box-shadow: 0 4px 8px rgba(204, 0, 0, 0.2) !important;
+  text-decoration: none !important;
+  display: inline-block !important;
+  text-align: center !important;
+}
+
+.ver-detalles:hover {
+  background-color: #ff0000 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 12px rgba(204, 0, 0, 0.3) !important;
+}
+
+/* Estilos para el filtro y contenido principal */
+.filtros-sidebar {
+  position: fixed !important;
+  top: 130px !important;
+  left: 0 !important;
+  width: 400px !important;
+  height: calc(100vh - 80px) !important;
+  padding: 0 20px 20px 20px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  background-color: rgba(0, 0, 0, 0.03) !important;
+  z-index: 90 !important;
+  margin-top: 20px !important;
+}
+
+.productos-content {
+  flex: 1 !important;
+  margin-left: 400px !important;
+  padding: 0 20px 20px 0 !important;
+  color: #ffffff !important;
+  margin-top: 0 !important;
+}
+
+/* Estilos para el menú de navegación */
+.nav-principal {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.98), rgba(0, 0, 0, 0.95)) !important;
+  padding: 1.5rem 3rem !important;
+  position: fixed !important;
+  width: 100% !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+/* Estilos para la imagen del producto */
+.producto-imagen {
+  position: relative !important;
+  width: 100% !important;
+  padding-top: 63% !important; /* Proporción un poco más larga */
+  overflow: hidden !important;
+}
+
+.imagen-principal {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+/* Estilos para la información del producto */
+.producto-info {
+  padding: 10px !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.producto-header {
+  margin-bottom: 10px !important;
+}
+
+.producto-titulo {
+  font-size: 1.2rem !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  margin: 0 0 6px 0 !important;
+  height: 32px !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.precio-actual {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: #ff3333 !important;
+}
+
+.precio-mensual {
+  font-size: 0.9rem !important;
+  color: #cccccc !important;
+  margin-top: 2px !important;
+}
+
+.producto-specs {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 6px !important;
+  margin: 10px 0 !important;
+  font-size: 0.85rem !important;
+  color: #dddddd !important;
+}
+
+.spec-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  text-align: center !important;
+  padding: 6px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(255, 0, 0, 0.1) !important;
+}
+
+/* Estilos para los botones con año, kilometraje, etc. */
+.producto-card .fas.fa-calendar,
+.producto-card .fas.fa-tachometer-alt,
+.producto-card .fas.fa-gas-pump,
+.producto-card .fas.fa-cog,
+.spec-icon .fas.fa-calendar,
+.spec-icon .fas.fa-tachometer-alt,
+.spec-icon .fas.fa-gas-pump,
+.spec-icon .fas.fa-cog,
+.spec-icon,
+.spec-icon [class^="fas"],
+.spec-icon [class*=" fas"],
+.spec-icon [class^="far"],
+.spec-icon [class*=" far"] {
+  color: white !important;
+  background-color: transparent !important;
+}
+
+/* Estilos para el precio en la página de detalles */
+.precio-actual {
+  color: #4a90e2 !important;
+}
+
+/* Mantenemos el botón Ver Detalles en rojo */
+.ver-detalles {
+  background-color: #cc0000 !important;
+  color: white !important;
+}
+
+/* Estilos para asegurar que el menú sea visible */
+.nav-principal {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  z-index: 999999 !important;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.98), rgba(0, 0, 0, 0.95)) !important;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 1.5rem 3rem !important;
+  height: auto !important;
+  transform: translateZ(0) !important;
+  will-change: transform !important;
+  -webkit-transform: translate3d(0,0,0) !important;
+  -webkit-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
+}
+
+/* Estilos para el grid de productos */
+.productos-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(300px, 1fr)) !important;
+  justify-content: center !important;
+  gap: 30px !important;
+  padding: 0 !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+}
+
+/* Estilos para las badges */
+.eco-badge, .estado-badge {
+  position: absolute !important;
+  padding: 5px 10px !important;
+  border-radius: 4px !important;
+  font-weight: 600 !important;
+  font-size: 0.8rem !important;
+  z-index: 10 !important;
+}
+
+.eco-badge {
+  top: 10px !important;
+  right: 10px !important;
+  background-color: #22cc66 !important;
+  color: white !important;
+}
+
+.estado-badge {
+  top: 10px !important;
+  left: 10px !important;
+  background-color: #cc0000 !important;
+  color: white !important;
+}
+
+/* Estilos para el contenedor del catálogo */
+.catalogo-container {
+  min-height: 100vh !important;
+  overflow-x: hidden !important;
+  background: linear-gradient(135deg, #000000, #1a0000, #330000, #000000) !important;
+  position: relative !important;
+}
+
+.catalogo-container::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 100vh !important;
+  background: radial-gradient(circle at 50% 30%, rgba(255, 0, 0, 0.15), rgba(255, 0, 0, 0.05) 40%, transparent 70%) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+.catalogo-container::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 200px !important;
+  background: linear-gradient(to top, rgba(255, 0, 0, 0.08), transparent) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+.catalogo-container > * {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.main-content {
+  display: flex !important;
+  width: 100% !important;
+  margin-top: 20px !important;
+  position: relative !important;
+  top: 0 !important;
+}

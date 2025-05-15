@@ -135,10 +135,9 @@ export default function CardCoches({ producto }) {
     // Guarda los datos del coche seleccionado
     localStorage.setItem("cocheSeleccionado", JSON.stringify(coche));
 
-    // Eliminamos cualquier marcador de navegación
-    sessionStorage.removeItem("vieneDePagina");
-    sessionStorage.removeItem("ultimaNavegacion");
-
+    // Guardar el estado actual para poder volver
+    sessionStorage.setItem("ultimaPagina", "catalogo");
+    
     // Navegar a la página de detalles
     router.push(`/Pages/Coches/${coche.modelo_id}`);
   };

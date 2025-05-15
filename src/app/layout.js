@@ -1,5 +1,6 @@
 import { Inter } from 'next/font/google'
 import './globals.css'
+import './fixed-styles.css' // Importando estilos fijos
 import { metadata } from './metadata'
 import ClientProviders from './client-providers'
 

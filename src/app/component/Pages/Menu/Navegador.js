@@ -3,7 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useCart } from '../../../context/CartContext';
-import './menu.css'; 
+import './menu.css';
+import { createPortal } from 'react-dom'; 
 
 function NavegadorMenu() {
     const router = useRouter();
@@ -88,8 +89,39 @@ function NavegadorMenu() {
         return () => document.removeEventListener('click', closeDropdown);
     }, [showDropdown]);
 
-    return (
-        <nav className="nav-principal">
+    // Estilo inline para el menú con máxima prioridad
+    const menuStyle = {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        width: '100%',
+        zIndex: 9999999,
+        background: 'linear-gradient(to right, rgba(0, 0, 0, 0.98), rgba(0, 0, 0, 0.95))',
+        boxShadow: '0 2px 20px rgba(0, 0, 0, 0.3)',
+        transform: 'translateZ(0)',
+        WebkitTransform: 'translate3d(0,0,0)',
+        WebkitBackfaceVisibility: 'hidden',
+        backfaceVisibility: 'hidden',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '1.5rem 3rem',
+        height: 'auto'
+    };
+
+    // Estado para controlar si el portal está listo para renderizarse
+    const [mounted, setMounted] = useState(false);
+
+    // Efecto para montar el portal solo en el cliente
+    useEffect(() => {
+        setMounted(true);
+        return () => setMounted(false);
+    }, []);
+
+    // El contenido del menú que se renderizará en el portal
+    const menuContent = (
+        <nav className="nav-principal" style={menuStyle}>
             <div onClick={() => handleNavigation('/')} className="logo-container">
                 <img src="/FOTOS/logo.png" alt="DriveSoul Logo" className="logo" />
             </div>
@@ -134,6 +166,11 @@ function NavegadorMenu() {
             </ul>
         </nav>
     );
+
+    // Renderizar el menú usando un portal para asegurar que esté por encima de todo
+    return mounted && typeof document !== 'undefined' ? 
+        createPortal(menuContent, document.body) : 
+        menuContent;
 }
 
 export default NavegadorMenu; 

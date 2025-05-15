@@ -3,33 +3,40 @@
   grid-template-columns: repeat(3, minmax(300px, 1fr));
   justify-content: center;
   gap: 30px;
-  padding: 20px;
+  padding: 0;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 .producto-card {
   width: 100%;
-  height: 580px;
-  background: white;
+  height: 520px;
+  background: linear-gradient(145deg, #1a1a1a, #2a2020);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(255, 0, 0, 0.2);
+  border: 1px solid rgba(255, 0, 0, 0.15);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 1;
 }
 
 .producto-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 20px rgba(255, 0, 0, 0.3);
+  border-color: rgba(255, 0, 0, 0.3);
+  background: linear-gradient(145deg, #202020, #2d2323);
 }
 
 .producto-imagen {
   position: relative;
   width: 100%;
-  padding-top: 66.67%; /* Proporción 3:2 */
+  padding-top: 63%; /* Proporción un poco más larga */
   overflow: hidden;
 }
 
@@ -44,7 +51,7 @@
 }
 
 .producto-info {
-  padding: 15px;
+  padding: 10px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -55,13 +62,14 @@
 }
 
 .producto-titulo {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 600;
-  color: #2d3748;
-  margin: 0 0 8px 0;
-  height: 35px;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  height: 32px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -69,22 +77,22 @@
 .precio-actual {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #2c5282;
+  color: #ff3333;
 }
 
 .precio-mensual {
   font-size: 0.9rem;
-  color: #718096;
+  color: #cccccc;
   margin-top: 2px;
 }
 
 .producto-specs {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin: 12px 0;
-  font-size: 0.9rem;
-  color: #4a5568;
+  gap: 6px;
+  margin: 10px 0;
+  font-size: 0.85rem;
+  color: #ffffff;
 }
 
 .spec-item {
@@ -94,12 +102,13 @@
   gap: 5px;
   text-align: center;
   padding: 6px;
-  background: rgba(44, 82, 130, 0.05);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 8px;
+  border: 1px solid rgba(255, 0, 0, 0.1);
 }
 
 .spec-item i {
-  color: #2c5282;
+  color: #ff3333;
 }
 
 .spec-separator {
@@ -108,20 +117,26 @@
 
 .ver-detalles {
   width: 100%;
-  background-color: #2c5282;
+  background-color: #cc0000;
   color: white;
   border: none;
-  padding: 12px;
+  padding: 10px;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, transform 0.2s;
   margin-top: auto;
+  box-shadow: 0 4px 8px rgba(204, 0, 0, 0.2);
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
 }
 
 .ver-detalles:hover {
-  background-color: #2a4365;
+  background-color: #ff0000;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(204, 0, 0, 0.3);
 }
 
 .eco-badge {
@@ -141,13 +156,13 @@
   position: absolute;
   top: 10px;
   left: 10px;
-  background: #2c5282;
+  background: #cc0000;
   color: white;
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(204, 0, 0, 0.3);
 }
 
 .no-resultados {

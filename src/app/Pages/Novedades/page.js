@@ -155,7 +155,7 @@ const Novedades = () => {
 
     return (
         <>
-            <div className="novedades-container">
+            <div style={{background: 'linear-gradient(to bottom, #000000, #1a0000)', minHeight: '100vh', color: '#ffffff'}}>
                 <NavegadorMenu />
                 
                 <div className="banner-container">
@@ -172,16 +172,17 @@ const Novedades = () => {
                     </div>
                 </div>
                 
-                <div className="ofertas-content" style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
+                <div style={{maxWidth: '1200px', margin: '0 auto', padding: '20px 10px'}}>
                     
                     <div className="productos-grid">
                         {cochesEnOferta.map((coche) => (
-                        <div key={coche.id} className="producto-card">
-                            <div className="producto-imagen">
+                        <div key={coche.id} className="producto-card" style={{height: '800px', width: '100%', background: 'linear-gradient(145deg, #1a1a1a, #2a2020)', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 10px rgba(255, 0, 0, 0.2)', border: '1px solid rgba(255, 0, 0, 0.15)', display: 'flex', flexDirection: 'column', position: 'relative'}}>
+                            <div className="producto-imagen" style={{position: 'relative', width: '100%', paddingTop: '80%', overflow: 'hidden'}}>
                                 <img
                                     src={getImagenCoche(coche.modelo_id)}
                                     alt={coche.nombre}
                                     className="imagen-principal"
+                                    style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center'}}
                                     onError={(e) => { e.target.src = '/FOTOS/COCHES/default.jpg' }}
                                 />
                                 {coche.tipo_combustible && coche.tipo_combustible.toLowerCase() === "híbrido" && (
@@ -189,57 +190,50 @@ const Novedades = () => {
                                         <span>ECO</span>
                                     </div>
                                 )}
-                                <div className="descuento-badge">
+                                <div className="descuento-badge" style={{position: 'absolute', top: '10px', right: '10px', backgroundColor: '#cc0000', color: 'white', padding: '6px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: '600', boxShadow: '0 2px 4px rgba(204, 0, 0, 0.3)', zIndex: 2}}>
                                     <span>-{coche.porcentaje_descuento}%</span>
                                 </div>
                             </div>
 
-                            <div className="producto-info">
-                                <div className="producto-header">
-                                    <h3 className="producto-titulo">{coche.nombre}</h3>
+                            <div className="producto-info" style={{padding: '15px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+                                <div className="producto-header" style={{marginBottom: '10px'}}>
+                                    <h3 className="producto-titulo" style={{fontSize: '1.4rem', fontWeight: 600, color: '#ffffff', margin: '0 0 10px 0', height: '40px', display: '-webkit-box', WebkitLineClamp: 2, lineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>{coche.nombre}</h3>
                                     <div className="producto-precio">
-                                        <div className="precio-original" style={{ 
-                                            textDecoration: 'line-through', 
-                                            color: '#999', 
-                                            fontSize: '0.9em' 
-                                        }}>
+                                        <div style={{textDecoration: 'line-through', color: '#999', fontSize: '0.9rem', marginBottom: '2px'}}>
                                             {coche.precio.toLocaleString("es-ES")} €
                                         </div>
-                                        <div className="precio-actual" style={{ color: '#ff3a3a', fontWeight: 'bold' }}>
+                                        <div style={{fontSize: '1.5rem', fontWeight: 700, color: '#ff3333'}}>
                                             {coche.precio_oferta.toLocaleString("es-ES")} €
                                         </div>
-                                        <div className="precio-mensual">
+                                        <div style={{fontSize: '0.9rem', color: '#cccccc', marginTop: '2px'}}>
                                             Desde {Math.round(coche.precio_oferta / 72).toLocaleString("es-ES")} €/mes*
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="producto-specs">
-                                    <div className="spec-item">
-                                        <i className="fas fa-calendar"></i>
-                                        <span>{coche.anio}</span>
+                                <div style={{display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '3px', margin: '5px 0', fontSize: '0.6rem', color: '#ffffff'}}>
+                                    <div className="spec-item" style={{padding: '2px', backgroundColor: 'rgba(255, 255, 255, 0.05)'}}>
+                                        <i className="fas fa-calendar" style={{color: '#ff3333', fontSize: '0.5rem'}}></i>
+                                        <span style={{marginLeft: '1px'}}>{coche.anio}</span>
                                     </div>
-                                    <div className="spec-separator">·</div>
-                                    <div className="spec-item">
-                                        <i className="fas fa-tachometer-alt"></i>
-                                        <span>{coche.kilometraje ? coche.kilometraje.toLocaleString("es-ES") : '0'} km</span>
+                                    <div className="spec-item" style={{padding: '2px', backgroundColor: 'rgba(255, 255, 255, 0.05)'}}>
+                                        <i className="fas fa-tachometer-alt" style={{color: '#ff3333', fontSize: '0.5rem'}}></i>
+                                        <span style={{marginLeft: '1px'}}>{coche.kilometraje ? coche.kilometraje.toLocaleString("es-ES") : '0'} km</span>
                                     </div>
-                                    <div className="spec-separator">·</div>
-                                    <div className="spec-item">
-                                        <i className="fas fa-gas-pump"></i>
-                                        <span>{coche.tipo_combustible}</span>
+                                    <div className="spec-item" style={{padding: '2px', backgroundColor: 'rgba(255, 255, 255, 0.05)'}}>
+                                        <i className="fas fa-gas-pump" style={{color: '#ff3333', fontSize: '0.5rem'}}></i>
+                                        <span style={{marginLeft: '1px'}}>{coche.tipo_combustible}</span>
                                     </div>
-                                    <div className="spec-separator">·</div>
-                                    <div className="spec-item">
-                                        <i className="fas fa-cog"></i>
-                                        <span>{coche.transmision}</span>
+                                    <div className="spec-item" style={{padding: '2px', backgroundColor: 'rgba(255, 255, 255, 0.05)'}}>
+                                        <i className="fas fa-cog" style={{color: '#ff3333', fontSize: '0.5rem'}}></i>
+                                        <span style={{marginLeft: '1px'}}>{coche.transmision}</span>
                                     </div>
                                 </div>
                                 
-                                <div className="producto-acciones">
+                                <div style={{marginTop: '15px'}}>
                                     <a
                                         href={`/Pages/Coches/${coche.modelo_id}`}
-                                        className="ver-detalles"
+                                        className="ver-detalles" style={{width: '100%', backgroundColor: '#cc0000', color: 'white', border: 'none', padding: '14px', borderRadius: '8px', fontSize: '1.1rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease', boxShadow: '0 4px 8px rgba(204, 0, 0, 0.2)', textDecoration: 'none', display: 'block', textAlign: 'center', position: 'relative', zIndex: 2}}
                                         onClick={(e) => {
                                             e.preventDefault();
                                             // Guardar los datos del coche en localStorage antes de navegar

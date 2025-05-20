@@ -406,11 +406,11 @@ export default function DetallesCoche() {
                     { icon: 'calendar-alt', label: 'Año', value: coche.anio || '2023' },
                     { icon: 'road', label: 'Kilómetros', value: `${coche.kilometraje ? coche.kilometraje.toLocaleString('es-ES') : '0'} km` },
                     { icon: 'gas-pump', label: 'Combustible', value: coche.tipo_combustible || 'Gasolina' },
-                    { icon: 'cog', label: 'Transmisión', value: coche.transmision || 'Manual' },
+                    { icon: 'cog', label: 'Transmisión', value: coche.transmision || 'Automático' },
                     { icon: 'palette', label: 'Color', value: coche.color || 'No especificado' },
-                    { icon: 'bolt', label: 'Potencia', value: coche.potencia || 'N/A' },
-                    { icon: 'gauge-high', label: 'Velocidad Máx.', value: coche.velocidad_maxima || 'N/A' },
-                    { icon: 'gas-pump', label: 'Consumo', value: coche.consumo || 'N/A' }
+                    { icon: 'bolt', label: 'Potencia', value: coche.potencia || '150 CV' },
+                    { icon: 'gauge-high', label: 'Velocidad Máx.', value: coche.velocidad_maxima || '200 km/h' },
+                    { icon: 'gas-pump', label: 'Consumo', value: coche.consumo || '6.5 L/100km' }
                   ].map((spec, index) => (
                     <div key={index} className="spec-item">
                       <div

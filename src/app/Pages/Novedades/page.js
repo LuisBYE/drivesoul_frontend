@@ -6,111 +6,114 @@ import NavegadorMenu from '../../component/Pages/Menu/Navegador';
 import Footer from "../../component/footer";
 import { useCart } from '../../context/CartContext';
 import { obtenerGradiente } from '../../Utils/Coches/coloresCoches';
+import ReqCoches from "../../component/AxiosResquestAll/RequestsCoches"; 
 import './ofertas.css';
 import '../../Utils/Pages/tarjetas.css';
 
 const Novedades = () => {
+    console.log("[Novedades] Componente Novedades renderizando...");
     const router = useRouter();
     const { addToCart } = useCart();
     const [addedToCart, setAddedToCart] = useState({});
     const [cocheDesplegado, setCocheDesplegado] = useState(null);
     const [cocheId, setCocheId] = useState(null);
+    const [cochesOfertasApi, setCochesOfertasApi] = useState([]); 
+    const [loading, setLoading] = useState(true); 
+    const [error, setError] = useState(null); 
 
-    // Datos de los coches en oferta
-    const cochesEnOferta = [
-        {
-            id: 2,
-            modelo_id: 2,
-            nombre: "Hyundai i30 N Fastback",
-            precio: 39000,
+    // Datos específicos para los coches que queremos mostrar como ofertas
+    const ofertasEspecificasData = {
+        2: { // Hyundai i30 N Fastback - modelo_id: 2
+            nombreOferta: "Hyundai i30 N Fastback",
             precio_oferta: 33150,
             porcentaje_descuento: 15,
-            anio: "2023",
-            kilometraje: 0,
-            color: "Azul Performance",
-            tipo_combustible: "Gasolina",
-            transmision: "Manual 6 velocidades",
-            potencia: "280 CV",
-            aceleracion: "5.9 segundos (0-100 km/h)",
-            velocidad_maxima: "250 km/h",
-            consumo: "8.4 l/100km",
             categoria_oferta: 1,
-            descripcion: "Hyundai i30 N Fastback Performance, 280CV, increíble rendimiento, deportivo compacto con acabados premium y tecnología de competición. Incluye diferencial autoblocante electrónico, escape deportivo variable y modos de conducción configurables."
+            descripcionOferta: "Hyundai i30 N Fastback Performance, 280CV, increíble rendimiento, deportivo compacto con acabados premium y tecnología de competición. Incluye diferencial autoblocante electrónico, escape deportivo variable y modos de conducción configurables."
         },
-        {
-            id: 10,
-            modelo_id: 97,
-            nombre: "Volkswagen Golf",
-            precio: 28000,
+        97: { // Volkswagen Golf - modelo_id: 97
+            nombreOferta: "Volkswagen Golf",
             precio_oferta: 23800,
             porcentaje_descuento: 15,
-            anio: "2023",
-            kilometraje: 0,
-            color: "Gris Piedra Lunar",
-            tipo_combustible: "Gasolina",
-            transmision: "DSG 7 velocidades",
-            potencia: "150 CV",
-            aceleracion: "8.5 segundos (0-100 km/h)",
-            velocidad_maxima: "224 km/h",
-            consumo: "5.7 l/100km",
             categoria_oferta: 2,
-            descripcion: "Volkswagen Golf 2023, motor 1.5 TSI, 150CV, compacto alemán con tecnología de última generación. Equipado con sistema de infoentretenimiento de 10 pulgadas, asistentes de conducción avanzados y conectividad Car-Net."
+            descripcionOferta: "Volkswagen Golf 2023, motor 1.5 TSI, 150CV, compacto alemán con tecnología de última generación. Equipado con sistema de infoentretenimiento de 10 pulgadas, asistentes de conducción avanzados y conectividad Car-Net."
         },
-        {
-            id: 17,
-            modelo_id: 104,
-            nombre: "Mercedes Clase C",
-            precio: 45000,
+        104: { // Mercedes Clase C - modelo_id: 104
+            nombreOferta: "Mercedes Clase C",
             precio_oferta: 36000,
             porcentaje_descuento: 20,
-            anio: "2023",
-            kilometraje: 0,
-            color: "Rojo Jacinto",
-            tipo_combustible: "Gasolina",
-            transmision: "Automática 9G-TRONIC",
-            potencia: "204 CV",
-            aceleracion: "7.3 segundos (0-100 km/h)",
-            velocidad_maxima: "246 km/h",
-            consumo: "6.2 l/100km",
             categoria_oferta: 3,
-            descripcion: "Mercedes Clase C 2023, motor 2.0, 204CV, berlina premium con acabados de lujo y tecnología avanzada. Incluye sistema MBUX con pantalla de 11.9 pulgadas, iluminación ambiental personalizable y paquete de asistencia a la conducción."
+            descripcionOferta: "Mercedes Clase C 2023, motor 2.0, 204CV, berlina premium con acabados de lujo y tecnología avanzada. Incluye sistema MBUX con pantalla de 11.9 pulgadas, iluminación ambiental personalizable y paquete de asistencia a la conducción."
         }
-    ];
+    };
 
-    // Categorías de ofertas
+    useEffect(() => {
+        const fetchYTransformarOfertas = async () => {
+            console.log("[Novedades] fetchYTransformarOfertas iniciando..."); 
+            try {
+                setLoading(true);
+                const todosLosCoches = await ReqCoches.getCoches();
+                console.log("[Novedades] Datos recibidos de ReqCoches.getCoches():", todosLosCoches);
+
+                if (todosLosCoches && Array.isArray(todosLosCoches)) {
+                    const cochesEnOfertaTransformados = todosLosCoches
+                        .filter(coche => ofertasEspecificasData.hasOwnProperty(coche.modelo_id)) // Filtrar solo los que tienen datos de oferta definidos
+                        .map(coche => {
+                            const datosOferta = ofertasEspecificasData[coche.modelo_id];
+                            return {
+                                ...coche, // Datos base de la BBDD (incluye el 'precio' original, 'id' de BBDD, etc.)
+                                nombre: datosOferta.nombreOferta, // Usar nombre específico de la oferta
+                                precio_oferta: datosOferta.precio_oferta,
+                                porcentaje_descuento: datosOferta.porcentaje_descuento,
+                                categoria_oferta: datosOferta.categoria_oferta,
+                                descripcion: datosOferta.descripcionOferta // Usar descripción específica de la oferta
+                            };
+                        });
+
+                    console.log("[Novedades] Coches transformados como ofertas:", cochesEnOfertaTransformados);
+                    setCochesOfertasApi(cochesEnOfertaTransformados);
+                    console.log("[Novedades] Estado cochesOfertasApi actualizado:", cochesEnOfertaTransformados);
+                } else {
+                    setCochesOfertasApi([]);
+                    console.warn("[Novedades] La respuesta de ReqCoches.getCoches() no fue un array válido o está vacía.");
+                }
+            } catch (e) {
+                setError(e.message);
+                console.error("[Novedades] Error al cargar y transformar los coches en oferta:", e);
+                setCochesOfertasApi([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchYTransformarOfertas();
+    }, []); 
+
     const categoriasOfertas = {
         1: 'Promoción Especial',
         2: 'Liquidación',
         3: 'Descuento Financiación'
     };
 
-    // Función para mostrar/ocultar detalles del coche
     const mostrarCocheId = (id) => {
         setCocheId(cocheId === id ? null : id);
         setCocheDesplegado(cocheId !== id);
     };
     
 
-    
-    // Función para navegar a la página de detalles del coche
     const navegarADetalles = (coche) => {
-        // Guardar los datos del coche seleccionado con precio de oferta
         const cocheConOferta = {
             ...coche,
-            precioOriginal: coche.precio,  // Guardamos el precio original
-            precio: coche.precio_oferta,   // Reemplazamos el precio por el precio de oferta
-            en_oferta: true,               // Marcamos que está en oferta
-            porcentaje_descuento: coche.porcentaje_descuento  // Guardamos el porcentaje de descuento
+            precioOriginal: coche.precio,  
+            precio: coche.precio_oferta,   
+            en_oferta: true,               
+            porcentaje_descuento: coche.porcentaje_descuento  
         };
         
         localStorage.setItem('cocheSeleccionado', JSON.stringify(cocheConOferta));
         
-        // Navegar a la página de detalles usando window.location para forzar una recarga completa
-        // Esto asegura que al volver, la página se recargue completamente y no haya problemas de diseño
         window.location.href = `/Pages/Coches/${coche.modelo_id}`;
     };
 
-    // Función para añadir al carrito
     const agregarAlCarrito = (coche) => {
         const cocheParaCarrito = {
             id: coche.id,
@@ -127,7 +130,6 @@ const Novedades = () => {
         setAddedToCart({ ...addedToCart, [coche.id]: true });
     };
 
-    // Función para obtener la imagen del coche
     const getImagenCoche = (modelo_id) => {
         const rutasImagenes = {
             1: "/FOTOS/COCHES/SEATIBIZAROJO/1.jpg",
@@ -175,8 +177,8 @@ const Novedades = () => {
                 <div style={{maxWidth: '1200px', margin: '0 auto', padding: '20px 10px'}}>
                     
                     <div className="productos-grid">
-                        {cochesEnOferta.map((coche) => (
-                        <div key={coche.id} className="producto-card" style={{height: '800px', width: '100%', background: 'linear-gradient(145deg, #1a1a1a, #2a2020)', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 10px rgba(255, 0, 0, 0.2)', border: '1px solid rgba(255, 0, 0, 0.15)', display: 'flex', flexDirection: 'column', position: 'relative'}}>
+                        {cochesOfertasApi.map((coche, index) => (
+                        <div key={`oferta-${coche.modelo_id}-${index}`} className="producto-card" style={{height: '800px', width: '100%', background: 'linear-gradient(145deg, #1a1a1a, #2a2020)', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 10px rgba(255, 0, 0, 0.2)', border: '1px solid rgba(255, 0, 0, 0.15)', display: 'flex', flexDirection: 'column', position: 'relative'}}>
                             <div className="producto-imagen" style={{position: 'relative', width: '100%', paddingTop: '80%', overflow: 'hidden'}}>
                                 <img
                                     src={getImagenCoche(coche.modelo_id)}
@@ -236,7 +238,6 @@ const Novedades = () => {
                                         className="ver-detalles" style={{width: '100%', backgroundColor: '#cc0000', color: 'white', border: 'none', padding: '14px', borderRadius: '8px', fontSize: '1.1rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease', boxShadow: '0 4px 8px rgba(204, 0, 0, 0.2)', textDecoration: 'none', display: 'block', textAlign: 'center', position: 'relative', zIndex: 2}}
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            // Guardar los datos del coche en localStorage antes de navegar
                                             const cocheConOferta = {
                                                 ...coche,
                                                 precioOriginal: coche.precio,
@@ -246,7 +247,6 @@ const Novedades = () => {
                                             };
                                             localStorage.setItem('cocheSeleccionado', JSON.stringify(cocheConOferta));
                                             
-                                            // Navegar directamente usando window.location para forzar una recarga completa
                                             window.location.href = `/Pages/Coches/${coche.modelo_id}`;
                                         }}
                                     >
@@ -259,7 +259,6 @@ const Novedades = () => {
                     </div>
                 </div>
                 
-                {/* Sección de Tecnología Automotriz */}
                 <div style={{maxWidth: '1200px', margin: '60px auto 0', padding: '20px 10px'}}>
                     <h2 style={{color: '#ffffff', fontSize: '2rem', fontWeight: '700', marginBottom: '30px', textAlign: 'center', position: 'relative'}}>
                         TECNOLOGÍA AUTOMOTRIZ
@@ -299,7 +298,6 @@ const Novedades = () => {
                     </div>
                 </div>
                 
-                {/* Sección de Consejos de Compra */}
                 <div style={{maxWidth: '1200px', margin: '60px auto 0', padding: '20px 10px'}}>
                     <h2 style={{color: '#ffffff', fontSize: '2rem', fontWeight: '700', marginBottom: '30px', textAlign: 'center', position: 'relative'}}>
                         CONSEJOS DE COMPRA

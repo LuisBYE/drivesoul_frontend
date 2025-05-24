@@ -2,7 +2,9 @@
 import React, { useState, useEffect } from "react";
 import NavegadorMenu from '../../component/Pages/Menu/Navegador';
 import Footer from "../../component/footer";
+import PageBanner from '../../components/PageBanner';
 import "./noticias.css";
+import '../../styles/global.css';
 
 // Nuevo componente para la tarjeta de video individual
 function VideoCardItem({ video }) {
@@ -162,20 +164,16 @@ export default function Noticias() {
   return (
     <>
       <NavegadorMenu />
-      <div className="noticias-container">
+      <div className="noticias-container noticias-page">
         {/* Banner superior */}
-        <div className="noticias-banner">
-          <img src="/FOTOS/NOTICIAS_MOT1.jpg" alt="Noticias del Motor" className="noticias-banner-img" />
-          <div className="noticias-banner-content">
-            <h1 className="titulo">NOTICIAS DEL MOTOR</h1>
-            <p className="noticias-banner-descripcion">
-              Mantente al día con las últimas novedades, pruebas y guías del mundo del motor.
-            </p>
-          </div>
-        </div>
+        <PageBanner
+          title="NOTICIAS DEL MOTOR"
+          subtitle="Mantente al día con las últimas novedades, pruebas y guías del mundo del motor."
+          backgroundImage="/FOTOS/fot.jpg"
+        />
 
         {/* Sección Noticias Destacadas */}
-        <section className="seccion-noticias">
+        <section className="seccion-noticias" style={{marginTop: '80px'}}>
           <div className="seccion-titulo-container">
             <h2 className="seccion-titulo">ÚLTIMAS NOVEDADES</h2>
           </div>

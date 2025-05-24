@@ -1,18 +1,18 @@
 import React from 'react';
 import NavegadorMenu from '../../component/Pages/Menu/Navegador';
 import Footer from "../../component/footer";
+import AsistenteCoche from "./AsistenteCoche";
+import { FormProvider } from "../../context/FormContext";
 
 const Coche = () => {
     return (
-        <div>
-            <NavegadorMenu />
-            <h1 style={{ fontSize: '3rem', textAlign: 'center', margin: '20px 0', color: '#333' }}>Catálogo</h1>
-            
-            <div className="informacion-adicional" style={{ marginTop: '40px', padding: '20px', backgroundColor: '#817674', borderRadius: '8px' }}>
-                <h2>COCHES A MEDIDA</h2>    
+        <FormProvider>
+            <div className="coches-page-container">
+                <NavegadorMenu />
+                <AsistenteCoche />
+                <Footer />
             </div>
-            <Footer />
-        </div>
+        </FormProvider>
     );
 };
 

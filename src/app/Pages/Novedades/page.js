@@ -7,8 +7,10 @@ import Footer from "../../component/footer";
 import { useCart } from '../../context/CartContext';
 import { obtenerGradiente } from '../../Utils/Coches/coloresCoches';
 import ReqCoches from "../../component/AxiosResquestAll/RequestsCoches"; 
+import PageBanner from '../../components/PageBanner';
 import './ofertas.css';
 import '../../Utils/Pages/tarjetas.css';
+import '../../styles/global.css';
 
 const Novedades = () => {
     console.log("[Novedades] Componente Novedades renderizando...");
@@ -157,25 +159,16 @@ const Novedades = () => {
 
     return (
         <>
-            <div style={{background: 'linear-gradient(to bottom, #000000, #1a0000)', minHeight: '100vh', color: '#ffffff'}}>
+            <div className="novedades-page" style={{color: '#ffffff'}}>
                 <NavegadorMenu />
                 
-                <div className="banner-container">
-                    <img 
-                        src="/FOTOS/BANNEROFERTAS.png" 
-                        alt="Ofertas especiales" 
-                        className="banner-image"
-                    />
-                    <div className="banner-overlay">
-                        <div>
-                            <h1 className="banner-title">OFERTAS EXCLUSIVAS</h1>
-                            <p className="banner-subtitle">Descubre nuestras mejores promociones</p>
-                        </div>
-                    </div>
-                </div>
+                <PageBanner 
+                    title="OFERTAS EXCLUSIVAS" 
+                    subtitle="Descubre nuestras mejores promociones" 
+                    backgroundImage="/FOTOS/BANNEROFERTAS.png"
+                />
                 
-                <div style={{maxWidth: '1200px', margin: '0 auto', padding: '20px 10px'}}>
-                    
+                <div style={{maxWidth: '1200px', margin: '80px auto 0', padding: '20px 10px'}}>
                     <div className="productos-grid">
                         {cochesOfertasApi.map((coche, index) => (
                         <div key={`oferta-${coche.modelo_id}-${index}`} className="producto-card" style={{height: '800px', width: '100%', background: 'linear-gradient(145deg, #1a1a1a, #2a2020)', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 10px rgba(255, 0, 0, 0.2)', border: '1px solid rgba(255, 0, 0, 0.15)', display: 'flex', flexDirection: 'column', position: 'relative'}}>

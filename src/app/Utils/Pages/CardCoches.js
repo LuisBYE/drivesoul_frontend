@@ -25,8 +25,10 @@ export default function CardCoches({ producto }) {
   };
   useEffect(() => {
     console.log("consola producto", JSON.stringify(producto));
-   
-  }, [coche]);
+    if (producto && producto.length > 0) {
+      setCoche(producto);
+    }
+  }, [producto]);
 
   const marca = [
     "Seat",
@@ -190,7 +192,7 @@ export default function CardCoches({ producto }) {
 
             <div className="producto-info">
               <div className="producto-header">
-                <h3 className="producto-titulo">{item.nombre}</h3>
+                <h3 className="producto-titulo">{item.nombre_producto || item.nombre || `${item.marca} ${item.modelo}`}</h3>
                 <div className="producto-precio">
                   <div className="precio-actual">
                     {item.precio.toLocaleString("es-ES")} €

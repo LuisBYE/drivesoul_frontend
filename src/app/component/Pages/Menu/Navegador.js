@@ -13,6 +13,7 @@ function NavegadorMenu() {
     const [rol, setRol]= useState("");
     const [showDropdown, setShowDropdown] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [currentPath, setCurrentPath] = useState("");
     const { cartCount, setCartCount } = useCart();
     const user = localStorage.getItem('user');
     // Función para verificar y actualizar el estado de autenticación
@@ -45,6 +46,11 @@ function NavegadorMenu() {
         window.addEventListener('logout', checkAuthStatus);
         window.addEventListener('storage', checkAuthStatus);
         
+        // Detectar la página actual
+        if (typeof window !== 'undefined') {
+            setCurrentPath(window.location.pathname);
+        }
+        
         return () => {
             window.removeEventListener('login', checkAuthStatus);
             window.removeEventListener('logout', checkAuthStatus);
@@ -55,6 +61,7 @@ function NavegadorMenu() {
     const handleNavigation = (path) => {
         if (showDropdown) setShowDropdown(false);
         if (isMobileMenuOpen) setIsMobileMenuOpen(false);
+        setCurrentPath(path);
         router.push(path);
     };
 
@@ -126,12 +133,12 @@ function NavegadorMenu() {
                 <img src="/FOTOS/logo.png" alt="DriveSoul Logo" className="logo" />
             </div>
             <ul className="menu">
-                <li onClick={() => handleNavigation('/Pages/Novedades')}>Novedades</li>
-                <li onClick={() => handleNavigation('/Pages/Catalogo')}>Catálogo Coches</li>
-                <li onClick={() => handleNavigation('/Pages/Noticias')}>Noticias del Motor</li>
-                <li onClick={() => handleNavigation('/Pages/Coches')}>Coche a medida</li>
-              <li onClick={() => handleNavigation('/Pages/Contacto')}>Contacto</li>
-              {rol === "administrador" && user !== null && <li onClick={() => handleNavigation('/Pages/Admin')}>Admin</li>}
+                <li onClick={() => handleNavigation('/Pages/Novedades')} className={currentPath === '/Pages/Novedades' ? 'active' : ''}>Novedades</li>
+                <li onClick={() => handleNavigation('/Pages/Catalogo')} className={currentPath === '/Pages/Catalogo' ? 'active' : ''}>Catálogo Coches</li>
+                <li onClick={() => handleNavigation('/Pages/Noticias')} className={currentPath === '/Pages/Noticias' ? 'active' : ''}>Noticias del Motor</li>
+                <li onClick={() => handleNavigation('/Pages/Coches')} className={currentPath === '/Pages/Coches' ? 'active' : ''}>Coche a medida</li>
+              <li onClick={() => handleNavigation('/Pages/Contacto')} className={currentPath === '/Pages/Contacto' ? 'active' : ''}>Contacto</li>
+              {rol === "administrador" && user !== null && <li onClick={() => handleNavigation('/Pages/Admin')} className={currentPath === '/Pages/Admin' ? 'active' : ''}>Admin</li>}
               
                 <li onClick={() => handleNavigation('/Pages/cart')} className="cart-icon-container">
                     <div className="cart-icon">
@@ -159,7 +166,7 @@ function NavegadorMenu() {
                         )}
                     </li>
                 ) : (
-                    <li onClick={() => handleNavigation('/Pages/Registro')} className="register-button">
+                    <li onClick={() => handleNavigation('/Pages/Registro')} className={`register-button ${currentPath === '/Pages/Registro' ? 'active' : ''}`}>
                         Registro
                     </li>
                 )}

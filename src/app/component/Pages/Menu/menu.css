@@ -82,6 +82,17 @@ body {
     transform: scaleX(1);
 }
 
+/* Estilo para el enlace activo */
+.menu li.active {
+    color: #ff3333;
+}
+
+.menu li.active:after {
+    transform: scaleX(1);
+    background: linear-gradient(90deg, #ff3333, #ff0000);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
 /* BOTÓN DE REGISTRO */
 .register-button {
     color: white;

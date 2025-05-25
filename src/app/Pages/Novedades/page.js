@@ -8,6 +8,7 @@ import { useCart } from '../../context/CartContext';
 import { obtenerGradiente } from '../../Utils/Coches/coloresCoches';
 import ReqCoches from "../../component/AxiosResquestAll/RequestsCoches"; 
 import PageBanner from '../../components/PageBanner';
+import ComparadorCoches from '../../component/ComparadorCoches';
 import './ofertas.css';
 import '../../Utils/Pages/tarjetas.css';
 import '../../styles/global.css';
@@ -252,74 +253,57 @@ const Novedades = () => {
                     </div>
                 </div>
                 
-                <div style={{maxWidth: '1200px', margin: '60px auto 0', padding: '20px 10px'}}>
-                    <h2 style={{color: '#ffffff', fontSize: '2rem', fontWeight: '700', marginBottom: '30px', textAlign: 'center', position: 'relative'}}>
-                        TECNOLOGÍA AUTOMOTRIZ
-                        <div style={{width: '80px', height: '3px', background: '#cc0000', margin: '15px auto'}}></div>
-                    </h2>
-                    
-                    <div style={{display: 'flex', gap: '30px', marginTop: '20px', overflow: 'hidden', borderRadius: '12px'}}>
-                        <div style={{flex: '1', background: 'linear-gradient(145deg, #1a1a1a, #2a2020)', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 10px rgba(255, 0, 0, 0.2)', border: '1px solid rgba(255, 0, 0, 0.15)'}}>
-                            <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-                                <div style={{color: '#ff3333', fontSize: '2.5rem', marginBottom: '20px', textAlign: 'center'}}>
-                                    <i className="fas fa-charging-station"></i>
-                                </div>
-                                <h3 style={{fontSize: '1.5rem', fontWeight: 600, color: '#ffffff', margin: '0 0 15px 0', textAlign: 'center'}}>Movilidad Eléctrica</h3>
-                                <p style={{fontSize: '1rem', color: '#cccccc', lineHeight: '1.6', flex: '1'}}>
-                                    La revolución eléctrica está transformando la industria automotriz. Los nuevos modelos ofrecen mayor autonomía, menos tiempo de carga y una experiencia de conducción más silenciosa y sostenible.
-                                </p>
-                                <div style={{marginTop: '20px', display: 'flex', justifyContent: 'center'}}>
-                                    <a href="#" style={{display: 'inline-block', backgroundColor: '#cc0000', color: 'white', padding: '10px 25px', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 600, textDecoration: 'none', transition: 'all 0.2s ease'}}>Ver catálogo eléctrico</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div style={{flex: '1', background: 'linear-gradient(145deg, #1a1a1a, #2a2020)', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 10px rgba(255, 0, 0, 0.2)', border: '1px solid rgba(255, 0, 0, 0.15)'}}>
-                            <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-                                <div style={{color: '#ff3333', fontSize: '2.5rem', marginBottom: '20px', textAlign: 'center'}}>
-                                    <i className="fas fa-car-side"></i>
-                                </div>
-                                <h3 style={{fontSize: '1.5rem', fontWeight: 600, color: '#ffffff', margin: '0 0 15px 0', textAlign: 'center'}}>Conducción Autónoma</h3>
-                                <p style={{fontSize: '1rem', color: '#cccccc', lineHeight: '1.6', flex: '1'}}>
-                                    Los sistemas de asistencia a la conducción evolucionan rápidamente. Los vehículos modernos incorporan tecnologías que mejoran la seguridad y comodidad, acercando la conducción autónoma a la realidad cotidiana.
-                                </p>
-                                <div style={{marginTop: '20px', display: 'flex', justifyContent: 'center'}}>
-                                    <a href="#" style={{display: 'inline-block', backgroundColor: '#cc0000', color: 'white', padding: '10px 25px', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 600, textDecoration: 'none', transition: 'all 0.2s ease'}}>Descubrir más</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {/* COMPARADOR DE MODELOS MEJORADO */}
+                <ComparadorCoches />
                 
+                {/* TESTIMONIOS DE CLIENTES */}
                 <div style={{maxWidth: '1200px', margin: '60px auto 0', padding: '20px 10px'}}>
                     <h2 style={{color: '#ffffff', fontSize: '2rem', fontWeight: '700', marginBottom: '30px', textAlign: 'center', position: 'relative'}}>
-                        CONSEJOS DE COMPRA
+                        TESTIMONIOS DE CLIENTES
                         <div style={{width: '80px', height: '3px', background: '#cc0000', margin: '15px auto'}}></div>
                     </h2>
                     
-                    <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginTop: '20px'}}>
-                        <div style={{background: 'linear-gradient(145deg, #1a1a1a, #2a2020)', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 10px rgba(255, 0, 0, 0.2)', border: '1px solid rgba(255, 0, 0, 0.15)', padding: '20px'}}>
-                            <div style={{color: '#ff3333', fontSize: '2rem', marginBottom: '15px', textAlign: 'center'}}>
-                                <i className="fas fa-check-circle"></i>
+                    <div style={{display: 'flex', gap: '30px', marginTop: '20px', overflow: 'hidden'}}>
+                        <div style={{flex: '1', background: 'linear-gradient(145deg, #1a1a1a, #2a2020)', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 10px rgba(255, 0, 0, 0.2)', border: '1px solid rgba(255, 0, 0, 0.15)', position: 'relative'}}>
+                            <div style={{position: 'absolute', top: '20px', left: '20px', color: '#ff3333', fontSize: '2rem', opacity: '0.3'}}>
+                                <i className="fas fa-quote-left"></i>
                             </div>
-                            <h3 style={{fontSize: '1.1rem', fontWeight: 600, color: '#ffffff', margin: '0 0 15px 0', textAlign: 'center'}}>¿Cómo elegir tu primer coche?</h3>
-                            <p style={{fontSize: '0.9rem', color: '#cccccc', textAlign: 'center'}}>Descubre los aspectos clave que debes considerar al comprar tu primer vehículo.</p>
+                            <div style={{display: 'flex', flexDirection: 'column', height: '100%', position: 'relative', zIndex: '1'}}>
+                                <p style={{fontSize: '1rem', color: '#cccccc', lineHeight: '1.6', flex: '1', marginBottom: '20px', fontStyle: 'italic'}}>
+                                    Compré mi Hyundai i30 N en DriveSoul y la experiencia fue excepcional. El asesoramiento fue profesional y personalizado, y el precio con la oferta especial fue imbatible. Recomiendo DriveSoul a todos mis amigos.
+                                </p>
+                                <div>
+                                    <h4 style={{fontSize: '1.1rem', fontWeight: 600, color: '#ffffff', margin: '0 0 5px 0'}}>Carlos Martínez</h4>
+                                    <div style={{display: 'flex', color: '#ff3333'}}>
+                                        <i className="fas fa-star"></i>
+                                        <i className="fas fa-star"></i>
+                                        <i className="fas fa-star"></i>
+                                        <i className="fas fa-star"></i>
+                                        <i className="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
-                        <div style={{background: 'linear-gradient(145deg, #1a1a1a, #2a2020)', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 10px rgba(255, 0, 0, 0.2)', border: '1px solid rgba(255, 0, 0, 0.15)', padding: '20px'}}>
-                            <div style={{color: '#ff3333', fontSize: '2rem', marginBottom: '15px', textAlign: 'center'}}>
-                                <i className="fas fa-coins"></i>
+                        <div style={{flex: '1', background: 'linear-gradient(145deg, #1a1a1a, #2a2020)', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 10px rgba(255, 0, 0, 0.2)', border: '1px solid rgba(255, 0, 0, 0.15)', position: 'relative'}}>
+                            <div style={{position: 'absolute', top: '20px', left: '20px', color: '#ff3333', fontSize: '2rem', opacity: '0.3'}}>
+                                <i className="fas fa-quote-left"></i>
                             </div>
-                            <h3 style={{fontSize: '1.1rem', fontWeight: 600, color: '#ffffff', margin: '0 0 15px 0', textAlign: 'center'}}>Financiación inteligente</h3>
-                            <p style={{fontSize: '0.9rem', color: '#cccccc', textAlign: 'center'}}>Consejos para obtener la mejor financiación al comprar tu próximo coche.</p>
-                        </div>
-                        
-                        <div style={{background: 'linear-gradient(145deg, #1a1a1a, #2a2020)', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 10px rgba(255, 0, 0, 0.2)', border: '1px solid rgba(255, 0, 0, 0.15)', padding: '20px'}}>
-                            <div style={{color: '#ff3333', fontSize: '2rem', marginBottom: '15px', textAlign: 'center'}}>
-                                <i className="fas fa-car-crash"></i>
+                            <div style={{display: 'flex', flexDirection: 'column', height: '100%', position: 'relative', zIndex: '1'}}>
+                                <p style={{fontSize: '1rem', color: '#cccccc', lineHeight: '1.6', flex: '1', marginBottom: '20px', fontStyle: 'italic'}}>
+                                    La financiación que me ofrecieron fue exactamente lo que necesitaba. El proceso fue rápido y sin complicaciones. Mi Mercedes Clase C es todo lo que esperaba y más. El descuento del 20% marcó la diferencia.
+                                </p>
+                                <div>
+                                    <h4 style={{fontSize: '1.1rem', fontWeight: 600, color: '#ffffff', margin: '0 0 5px 0'}}>Laura Sánchez</h4>
+                                    <div style={{display: 'flex', color: '#ff3333'}}>
+                                        <i className="fas fa-star"></i>
+                                        <i className="fas fa-star"></i>
+                                        <i className="fas fa-star"></i>
+                                        <i className="fas fa-star"></i>
+                                        <i className="fas fa-star-half-alt"></i>
+                                    </div>
+                                </div>
                             </div>
-                            <h3 style={{fontSize: '1.1rem', fontWeight: 600, color: '#ffffff', margin: '0 0 15px 0', textAlign: 'center'}}>Inspección de vehículos usados</h3>
-                            <p style={{fontSize: '0.9rem', color: '#cccccc', textAlign: 'center'}}>Qué revisar cuando compras un coche de segunda mano para evitar sorpresas.</p>
                         </div>
                     </div>
                 </div>

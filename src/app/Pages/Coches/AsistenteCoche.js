@@ -1,5 +1,4 @@
 "use client";
-"use client";
 import React, { useState, useEffect } from 'react';
 import './asistenteCoche.css';
 import NavegadorMenu from '../../component/Pages/Menu/Navegador';
@@ -123,7 +122,7 @@ function RecomendacionesSimilares({ respuestas }) {
   if (!recomendados.length) return null;
   return (
     <div className="asistente-similares">
-      <h3>Recomendaciones similares</h3>
+      <h3>Alternativas que podrían encajarte</h3>
       <CardCoches producto={recomendados} />
     </div>
   );
@@ -133,6 +132,28 @@ export default function AsistenteCoche() {
   const [paso, setPaso] = useState(0);
   const [respuestas, setRespuestas] = useState({});
   const [cochesFiltrados, setCochesFiltrados] = useState(mockCoches);
+  const [dbConectada, setDbConectada] = useState(false); // Inicialmente asumimos que no hay conexión
+  
+  // Verificar conexión a la base de datos al cargar el componente
+  useEffect(() => {
+    // Simulación de verificación de conexión a la BD
+    const verificarConexion = async () => {
+      try {
+        // En un caso real, aquí harías una petición a tu API para verificar la conexión
+        // Por ahora, verificamos si mockCoches tiene datos (simulando una BD conectada)
+        const hayConexion = mockCoches && mockCoches.length > 0;
+        setDbConectada(hayConexion);
+        if (!hayConexion) {
+          console.error("No hay conexión a la base de datos o no hay datos disponibles");
+        }
+      } catch (error) {
+        console.error("Error al verificar conexión a la BD:", error);
+        setDbConectada(false);
+      }
+    };
+    
+    verificarConexion();
+  }, []);
 
   // Banner visual atractivo
   const banner = (
@@ -179,20 +200,26 @@ export default function AsistenteCoche() {
     if ([1, 2, 4].includes(idx)) {
       // tipo_combustible, transmision, marca
       opciones = getOpcionesDinamicas(cochesFiltrados, preg.key);
-      // Si solo hay una opción, saltar pregunta
-      if (opciones.length === 1 && !respuestas[preg.key]) {
+      
+      // Si solo hay una opción, saltar pregunta pero solo después de la primera pregunta
+      // Esto evita que se muestre un coche respondiendo solo una pregunta
+      if (opciones.length === 1 && !respuestas[preg.key] && Object.keys(respuestas).length > 1) {
         setTimeout(() => handleRespuesta(preg.key, opciones[0].value), 300);
       }
     }
+    
     // Si es transmisión y solo hay eléctricos/híbridos, no preguntar
+    // Pero solo si ya hemos respondido al menos una pregunta
     if (
       preg.key === "transmision" &&
       cochesFiltrados.every(
         (c) => c.tipo_combustible === "Eléctrico" || c.tipo_combustible === "Híbrido"
-      )
+      ) &&
+      Object.keys(respuestas).length > 1
     ) {
       return null;
     }
+    
     // Si ya está respondida, no mostrar
     if (respuestas[preg.key]) return null;
     // Si no quedan opciones, no mostrar
@@ -200,27 +227,35 @@ export default function AsistenteCoche() {
     return { ...preg, opciones };
   }).filter(Boolean);
 
-  // Mostrar recomendación final
-  const mostrarRecomendacion = preguntas.length === 0 || cochesFiltrados.length === 1;
+  // Mostrar recomendación final solo si se han respondido más de una pregunta
+  // o si ya no hay más preguntas disponibles
+  const mostrarRecomendacion = (preguntas.length === 0 && Object.keys(respuestas).length > 1) || 
+                             (cochesFiltrados.length === 1 && Object.keys(respuestas).length > 1);
 
   return (
     <div className="page-container asistente-coche-bg coche-a-medida-page">
-      <div className="asistente-banner-full">
-        <img src={bannerCoche} alt="Banner coche" className="banner-img-full" />
-        <div className="banner-texto-full">
-          <h1 className="page-title">Encuentra tu coche ideal</h1>
-          <p className="page-subtitle">Responde unas sencillas preguntas y te recomendaremos el modelo perfecto para ti.</p>
-        </div>
-      </div>
+      <PageBanner
+        title="COCHE A MEDIDA"
+        subtitle="Responde unas sencillas preguntas y te recomendaremos el modelo perfecto para ti."
+        backgroundImage={bannerCoche}
+      />
       <div className="asistente-coche-container">
         <div className="asistente-content">
-        {!mostrarRecomendacion ? (
+        {!dbConectada ? (
+          <div className="asistente-error">
+            <h2 className="page-title">Servicio no disponible</h2>
+            <p className="page-subtitle">Lo sentimos, no podemos mostrarte el asistente en este momento porque no hay conexión con la base de datos. Por favor, inténtalo más tarde.</p>
+            <div className="cta-buttons" style={{marginTop: '30px'}}>
+              <a href="/Pages/Catalogo" className="cta-btn cta-secondary page-button">Ver catálogo completo</a>
+            </div>
+          </div>
+        ) : !mostrarRecomendacion ? (
           <div className="asistente-pregunta">
             <div style={{ textAlign: 'center', width: '100%' }}>
-              <h2 className="page-title">{preguntas[0].texto}</h2>
+              <h2 className="page-title">{preguntas[0]?.texto || "Cargando preguntas..."}</h2>
             </div>
             <div className="asistente-opciones">
-              {preguntas[0].opciones.map((op) => (
+              {preguntas[0]?.opciones.map((op) => (
                 <button
                   key={op.value}
                   className="asistente-btn page-button"
@@ -233,12 +268,15 @@ export default function AsistenteCoche() {
           </div>
         ) : (
           <div className="asistente-recomendacion">
-            <h2 className="page-title">Tu coche ideal</h2>
             {cochesFiltrados.length > 0 ? (
-              <CardCoches producto={cochesFiltrados.slice(0, 1)} />
+              <>
+                <h2 className="page-title">Tu coche ideal</h2>
+                <CardCoches producto={cochesFiltrados.slice(0, 1)} />
+              </>
             ) : (
               <>
-                <p>No hay coches que cumplan con tus preferencias exactas.</p>
+                <h3 className="no-match-title">¡Casi lo tenemos!</h3>
+                <p className="no-match-message">No encontramos coches que coincidan exactamente con todas tus preferencias, pero tenemos algunas alternativas que podrían interesarte.</p>
                 <RecomendacionesSimilares respuestas={respuestas} />
               </>
             )}

@@ -6,6 +6,7 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #000000, #1a0000, #330000, #000000);
   overflow-x: hidden;
+  position: relative;
 }
 
 .asistente-coche-bg {
@@ -30,15 +31,7 @@
 }
 
 .asistente-coche-bg::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 200px;
-  background: linear-gradient(to top, rgba(255, 0, 0, 0.08), transparent);
-  pointer-events: none;
-  z-index: 1;
+  content: none;
 }
 
 .asistente-coche-bg > * {
@@ -68,22 +61,9 @@
   z-index: 1;
 }
 
+/* Quitamos el patrón de rombos del fondo general */
 .coches-page-container::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: linear-gradient(45deg, rgba(255,0,0,0.05) 25%, transparent 25%), 
-                    linear-gradient(-45deg, rgba(255,0,0,0.05) 25%, transparent 25%), 
-                    linear-gradient(45deg, transparent 75%, rgba(255,0,0,0.05) 75%), 
-                    linear-gradient(-45deg, transparent 75%, rgba(255,0,0,0.05) 75%);
-  background-size: 20px 20px;
-  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.3;
+  content: none;
 }
 
 .asistente-banner-full {
@@ -210,6 +190,30 @@
   -webkit-backdrop-filter: blur(5px);
   position: relative;
   margin-top: 0 !important;
+}
+
+.asistente-progreso {
+  margin-top: 20px;
+  text-align: center;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.asistente-progreso p {
+  color: #ffffff;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.asistente-error {
+  text-align: center;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  margin: 20px auto;
+  max-width: 800px;
 }
 
 .asistente-content::before {
@@ -358,20 +362,28 @@
 /* Estilos para la llamada a la acción secundaria */
 .asistente-cta-secundaria {
   width: 100%;
-  background: rgba(0,0,0,0.2);
-  padding: 60px 20px;
-  margin-top: 40px;
+  background: #0a0a0a;
+  padding: 80px 20px;
+  margin-top: 60px;
   position: relative;
+  overflow: hidden;
 }
 
 .asistente-cta-secundaria::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,30,30,0.3), transparent);
+  content: none;
+}
+
+@keyframes patternMove {
+  0% {
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  }
+  100% {
+    background-position: 50px 50px, 50px 60px, 60px 40px, 40px 50px;
+  }
+}
+
+.asistente-cta-secundaria::after {
+  content: none;
 }
 
 .cta-container {
@@ -379,6 +391,13 @@
   margin: 0 auto;
   text-align: center;
   color: #fff;
+  position: relative;
+  z-index: 3;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 0, 0, 0.15);
 }
 
 .cta-container h3 {
@@ -406,37 +425,65 @@
 
 .cta-btn {
   display: inline-block;
-  padding: 14px 28px;
-  border-radius: 4px;
+  padding: 16px 32px;
+  border-radius: 8px;
   font-weight: 600;
   font-size: 1.1rem;
   text-decoration: none;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  margin: 0 10px;
+  width: auto;
+  text-align: center;
+}
+
+.cta-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.6s ease;
+  z-index: -1;
+}
+
+.cta-btn:hover::before {
+  left: 100%;
 }
 
 .cta-primary {
-  background: rgba(150,30,30,0.8);
+  background: #cc0000;
   color: #fff;
+  border: none;
+  display: inline-block;
+  width: auto;
 }
 
 .cta-secondary {
-  background: rgba(30,30,40,0.6);
+  background: rgba(30,30,40,0.8);
   color: #fff;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,0,0,0.2);
+  display: inline-block;
+  width: auto;
 }
 
 .cta-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
 }
 
 .cta-primary:hover {
-  background: rgba(180,30,30,0.9);
+  background: linear-gradient(135deg, #ff0000, #ff5555);
 }
 
 .cta-secondary:hover {
-  background: rgba(40,40,50,0.7);
+  background: rgba(50,50,60,0.9);
+  border-color: rgba(255,0,0,0.4);
 }
 
 @media (max-width: 900px) {
@@ -524,63 +571,130 @@
 }
 
 .asistente-content {
-  padding: 36px 28px 28px 28px;
+  padding: 60px 50px;
   color: #fff;
+  background: linear-gradient(135deg, #000000, #1a0000, #330000, #000000);
+  border-radius: 20px;
+  margin: 20px auto;
+  max-width: 1300px;
+  width: 90%;
+}
+
+.asistente-pregunta {
+  padding: 60px 50px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 20px;
+  margin: 60px auto 60px auto;
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+  max-width: 1000px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  display: block;
+}
+
+.asistente-pregunta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.7), transparent);
+  z-index: 1;
+}
+
+.asistente-pregunta::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(45deg, rgba(255,0,0,0.05) 25%, transparent 25%), 
+                  linear-gradient(-45deg, rgba(255,0,0,0.05) 25%, transparent 25%), 
+                  linear-gradient(45deg, transparent 75%, rgba(255,0,0,0.05) 75%), 
+                  linear-gradient(-45deg, transparent 75%, rgba(255,0,0,0.05) 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.3;
 }
 
 .asistente-pregunta h2 {
   font-size: 1.45rem;
-  margin-bottom: 18px;
-  color: #222;
+  margin-bottom: 30px;
+  color: #ffffff;
   font-weight: 700;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .asistente-opciones {
   display: flex;
   flex-wrap: wrap;
   gap: 18px;
+  padding: 25px 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  justify-content: center;
 }
 
 .asistente-btn {
-  background: #2b3a55;
+  background: rgba(150, 30, 30, 0.8);
   color: #fff;
   border: none;
   border-radius: 8px;
-  padding: 14px 32px;
+  padding: 16px 36px;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-  box-shadow: 0 2px 8px rgba(43,58,85,0.06);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  min-width: 180px;
+  margin: 5px;
 }
 .asistente-btn:hover {
-  background: #3b4b6b;
-  transform: translateY(-2px) scale(1.04);
+  background: rgba(180, 30, 30, 0.9);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
 }
 
 .asistente-recomendacion {
   text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
 .asistente-recomendacion h2 {
   font-size: 1.7rem;
   margin-bottom: 15px;
-  color: #2b3a55;
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 .asistente-reiniciar {
-  margin-top: 30px;
-  background: #fff;
-  border: 2px solid #2b3a55;
-  color: #2b3a55;
-  padding: 10px 32px;
+  margin-top: 40px;
+  background: #cc0000;
+  border: none;
+  color: #ffffff;
+  padding: 12px 36px;
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(204, 0, 0, 0.3);
 }
 .asistente-reiniciar:hover {
-  background: #2b3a55;
+  background: #ff0000;
   color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(204, 0, 0, 0.4);
 }
 
 @media (max-width: 600px) {
@@ -591,5 +705,62 @@
   .asistente-content {
     padding: 18px 6px 18px 6px;
     border-radius: 12px;
+  }
+}
+
+/* Estilos para cuando no se encuentra un coche */
+.asistente-similares {
+  margin-top: 30px;
+}
+
+.asistente-similares h3 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  position: relative;
+  display: inline-block;
+  padding-bottom: 10px;
+}
+
+.asistente-similares h3::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,30,30,0.6), transparent);
+}
+
+.no-match-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.no-match-message {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+  animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

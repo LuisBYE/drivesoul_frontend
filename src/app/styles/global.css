@@ -10,8 +10,18 @@ html, body {
 }
 
 /* Estilos SOLO para las pu00e1ginas de Novedades, Noticias y Coche a Medida */
-.novedades-page,
-.noticias-page,
+.novedades-page {
+  background: linear-gradient(135deg, #632323, #1a0000, #330000, #000000);
+  min-height: 100vh;
+  width: 100%;
+}
+
+.noticias-page {
+  background: linear-gradient(to bottom, #080808, #270909) !important;
+  min-height: 100vh;
+  width: 100%;
+}
+
 .coche-a-medida-page {
   background: linear-gradient(135deg, #000000, #1a0000, #330000, #000000);
   min-height: 100vh;

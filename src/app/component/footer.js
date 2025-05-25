@@ -1,8 +1,32 @@
 "use client";
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function Footer() {
   const router = useRouter();
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  
+  // Función para detectar el scroll y mostrar/ocultar la flecha
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+  // Función para ir al inicio de la página
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
   
   const navegarACatalogo = () => {
     router.push('/Pages/Catalogo');
@@ -14,6 +38,19 @@ export default function Footer() {
   
   return (
     <footer className="bg-black text-white pt-12 pb-6 relative mt-auto">
+      {/* Botón para volver arriba */}
+      {showScrollTop && (
+        <button 
+          onClick={scrollToTop} 
+          className="fixed bottom-8 right-8 bg-red-600/80 hover:bg-red-700 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 hover:transform hover:scale-110 z-50 backdrop-blur-sm"
+          aria-label="Volver arriba"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+          </svg>
+        </button>
+      )}
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {/* Logo y descripción */}

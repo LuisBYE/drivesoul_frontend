@@ -1,17 +1,32 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import NavegadorPag from "./component/Pages/Menu/Navegador";
 import Footer from "./component/footer";
 import ReqCoches from "./component/AxiosResquestAll/RequestsCoches";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+import CardCochesSimple from "./component/CardCochesSimple";
 
 export default function Home() {
   const [respuesta, setRespuesta] = useState("");
   const [scrollY, setScrollY] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [productos, setProductos] = useState([]);
+  const [presupuestoMax, setPresupuestoMax] = useState(30000);
+  const [tipoCoche, setTipoCoche] = useState("SUV");
+  const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
+  const [mensaje, setMensaje] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [enviado, setEnviado] = useState(false);
+  const [noticias, setNoticias] = useState([]);
   const scrollRef = useRef(null);
+  const configuradorRef = useRef(null);
+  const noticiasRef = useRef(null);
+  const contactoRef = useRef(null);
   const router = useRouter();
 
   // Efecto para la animación de carga inicial
@@ -36,6 +51,66 @@ export default function Home() {
       scrollRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
+  
+  // Función para navegar a las diferentes secciones
+  const scrollToSection = (ref) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+  
+  // Función para buscar coches según configuración
+  const buscarCoches = () => {
+    router.push(`/Pages/Catalogo?presupuesto=${presupuestoMax}&tipo=${tipoCoche}`);
+  };
+  
+  // Función para manejar el envío del formulario
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Formulario enviado", { nombre, email, telefono, mensaje });
+    setEnviado(true);
+    
+    // Resetear el formulario después de 3 segundos
+    setTimeout(() => {
+      setNombre("");
+      setEmail("");
+      setTelefono("");
+      setMensaje("");
+      setEnviado(false);
+    }, 3000);
+  };
+  
+  // Inicializar noticias
+  useEffect(() => {
+    const noticiasData = [
+      {
+        id: 1,
+        titulo: "Hyundai IONIQ 5: La revolución eléctrica",
+        resumen: "Descubre el nuevo Hyundai IONIQ 5, un vehículo eléctrico que redefine el concepto de movilidad sostenible.",
+        fecha: "15 Mayo 2025",
+        imagen: "/FOTOS/COCHES/HYUNDAIKONA/1.jpg",
+        enlace: "/Pages/Noticias/DetalleHyundaiIoniq"
+      },
+      {
+        id: 2,
+        titulo: "Mercedes-Benz presenta su nueva línea de vehículos híbridos",
+        resumen: "La marca alemana apuesta por la tecnología híbrida en su nueva gama de vehículos de lujo.",
+        fecha: "10 Mayo 2025",
+        imagen: "/FOTOS/COCHES/MERCEDESCLASECROJO/1.jpeg",
+        enlace: "/Pages/Noticias/DetalleMercedesBenz"
+      },
+      {
+        id: 3,
+        titulo: "Toyota Corolla 2025: Tradición y tecnología",
+        resumen: "El modelo más vendido de la historia se renueva con un diseño más moderno y tecnología de vanguardia.",
+        fecha: "5 Mayo 2025",
+        imagen: "/FOTOS/COCHES/VOLKSWAGENPOLOROJO/1.png",
+        enlace: "/Pages/Noticias/DetalleToyotaCorolla"
+      }
+    ];
+    
+    setNoticias(noticiasData);
+  }, []);
 
   // Obtener productos aleatorios
   useEffect(() => {
@@ -134,29 +209,35 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black opacity-60"></div>
         
         <div 
-          className={`relative z-10 flex flex-col items-center justify-center h-full px-4 text-center transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+          className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
         >
-          <h1 className="text-7xl md:text-9xl font-bold mb-8">
-            <span className="text-white">DRIVE</span><span className="text-red-600">SOUL</span>
+          <h1 className="text-6xl md:text-8xl font-bold mb-6 tracking-tighter">
+            <span className="text-white">DRIVE</span>
+            <span className="text-red-600 relative">
+              SOUL
+              <span className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-red-600 to-red-800"></span>
+            </span>
           </h1>
+          <p className="text-xl md:text-3xl text-gray-200 mb-12 font-light tracking-wide">Descubre la pasión por conducir</p>
           
-          <p className="text-xl md:text-3xl max-w-2xl font-light mb-12 text-white opacity-80">
-            Descubre la pasión por conducir
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-8 mt-4">
+          <div className="flex flex-col md:flex-row gap-6">
             <button 
               onClick={navegarACatalogo}
-              className="px-10 py-4 bg-red-600 rounded-sm font-medium text-white uppercase tracking-wider transition-all duration-300 hover:bg-red-700 hover:shadow-lg"
+              className="bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700 text-white px-10 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-red-700/30 flex items-center justify-center gap-2"
             >
-              Explorar Vehículos
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              EXPLORAR VEHÍCULOS
             </button>
-            
             <button 
-              onClick={navegarAContacto}
-              className="px-10 py-4 border-2 border-white rounded-sm font-medium uppercase tracking-wider transition-all duration-300 hover:bg-white hover:text-black"
+              onClick={() => scrollToSection(contactoRef)}
+              className="bg-transparent border-2 border-white hover:bg-white/10 text-white px-10 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-white/20 flex items-center justify-center gap-2"
             >
-              Contactar
+              CONTACTAR
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </button>
           </div>
           
@@ -194,74 +275,22 @@ export default function Home() {
       {/* Productos destacados */}
       <section ref={scrollRef} className="py-20 px-4 md:px-8 bg-gradient-to-b from-black to-zinc-900">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold mb-4 text-center">
-            <span className="text-white">Productos</span>
-            <span className="text-red-600"> Destacados</span>
+          <h2 className="text-5xl md:text-6xl font-extrabold mb-6 text-center">
+            <span className="text-white">Productos </span>
+            <span className="text-red-600 inline-block relative">
+              Destacados
+              <span className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-red-600 to-red-800"></span>
+            </span>
           </h2>
-          <p className="text-gray-400 text-center max-w-2xl mx-auto mb-12">Descubre nuestra selección de vehículos de alta gama diseñados para satisfacer tus expectativas</p>
+          <p className="text-gray-300 text-xl text-center max-w-2xl mx-auto mb-12">Descubre nuestra selección de vehículos de alta gama diseñados para satisfacer tus expectativas</p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {productos.length > 0 ? (
-              productos.map((coche) => (
-                <div key={coche.id} className="bg-zinc-800 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:transform hover:scale-105">
-                  <div className="relative h-56 overflow-hidden">
-                    <img 
-                      src={getImagenCoche(coche.modelo_id)} 
-                      alt={coche.nombre} 
-                      className="w-full h-full object-cover" 
-                    />
-                    {coche.tipo_combustible && coche.tipo_combustible.toLowerCase() === "híbrido" && (
-                      <div className="absolute top-4 right-4 bg-green-500 text-white px-2 py-1 rounded text-xs font-bold">
-                        ECO
-                      </div>
-                    )}
-                    <div className="absolute top-4 left-4 bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">
-                      {coche.kilometraje === 0 ? "NUEVO" : "USADO"}
-                    </div>
-                  </div>
-                  
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-white mb-2">{coche.nombre}</h3>
-                    
-                    <div className="flex justify-between items-center mb-4">
-                      <div className="text-2xl font-bold text-red-500">
-                        {coche.precio?.toLocaleString("es-ES")} €
-                      </div>
-                      <div className="text-sm text-gray-400">
-                        Desde {Math.round(coche.precio / 72)?.toLocaleString("es-ES")} €/mes
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      <span className="text-xs bg-zinc-700 text-gray-300 px-2 py-1 rounded">
-                        {coche.anio}
-                      </span>
-                      <span className="text-xs bg-zinc-700 text-gray-300 px-2 py-1 rounded">
-                        {coche.kilometraje?.toLocaleString("es-ES")} km
-                      </span>
-                      <span className="text-xs bg-zinc-700 text-gray-300 px-2 py-1 rounded">
-                        {coche.tipo_combustible}
-                      </span>
-                      <span className="text-xs bg-zinc-700 text-gray-300 px-2 py-1 rounded">
-                        {coche.transmision}
-                      </span>
-                    </div>
-                    
-                    <button 
-                      onClick={() => navegarADetalles(coche)}
-                      className="w-full bg-red-600 text-white py-2 rounded-sm font-medium transition-all duration-300 hover:bg-red-700"
-                    >
-                      Ver Detalles
-                    </button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="col-span-3 text-center py-10">
-                <p className="text-gray-400">Cargando productos destacados...</p>
-              </div>
-            )}
-          </div>
+          {productos.length > 0 ? (
+            <CardCochesSimple producto={productos} />
+          ) : (
+            <div className="text-center py-10">
+              <p className="text-gray-400">Cargando productos destacados...</p>
+            </div>
+          )}
           
           <div className="text-center mt-12">
             <button 
@@ -274,6 +303,314 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Mini Configurador de Coche */}
+      <section ref={configuradorRef} className="py-24 px-4 md:px-8 relative">
+        {/* Fondo con degradado y efecto */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-red-900/15 to-black">
+          <div className="absolute inset-0 bg-[url('/FOTOS/COCHES/pattern-bg.png')] opacity-10"></div>
+          <div className="absolute inset-0 bg-gradient-radial from-red-700/25 via-red-800/15 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-red-800/10 via-red-700/15 to-red-800/10"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-800/5 via-red-700/10 to-transparent"></div>
+        </div>
+        
+        {/* Líneas decorativas */}
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-red-600 to-transparent"></div>
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-red-600 to-transparent"></div>
+        
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl md:text-6xl font-extrabold mb-6">
+              <span className="text-white">Configura tu </span>
+              <span className="text-red-600 inline-block relative">
+                coche ideal
+                <span className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-red-600 to-red-800"></span>
+              </span>
+            </h2>
+            <p className="text-gray-300 text-xl max-w-2xl mx-auto">Encuentra el vehículo perfecto para ti con nuestro configurador personalizado</p>
+          </div>
+          
+          <div className="flex flex-col md:flex-row gap-12 items-center">
+            <div className="w-full md:w-1/2">
+              <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 p-10 rounded-xl shadow-2xl border border-zinc-700 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-radial from-red-600/20 via-transparent to-transparent"></div>
+                <div className="absolute bottom-0 left-0 w-40 h-40 bg-gradient-radial from-red-600/10 via-transparent to-transparent"></div>
+                
+                <div className="mb-8 relative z-10">
+                  <label className="block text-white text-lg mb-3 font-semibold">¿Cuál es tu presupuesto máximo?</label>
+                  <select 
+                    value={presupuestoMax}
+                    onChange={(e) => setPresupuestoMax(e.target.value)}
+                    className="w-full bg-zinc-800 text-white py-4 px-5 rounded-lg border border-zinc-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 shadow-lg transition-all duration-300"
+                  >
+                    <option value="20000">Hasta 20.000 €</option>
+                    <option value="30000">Hasta 30.000 €</option>
+                    <option value="40000">Hasta 40.000 €</option>
+                    <option value="60000">Hasta 60.000 €</option>
+                    <option value="100000">Más de 60.000 €</option>
+                  </select>
+                </div>
+                
+                <div className="mb-10 relative z-10">
+                  <label className="block text-white text-lg mb-3 font-semibold">¿Qué tipo de vehículo buscas?</label>
+                  <select 
+                    value={tipoCoche}
+                    onChange={(e) => setTipoCoche(e.target.value)}
+                    className="w-full bg-zinc-800 text-white py-4 px-5 rounded-lg border border-zinc-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 shadow-lg transition-all duration-300"
+                  >
+                    <option value="SUV">SUV</option>
+                    <option value="Urbano">Urbano</option>
+                    <option value="Deportivo">Deportivo</option>
+                    <option value="Familiar">Familiar</option>
+                    <option value="Compacto">Compacto</option>
+                    <option value="Berlina">Berlina</option>
+                  </select>
+                </div>
+                
+                <button 
+                  onClick={buscarCoches}
+                  className="w-full bg-gradient-to-r from-red-700 to-red-600 text-white py-4 px-6 rounded-lg font-bold text-lg transition-all duration-300 hover:from-red-800 hover:to-red-700 hover:shadow-lg hover:shadow-red-700/30 flex items-center justify-center gap-3 transform hover:-translate-y-1"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  Buscar vehículos
+                </button>
+              </div>
+            </div>
+            
+            <div className="w-full md:w-1/2 relative">
+              <div className="relative h-[450px] w-full overflow-hidden rounded-xl shadow-2xl">
+                <img 
+                  src="/FOTOS/COCHES/AUDIQ5BLANCO/1.png" 
+                  alt="Configura tu coche" 
+                  className="w-full h-full object-cover object-center rounded-xl transform hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 p-8 w-full">
+                  <h3 className="text-3xl font-bold text-white mb-3">Coche a medida</h3>
+                  <p className="text-gray-200 mb-6 text-lg">Configura cada detalle según tus preferencias</p>
+                  <Link 
+                    href="/Pages/Coches" 
+                    className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-bold transition-all duration-300 hover:shadow-lg hover:shadow-red-600/30 transform hover:-translate-y-1"
+                  >
+                    Configurador completo 
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+
+      
+      {/* Formulario de Contacto */}
+      <section ref={contactoRef} className="py-24 px-4 md:px-8 relative">
+        {/* Fondo con degradado y efecto */}
+        <div className="absolute inset-0 bg-gradient-to-b from-zinc-900 via-black to-zinc-900">
+          <div className="absolute inset-0 bg-[url('/FOTOS/COCHES/pattern-bg.png')] opacity-5"></div>
+          <div className="absolute inset-0 bg-gradient-radial from-red-900/10 via-transparent to-transparent"></div>
+        </div>
+        
+        {/* Líneas decorativas */}
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-red-600 to-transparent"></div>
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-red-600 to-transparent"></div>
+        
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl md:text-6xl font-extrabold mb-6">
+              <span className="text-white">Contacta con </span>
+              <span className="text-red-600 inline-block relative">
+                nosotros
+                <span className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-red-600 to-red-800"></span>
+              </span>
+            </h2>
+            <p className="text-gray-300 text-xl max-w-2xl mx-auto">¿Tienes alguna pregunta o necesitas más información? Nuestro equipo está listo para ayudarte</p>
+          </div>
+          
+          <div className="flex flex-col md:flex-row gap-12 items-stretch">
+            <div className="w-full md:w-1/2 flex flex-col bg-[#1a1a1a] rounded-xl shadow-2xl border border-zinc-700 overflow-hidden relative">
+              {/* Elementos decorativos */}
+              <div className="absolute top-0 right-0 w-60 h-60 bg-gradient-radial from-red-600/20 via-transparent to-transparent"></div>
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-600 to-transparent opacity-70"></div>
+              <div className="absolute -top-20 -left-20 w-40 h-40 rounded-full bg-red-600/10 blur-3xl"></div>
+              <div className="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-red-600/5 blur-2xl"></div>
+              
+              <div className="p-10 relative z-10">
+                <div className="relative z-10">
+                  <h3 className="text-3xl font-extrabold mb-2 text-white">Ubicación</h3>
+                  <div className="h-1 w-20 bg-gradient-to-r from-red-600 to-red-800 mb-10"></div>
+                </div>
+                
+                <div className="flex items-start mb-8 group relative z-10">
+                  <div className="bg-gradient-to-br from-red-700 to-red-500 rounded-full p-4 mr-5 shadow-lg shadow-red-500/20 group-hover:shadow-red-500/40 transition-all duration-300 group-hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <div className="pt-2">
+                    <p className="text-white text-lg font-semibold mb-1 group-hover:text-red-400 transition-colors duration-300">Carrer del Doctor Aiguader</p>
+                    <p className="text-gray-400">Ciutat Vella, 08003 Barcelona, España</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start mb-8 group relative z-10">
+                  <div className="bg-gradient-to-br from-red-700 to-red-500 rounded-full p-4 mr-5 shadow-lg shadow-red-500/20 group-hover:shadow-red-500/40 transition-all duration-300 group-hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                  </div>
+                  <div className="pt-2">
+                    <p className="text-white text-lg font-semibold mb-1 group-hover:text-red-400 transition-colors duration-300">Teléfono</p>
+                    <p className="text-gray-400">936 854 874</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start group relative z-10">
+                  <div className="bg-gradient-to-br from-red-700 to-red-500 rounded-full p-4 mr-5 shadow-lg shadow-red-500/20 group-hover:shadow-red-500/40 transition-all duration-300 group-hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div className="pt-2">
+                    <p className="text-white text-lg font-semibold mb-1 group-hover:text-red-400 transition-colors duration-300">Email</p>
+                    <p className="text-gray-400">drivesould_responde@drivesoul.es</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-auto relative overflow-hidden">
+                <img 
+                  src="/FOTOS/concesionario.jpg" 
+                  alt="Concesionario DriveSoul" 
+                  className="w-full h-80 object-cover object-center transition-transform duration-700 hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 p-6 w-full">
+                  <h3 className="text-2xl font-bold text-white mb-2">Nuestro concesionario</h3>
+                  <p className="text-gray-200">Visítanos y descubre nuestra selección de vehículos</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="w-full md:w-1/2">
+              <div className="bg-[#1a1a1a] p-10 rounded-xl shadow-2xl border border-zinc-700 h-full relative overflow-hidden">
+                {/* Elementos decorativos */}
+                <div className="absolute top-0 right-0 w-60 h-60 bg-gradient-radial from-red-600/20 via-transparent to-transparent"></div>
+                <div className="absolute bottom-0 left-0 w-60 h-60 bg-gradient-radial from-red-600/10 via-transparent to-transparent"></div>
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-600 to-transparent opacity-70"></div>
+                <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-red-600/10 blur-3xl"></div>
+                
+                <div className="relative z-10">
+                  <h3 className="text-3xl md:text-4xl font-extrabold mb-2 text-white">Envíanos un mensaje</h3>
+                  <div className="h-1 w-32 bg-gradient-to-r from-red-600 to-red-800 mb-8"></div>
+                </div>
+                
+                {enviado ? (
+                  <div className="bg-green-900/50 border-l-4 border-green-500 text-green-100 p-6 rounded-r-lg mb-8 relative z-10 shadow-lg">
+                    <p className="font-bold text-xl mb-2">¡Mensaje enviado correctamente!</p>
+                    <p className="text-base">Nos pondremos en contacto contigo lo antes posible.</p>
+                  </div>
+                ) : null}
+                
+                <form onSubmit={handleSubmit} className="relative z-10">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                      <label className="block text-white text-lg mb-3 font-semibold">Nombre</label>
+                      <div className="relative">
+                        <input 
+                          type="text" 
+                          value={nombre}
+                          onChange={(e) => setNombre(e.target.value)}
+                          className="w-full bg-zinc-800/80 text-white py-4 px-5 pl-12 rounded-lg border border-zinc-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 shadow-lg transition-all duration-300"
+                          placeholder="Tu nombre"
+                          required
+                        />
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-red-500">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-white text-lg mb-3 font-semibold">Teléfono</label>
+                      <div className="relative">
+                        <input 
+                          type="tel" 
+                          value={telefono}
+                          onChange={(e) => setTelefono(e.target.value)}
+                          className="w-full bg-zinc-800/80 text-white py-4 px-5 pl-12 rounded-lg border border-zinc-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 shadow-lg transition-all duration-300"
+                          placeholder="Tu teléfono"
+                        />
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-red-500">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mb-6">
+                    <label className="block text-white text-lg mb-3 font-semibold">Email</label>
+                    <div className="relative">
+                      <input 
+                        type="email" 
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full bg-zinc-800/80 text-white py-4 px-5 pl-12 rounded-lg border border-zinc-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 shadow-lg transition-all duration-300"
+                        placeholder="Tu email"
+                        required
+                      />
+                      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mb-8">
+                    <label className="block text-white text-lg mb-3 font-semibold">Mensaje</label>
+                    <div className="relative">
+                      <textarea 
+                        value={mensaje}
+                        onChange={(e) => setMensaje(e.target.value)}
+                        className="w-full bg-zinc-800/80 text-white py-4 px-5 pl-12 rounded-lg border border-zinc-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 shadow-lg transition-all duration-300 min-h-[150px]"
+                        placeholder="¿En qué podemos ayudarte?"
+                        required
+                      ></textarea>
+                      <div className="absolute left-3 top-8 text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <button 
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-red-700 to-red-600 text-white py-4 px-6 rounded-lg font-bold text-lg transition-all duration-300 hover:from-red-800 hover:to-red-700 hover:shadow-lg hover:shadow-red-700/30 flex items-center justify-center gap-3 transform hover:-translate-y-1 relative overflow-hidden group"
+                  >
+                    <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-red-600/0 via-white/20 to-red-600/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                    ENVIAR MENSAJE
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
       {/* Características */}
       <section className="py-20 px-4 md:px-8 bg-zinc-900">
         <div className="max-w-7xl mx-auto">
@@ -312,63 +649,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Espacio para contenido adicional */}
-      <section className="py-16 bg-gradient-to-b from-zinc-900 to-black">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          {/* Espacio reservado para futuro contenido */}
-        </div>
-      </section>
 
-      {/* CTA con efecto interactivo */}
-      <section className="py-20 px-4 md:px-8 bg-gradient-to-t from-black to-zinc-900 relative overflow-hidden">
-        {/* Fondo con efecto de malla 3D */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 opacity-10">
-            <div className="grid grid-cols-12 h-full">
-              {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="h-full border-r border-white opacity-30"></div>
-              ))}
-            </div>
-            <div className="grid grid-rows-12 w-full h-full absolute top-0 left-0">
-              {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="w-full border-b border-white opacity-30"></div>
-              ))}
-            </div>
-          </div>
-        </div>
-        
-        {/* Fondo limpio sin círculos decorativos */}
-        
-        {/* Líneas decorativas */}
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-30"></div>
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-30"></div>
-        
-        {/* Contenido principal con efecto de revelación al scroll */}
-        <div 
-          className="max-w-4xl mx-auto text-center relative z-10"
-          style={{
-            opacity: Math.min(1, scrollY / 500),
-            transform: `translateY(${Math.max(0, 50 - scrollY / 10)}px)`
-          }}
-        >
-          <h2 className="text-4xl md:text-6xl font-bold mb-10 tracking-tight">
-            <span className="text-white">¿Listo para encontrar tu </span>
-            <span className="text-red-600">próximo vehículo</span>
-            <span className="text-white">?</span>
-          </h2>
-          
-          <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">Descubre nuestra selección de vehículos premium y vive la experiencia DriveSoul. Nuestros asesores te guiarán en todo el proceso.</p>
-          
-          <button 
-            onClick={navegarACatalogo}
-            className="px-10 py-4 bg-red-600 rounded-sm font-medium text-white uppercase tracking-wider text-lg transition-all duration-300 hover:bg-red-700 hover:shadow-lg"
-          >
-            Explorar Catálogo
-          </button>
-          
-
-        </div>
-      </section>
 
       <Footer />
       {/* Estado de conexión oculto para desarrollo */}

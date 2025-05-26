@@ -17,7 +17,7 @@ export default function DetallesCoche() {
   const [loaded, setLoaded] = useState(false);
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
-  const { addToCart } = useCart();
+  const { addToCart, cartCount, setCartCount } = useCart();
   const cocheData = localStorage.getItem("cocheSeleccionado");
 
 
@@ -271,18 +271,44 @@ export default function DetallesCoche() {
   const enviarACarrito = async () => {
     const user = localStorage.getItem("user");
     if (!user) {
-      router.push("/Pages/cart");
+      router.push("/Pages/Registro");
       return;
     }
 
-    const cocheAlmacenado = await RequestsCarrito.addItemToCart();
+    try {
+      const userData = JSON.parse(user);
+      console.log("Datos del usuario:", userData);
+      console.log("Datos del coche:", coche);
+      console.log("ID de la URL:", params.id);
+      console.log("Modelo ID del coche:", coche.modelo_id);
+      
+      // Preparar los datos del coche para el carrito en el formato que espera el backend
+      const itemData = {
+        UsuarioId: parseInt(userData.id),
+        ProductoId: parseInt(coche.modelo_id), // Volvemos a usar modelo_id ya que es el ID real del producto
+        Cantidad: 1
+      };
 
-    if(cocheAlmacenado){
-      alert("El coche ha sido añadido al carrito base de datos POST ");
-    }else{
-      alert("coche no se almaceno ")
+      console.log("Datos a enviar al carrito:", itemData);
+
+      // Llamar a la función del componente RequestsCarrito
+      const resultado = await RequestsCarrito.addItemToCart(itemData);
+      console.log("Resultado completo de añadir al carrito:", resultado);
+
+      if (resultado && resultado.mensaje) {
+        alert(resultado.mensaje);
+        // Actualizar el contador del carrito si es necesario
+        const updatedCartCount = cartCount + 1;
+        setCartCount(updatedCartCount);
+      } else {
+        console.error("Error en la respuesta:", resultado);
+        alert("Error al añadir el coche al carrito");
+      }
+    } catch (error) {
+      console.error('Error detallado al añadir al carrito:', error);
+      console.error('Respuesta del servidor:', error.response?.data);
+      alert("Error al añadir el coche al carrito: " + (error.response?.data?.mensaje || error.message || "Error desconocido"));
     }
-   
   };
 
   // LAYAUT
@@ -435,7 +461,8 @@ export default function DetallesCoche() {
                     background: obtenerGradiente(coche.color).acento,
                   }}
                   onClick={() => {
-                    handleAddToCart(), enviarACarrito();
+                    // handleAddToCart(), 
+                    enviarACarrito();
                   }}
                   disabled={addedToCart}
                 >

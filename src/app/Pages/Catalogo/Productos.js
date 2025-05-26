@@ -8,9 +8,9 @@ const Productos = () => {
   useEffect(() => {
     const fetchProductos = async () => {
       const cochesObtenidos = await ReqCoches.getCoches(); // Llamada a la API
+      console.log("cochesObtenidos", JSON.stringify(cochesObtenidos,null,2));
       setCoches(cochesObtenidos);
       // alert("hace peticion a backend ")
-      console.log(`coches ${JSON.stringify(cochesObtenidos)}`)
     };
 
     fetchProductos(); // se EJECUTA CUANDO SE CARGA EL COMPONENTE ES DECIR CUANDO SE ACTUALIZA LA PAGINA

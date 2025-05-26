@@ -30,15 +30,8 @@ export default function CartPage() {
 
     checkAuth();
 
-    window.addEventListener("storage", checkAuth);
     window.addEventListener("login", checkAuth);
-    window.addEventListener("logout", checkAuth);
-
-    return () => {
-      window.removeEventListener("storage", checkAuth);
-      window.removeEventListener("login", checkAuth);
-      window.removeEventListener("logout", checkAuth);
-    };
+  
   }, []);
 
   const continuarComprando = () => {
@@ -51,7 +44,7 @@ export default function CartPage() {
     // Traera todo los prductos de carrito_item
     const response = await ReqCarrito.getCarritoUsuario();
     if (response) {
-   
+      console.log(`datos de carrito 1 ${JSON.stringify(response.length)}`);
       setCarritoItems(response);
       console.log(`datos de carrito 2 ${JSON.stringify(response)}`);
     } else {
@@ -82,7 +75,9 @@ export default function CartPage() {
   }, []);
 
   useEffect(() => {
-    if (carritoItems !== 0) {
+
+    if (carritoItems > 0) {
+  
       carritoItems.map((item) => {
       
         searchProductos(item.usuarioId, item.id, item.cantidad);
@@ -98,6 +93,7 @@ export default function CartPage() {
 
   return (
     <div className="cart-page">
+      <pre> {JSON.stringify(carritoItems > 0)}</pre>
       <NavegadorMenu />
       <pre>productosCarrito {JSON.stringify(productosCarrito)}</pre>
       <div className="cart-container">

@@ -35,38 +35,40 @@ const getCarritoUsuario = async () => {
 };
 
 // FUNCIÓN PARA AÑADIR UN ITEM AL CARRITO
-const addItemToCart = async (item) => {
+const addItemToCart = async (itemData) => {
   try {
     // VERIFICAR SI HAY UN USUARIO AUTENTICADO
     const userData = localStorage.getItem("user");
-    if (!userData) return null;
-
-    const userObj = JSON.parse(userData);
-
-    // VERIFICAR QUE LOS DATOS DEL ITEM SEAN VÁLIDOS
-    if (!item || !item.modelo_id) {
-      console.error("DATOS DE ITEM INVÁLIDOS");
+    if (!userData) {
+      console.error("No hay usuario autenticado");
       return null;
     }
 
-    // PREPARAR DATOS PARA EL BACKEND
-    const itemData = {
-      usuario_id: userObj.id,
-      producto_id: item.modelo_id, // Cambiado de coche_id a producto_id
-      cantidad: item.quantity || 1,
-    };
+    // VERIFICAR QUE LOS DATOS DEL ITEM SEAN VÁLIDOS
+    if (!itemData || !itemData.UsuarioId || !itemData.ProductoId) {
+      console.error("DATOS DE ITEM INVÁLIDOS:", itemData);
+      return null;
+    }
+
+    console.log("Enviando petición a /carrito/agregar con datos:", itemData);
 
     // LLAMADA AL ENDPOINT DEL BACKEND
-    const response = await axiosInstance.post("/Carrito", itemData, {
+    const response = await axiosInstance.post("/carrito/agregar", itemData, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-    console.log("Item añadido al carrito:", response.data);
+
+    console.log("Respuesta completa del servidor:", response);
     return response.data;
   } catch (error) {
-    console.error("ERROR AL AÑADIR ITEM AL CARRITO:", error);
-    return null; // DEVUELVE NULL EN CASO DE ERROR
+    console.error("ERROR DETALLADO AL AÑADIR ITEM AL CARRITO:", {
+      mensaje: error.message,
+      respuesta: error.response?.data,
+      estado: error.response?.status,
+      datos: error.config?.data
+    });
+    throw error; // Re-lanzamos el error para manejarlo en el componente
   }
 };
 

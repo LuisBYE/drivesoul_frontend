@@ -113,10 +113,13 @@ export default function Home() {
   }, []);
 
   // Obtener productos aleatorios
+  //! listado de coches
   useEffect(() => {
     const obtenerProductos = async () => {
       try {
         const coches = await ReqCoches.getCoches();
+
+        console.log("Coches obtenidos:", JSON.stringify(coches,null,2));
         if (coches && coches.length > 0) {
           // Obtener 3 coches aleatorios
           const cochesAleatorios = [...coches]

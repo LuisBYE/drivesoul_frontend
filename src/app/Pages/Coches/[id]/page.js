@@ -32,19 +32,16 @@ export default function DetallesCoche() {
       return;
     }
     const params = {
-      UsuarioId: userData?.id, // userData es un objeto, no un array
-      ProductoId: cocheSeleccionado[0]?.producto_id, // ProductoId con mayúscula P
-      Cantidad: 1, // o la cantidad que desees
+      UsuarioId: userData?.id,
+      ProductoId: cocheSeleccionado[0]?.producto_id,
+      Cantidad: 1,
     };
     const resultado = await RequestsCarrito.addItemToCart(params);
     if (resultado) {
       setAddedToCart(true);
-      // setTimeout(() => {
-      //   setAddedToCart(false);
-      // }, 3000); // Resetea el estado después de 3 segundos
       alert("Coche añadido al carrito correctamente");
+      router.push("/Pages/cart"); // Esto te lleva a la cesta
     }
-    console.log("Resultado completo de añadir al carrito:", resultado);
   };
 
   return (

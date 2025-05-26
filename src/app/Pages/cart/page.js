@@ -12,6 +12,7 @@ import { useCart } from "../../context/CartContext";
 import "./cart.css";
 import ReqCarrito from "../../component/AxiosResquestAll/RequestsCarrito";
 import ReqProductos from "../../component/AxiosResquestAll/RequestsProductos";
+
 import ProductosCesta from "./ProductosCesta";
 
 export default function CartPage() {
@@ -31,7 +32,6 @@ export default function CartPage() {
     checkAuth();
 
     window.addEventListener("login", checkAuth);
-  
   }, []);
 
   const continuarComprando = () => {
@@ -40,51 +40,59 @@ export default function CartPage() {
   const [productosCarrito, setProductosCarrito] = useState([]);
 
   const [carritoItems, setCarritoItems] = useState([]);
-  const datosCarritoItem = async () => {
-    // Traera todo los prductos de carrito_item
-    const response = await ReqCarrito.getCarritoUsuario();
-    if (response) {
-      console.log(`datos de carrito 1 ${JSON.stringify(response.length)}`);
-      setCarritoItems(response);
-      console.log(`datos de carrito 2 ${JSON.stringify(response)}`);
-    } else {
-      alert("error al peticion ger")
-
-    }
-  };
 
   const searchProductos = async (id, ItemId, CantidadItem) => {
-    // console.log(`idUSUARIO ${JSON.stringify(id)}`);
-    // console.log(`aqui xd:  ${JSON.stringify(ItemId)}`)
-    const response = await ReqProductos.getProductoById(id);
-    if (response) {
-      const productoConItemId = {
-        ...response,
-        carritoItemId: ItemId,
-        cantidad:CantidadItem, // Este ID debe ser único por item en el carrito
-      };
-      // console.log("aqui", JSON.stringify(productoConItemId,null,2))
-      setProductosCarrito((prevProductos) => [...prevProductos, productoConItemId]);
+    const response = await ReqCarrito.getCarritoUsuario(id);
+    console.log("producto response", JSON.stringify(response, null, 2));
+    const itemDates = Array.isArray(response) ? response[0] : response;
+
+    const producto = await ReqProductos.getProductoById(itemDates.productoId);
+    console.log(" producto itemDates", JSON.stringify(itemDates, null, 2));
+    console.log(" producto", JSON.stringify(producto, null, 2));
+    const productoConItemId = {
+      ...itemDates,
+      carritoItemId: ItemId,
+      cantidad: CantidadItem,
+    };
+
+    setProductosCarrito((prevProductos) => [
+      ...prevProductos,
+      productoConItemId,
+    ]);
+  };
+  const fetchCarrito = async () => {
+    const carrito = await ReqCarrito.getCarritoUsuario();
+    if (!carrito || carrito.length === 0) {
+      return;
     } else {
-      alert("No se encontró producto por ID");
+      setCarritoItems(carrito);
     }
+
+    // o lo que necesites hacer con los datos
   };
 
   useEffect(() => {
-    datosCarritoItem();
+    fetchCarrito();
   }, []);
 
   useEffect(() => {
+    const fetchProductos = async () => {
+      if (!carritoItems || carritoItems.length === 0) return;
 
-    if (carritoItems > 0) {
-  
-      carritoItems.map((item) => {
-      
-        searchProductos(item.usuarioId, item.id, item.cantidad);
-      });
-    } else {
-      alert("no hay datos de carrito_Items");
-    }
+      const productos = await Promise.all(
+        carritoItems.map(async (item) => {
+          const producto = await ReqProductos.getProductoById(item.productoId);
+          return {
+            ...producto,
+            carritoItemId: item.id,
+            cantidad: item.cantidad,
+          };
+        })
+      );
+      setProductosCarrito(productos);
+    };
+
+    fetchProductos();
   }, [carritoItems]);
 
   const mostrarContenido = isLoggedIn && productosCarrito.length !== 0;
@@ -93,9 +101,7 @@ export default function CartPage() {
 
   return (
     <div className="cart-page">
-      <pre> {JSON.stringify(carritoItems > 0)}</pre>
       <NavegadorMenu />
-      <pre>productosCarrito {JSON.stringify(productosCarrito)}</pre>
       <div className="cart-container">
         <h1 className="cart-title">Mi Carrito</h1>
         {/* <pre> {JSON.stringify(cartItems)}</pre> */}
@@ -116,7 +122,6 @@ export default function CartPage() {
           <div className="empty-cart">
             <i className="fas fa-shopping-cart empty-cart-icon"></i>
             <p>Tu carrito está vacío</p>
-
           </div>
         )}
         <button onClick={continuarComprando} className="btn-continuar">

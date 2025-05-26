@@ -13,7 +13,7 @@ const getCarritoUsuario = async () => {
     if (!userData) return null;
 
     const userObj = JSON.parse(userData);
-   
+
     console.log(`aqui usuario ${JSON.stringify(userData)}`);
 
     if (!userObj?.id) {
@@ -36,6 +36,10 @@ const getCarritoUsuario = async () => {
 
 // FUNCIÓN PARA AÑADIR UN ITEM AL CARRITO
 const addItemToCart = async (itemData) => {
+  console.log(
+    "Iniciando addItemToCart con datos:",
+    JSON.stringify(itemData, null, 2)
+  );
   try {
     // VERIFICAR SI HAY UN USUARIO AUTENTICADO
     const userData = localStorage.getItem("user");
@@ -66,7 +70,7 @@ const addItemToCart = async (itemData) => {
       mensaje: error.message,
       respuesta: error.response?.data,
       estado: error.response?.status,
-      datos: error.config?.data
+      datos: error.config?.data,
     });
     throw error; // Re-lanzamos el error para manejarlo en el componente
   }

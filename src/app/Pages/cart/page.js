@@ -40,7 +40,7 @@ export default function CartPage() {
 
   const realizarCompra = () => {
     // TODO: Implementar la lógica de compra
-    router.push("/Pages/Checkout");
+    router.push("/Pages/EstadoCompra");
   };
   const [productosCarrito, setProductosCarrito] = useState([]);
 

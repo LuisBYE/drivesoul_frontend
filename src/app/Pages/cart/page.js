@@ -38,9 +38,25 @@ export default function CartPage() {
     router.push("/Pages/Catalogo");
   };
 
-  const realizarCompra = () => {
-    // TODO: Implementar la lógica de compra
-    router.push("/Pages/Checkout");
+  const realizarCompra = async () => {
+    // Mostramos un estado de procesamiento
+    setIsProcessing(true);
+    
+    try {
+      // Vaciar el carrito del usuario en el backend
+      await ReqCarrito.clearUserCart();
+      
+      // Limpiamos el estado local del carrito
+      setProductosCarrito([]);
+      setCarritoItems([]);
+      
+      // Redirigimos a la página de confirmación
+      router.push("/Pages/OrderConfirmation");
+    } catch (error) {
+      console.error("Error al realizar la compra:", error);
+      alert("Ha ocurrido un error al procesar tu compra. Por favor, inténtalo de nuevo.");
+      setIsProcessing(false);
+    }
   };
   const [productosCarrito, setProductosCarrito] = useState([]);
 
@@ -82,19 +98,41 @@ export default function CartPage() {
 
   useEffect(() => {
     const fetchProductos = async () => {
-      if (!carritoItems || carritoItems.length === 0) return;
+      if (!carritoItems || carritoItems.length === 0) {
+        // Si no hay items en el carrito, asegurarse de que productosCarrito esté vacío
+        setProductosCarrito([]);
+        return;
+      }
 
-      const productos = await Promise.all(
-        carritoItems.map(async (item) => {
-          const producto = await ReqProductos.getProductoById(item.productoId);
-          return {
-            ...producto,
-            carritoItemId: item.id,
-            cantidad: item.cantidad,
-          };
-        })
-      );
-      setProductosCarrito(productos);
+      try {
+        // Limpiar el estado anterior para evitar datos duplicados
+        setProductosCarrito([]);
+        
+        const productos = await Promise.all(
+          carritoItems.map(async (item) => {
+            const producto = await ReqProductos.getProductoById(item.productoId);
+            if (!producto) {
+              console.error(`No se pudo obtener el producto con ID ${item.productoId}`);
+              return null;
+            }
+            return {
+              ...producto,
+              carritoItemId: item.id,
+              cantidad: item.cantidad,
+            };
+          })
+        );
+        
+        // Filtrar cualquier producto nulo que pueda haber resultado de errores
+        const productosValidos = productos.filter(p => p !== null);
+        console.log('Productos válidos cargados en el carrito:', productosValidos.length);
+        
+        // Actualizar el estado con los productos válidos
+        setProductosCarrito(productosValidos);
+      } catch (error) {
+        console.error('Error al cargar los productos del carrito:', error);
+        setProductosCarrito([]);
+      }
     };
 
     fetchProductos();

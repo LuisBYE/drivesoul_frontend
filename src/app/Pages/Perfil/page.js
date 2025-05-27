@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import NavegadorPag from "../../component/Pages/Menu/Navegador";
-import ReqPedidos from '../../component/AxiosResquestAll/RequestsPedidos';
+import ReqPedidos from "../../component/AxiosResquestAll/RequestsPedidos";
 import './perfil.css';
 
 export default function PerfilPage() {
@@ -27,8 +27,10 @@ export default function PerfilPage() {
     // Cargar pedidos
     const cargarPedidos = async () => {
       try {
-        const data = await ReqPedidos.getPedidosUsuario();
-        setPedidos(data || []);
+        const pedidosData = await ReqPedidos.getPedidosUsuario();
+        if (pedidosData) {
+          setPedidos(pedidosData);
+        }
       } catch (error) {
         console.error("Error al cargar pedidos:", error);
       } finally {
@@ -43,6 +45,41 @@ export default function PerfilPage() {
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('es-ES', options);
+  };
+
+  const formatFecha = (fecha) => {
+    try {
+      return format(new Date(fecha), 'dd/MM/yyyy HH:mm');
+    } catch (error) {
+      return 'Fecha no disponible';
+    }
+  };
+
+  const getEstadoClass = (estado) => {
+    switch (estado.toLowerCase()) {
+      case 'pendiente':
+        return 'pendiente';
+      case 'completado':
+      case 'entregado':
+        return 'completado';
+      case 'cancelado':
+        return 'cancelado';
+      default:
+        return 'procesando';
+    }
+  };
+
+  const getEstadoPagoClass = (estadoPago) => {
+    switch (estadoPago.toLowerCase()) {
+      case 'completado':
+        return 'completado';
+      case 'pendiente':
+        return 'pendiente';
+      case 'fallido':
+        return 'fallido';
+      default:
+        return 'pendiente';
+    }
   };
 
   // PANTALLA DE CARGA
@@ -83,8 +120,6 @@ export default function PerfilPage() {
         {/* SECCIÓN DE PEDIDOS */}
         <div className="pedidos-section">
           <h2>Mis Pedidos</h2>
-          
-          {/* MENSAJE SI NO HAY PEDIDOS */}
           {pedidos.length === 0 ? (
             <div className="no-pedidos">
               <p>No tienes pedidos realizados</p>
@@ -93,31 +128,39 @@ export default function PerfilPage() {
               </button>
             </div>
           ) : (
-            /* LISTA DE PEDIDOS */
             <div className="pedidos-list">
-              {pedidos.map(pedido => (
+              {pedidos.map((pedido) => (
                 <div key={pedido.id} className="pedido-card">
-                  {/* CABECERA DEL PEDIDO */}
                   <div className="pedido-header">
-                    <h3>Pedido #{pedido.id}</h3>
-                    <span className={`estado ${pedido.estado?.toLowerCase() || 'pendiente'}`}>
-                      {pedido.estado || 'Pendiente'}
+                    <div>
+                      <h3>Pedido #{pedido.id}</h3>
+                      <span className="fecha-pedido">{formatFecha(pedido.fechaCreacion)}</span>
+                    </div>
+                    <span className={`estado-pedido ${getEstadoClass(pedido.estado)}`}>
+                      {pedido.estado}
                     </span>
                   </div>
-                  
-                  {/* INFORMACIÓN BÁSICA DEL PEDIDO */}
-                  <div className="pedido-info">
-                    <p><strong>Fecha:</strong> {formatDate(pedido.fecha || new Date())}</p>
-                    <p><strong>Total:</strong> {(pedido.total || 0).toFixed(2)}€</p>
+                  <div className="pedido-content">
+                    <p><strong>Total:</strong> {pedido.importeTotal.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</p>
+                    <p><strong>Dirección de envío:</strong> {pedido.direccionEnvio}</p>
+                    <p><strong>Método de pago:</strong> {pedido.metodoPago}</p>
+                    <div className={`estado-pago ${getEstadoPagoClass(pedido.estadoPago)}`}>
+                      Estado del pago: {pedido.estadoPago}
+                    </div>
                   </div>
-                  
-                  {/* BOTÓN PARA VER DETALLES */}
-                  <button 
-                    className="view-details-btn"
-                    onClick={() => router.push(`/Pages/Pedidos/${pedido.id}`)}
-                  >
-                    Ver detalles completos
-                  </button>
+                  {pedido.items && pedido.items.length > 0 && (
+                    <div className="pedido-items">
+                      <h3>Productos</h3>
+                      <ul>
+                        {pedido.items.map((item) => (
+                          <li key={item.id}>
+                            {item.nombreProducto} - Cantidad: {item.cantidad} - 
+                            Precio: {item.precio.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

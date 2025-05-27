@@ -39,7 +39,6 @@ export default function DetallesCoche() {
     const resultado = await RequestsCarrito.addItemToCart(params);
     if (resultado) {
       setAddedToCart(true);
-      alert("Coche añadido al carrito correctamente");
       router.push("/Pages/cart"); // Esto te lleva a la cesta
     }
   };

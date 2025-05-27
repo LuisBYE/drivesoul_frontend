@@ -15,7 +15,14 @@ function NavegadorMenu() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [currentPath, setCurrentPath] = useState("");
     const { cartCount, setCartCount } = useCart();
-    const user = localStorage.getItem('user');
+    const [user, setUser] = useState(null);
+
+    // Efecto para obtener el usuario del localStorage solo en el cliente
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        setUser(storedUser);
+    }, []);
+
     // Función para verificar y actualizar el estado de autenticación
     const checkAuthStatus = () => {
         

@@ -12,7 +12,7 @@ const nextConfig = {
         return [
             {
                 source: '/api/:path*', // Redirige las solicitudes que lleguen a /api/
-                destination: 'http://localhost:5003/api/:path*', // Redirige a tu backend
+                destination: 'http://localhost:5138/api/:path*', // Redirige a tu backend
             },
         ];
     },

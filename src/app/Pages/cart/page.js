@@ -37,6 +37,11 @@ export default function CartPage() {
   const continuarComprando = () => {
     router.push("/Pages/Catalogo");
   };
+
+  const realizarCompra = () => {
+    // TODO: Implementar la lógica de compra
+    router.push("/Pages/Checkout");
+  };
   const [productosCarrito, setProductosCarrito] = useState([]);
 
   const [carritoItems, setCarritoItems] = useState([]);
@@ -124,11 +129,33 @@ export default function CartPage() {
             <p>Tu carrito está vacío</p>
           </div>
         )}
-        <button onClick={continuarComprando} className="btn-continuar">
-          Explorar catálogo
-        </button>
+        <div className="cart-buttons">
+          <button onClick={continuarComprando} className="btn-continuar">
+            Explorar catálogo
+          </button>
+          {mostrarContenido && (
+            <button onClick={realizarCompra} className="btn-comprar">
+              Realizar Compra
+            </button>
+          )}
+        </div>
         {mostrarContenido && (
-          <ProductosCesta productoCesta={productosCarrito || []} />
+          <ProductosCesta 
+            productoCesta={productosCarrito || []} 
+            onRemoveItem={(carritoItemId) => {
+              // Actualizamos ambos estados de forma síncrona
+              const newProductosCarrito = productosCarrito.filter(item => item.carritoItemId !== carritoItemId);
+              const newCarritoItems = carritoItems.filter(item => item.id !== carritoItemId);
+              
+              setProductosCarrito(newProductosCarrito);
+              setCarritoItems(newCarritoItems);
+              
+              // Forzamos una actualización del estado mostrarContenido
+              if (newProductosCarrito.length === 0) {
+                setProductosCarrito([]);
+              }
+            }}
+          />
         )}
       </div>
     </div>

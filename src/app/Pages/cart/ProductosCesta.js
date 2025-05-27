@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./cart.css";
 import ReqCarrito from "../../component/AxiosResquestAll/RequestsCarrito";
 
-const ProductosCesta = ({ productoCesta }) => {
+const ProductosCesta = ({ productoCesta, onRemoveItem }) => {
   // Estado para todas las cantidades, usando el id del producto como clave
   const [cantidades, setCantidades] = useState(() =>
     Object.fromEntries(
@@ -28,13 +28,18 @@ const ProductosCesta = ({ productoCesta }) => {
   };
 
   const handleRemoveItem = async (carritoItemId) => {
-    const deleteItem = await ReqCarrito.removeCartItem(carritoItemId);
-    if (deleteItem) {
-      alert(`Item con ID ${carritoItemId} eliminado correctamente.`);
-      console.log(`Item con ID ${carritoItemId} eliminado correctamente.`);
-      // Aquí podrías actualizar el estado del carrito si es necesario
-    } else {
-      console.error(`Error al eliminar el item con ID ${carritoItemId}.`);
+    try {
+      const deleteItem = await ReqCarrito.removeCartItem(carritoItemId);
+      if (deleteItem !== null) {
+        onRemoveItem(carritoItemId); // Primero actualizamos el estado
+        console.log(`Item con ID ${carritoItemId} eliminado correctamente.`);
+      } else {
+        console.error(`Error al eliminar el item con ID ${carritoItemId}.`);
+        alert('No se pudo eliminar el producto. Por favor, intenta de nuevo.');
+      }
+    } catch (error) {
+      console.error('Error al eliminar el producto:', error);
+      alert('Ocurrió un error al eliminar el producto. Por favor, intenta de nuevo.');
     }
   };
 

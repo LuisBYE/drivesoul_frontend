@@ -71,53 +71,83 @@ export default function DetallesCoche() {
           ) : (
             // CONTENIDO DEL COCHE
             <>
-              <pre> {JSON.stringify(user)}</pre>
+              {/* <pre> {JSON.stringify(cocheSeleccionado, null, 2)}</pre> */}
               <div className="imagen-container">
                 <div className="imagen-wrapper">
-                  {/* <img
-                    src={images[currentImageIndex]}
-                    alt={`${cocheSeleccionado[0].nombre} - Imagen ${currentImageIndex + 1}`}
-                    className="imagen-principal"
-                    loading="eager"
-                  /> */}
-                </div>
-
-                <div className="carousel-controls">
-                  <button
-                    onClick={() =>
-                      setCurrentImageIndex(
-                        (prev) => (prev - 1 + images.length) % images.length
-                      )
-                    }
-                  >
-                    <i className="fas fa-chevron-left"></i>
-                  </button>
-                  <button
-                    onClick={() =>
-                      setCurrentImageIndex((prev) => (prev + 1) % images.length)
-                    }
-                  >
-                    <i className="fas fa-chevron-right"></i>
-                  </button>
-                </div>
-
-                <div className="thumbnail-container">
-                  {images.map((img, index) => (
-                    <div
-                      key={index}
-                      className={`thumbnail ${
-                        index === currentImageIndex ? "active" : ""
+                  {cocheSeleccionado[0].imagenes &&
+                  cocheSeleccionado[0].imagenes.length > 0 ? (
+                    <img
+                      src={`/FOTOS/COCHES/${cocheSeleccionado[0].imagenes[currentImageIndex]}`}
+                      alt={`${cocheSeleccionado[0].nombre} - Imagen ${
+                        currentImageIndex + 1
                       }`}
-                      onClick={() => setCurrentImageIndex(index)}
-                    >
+                      className="imagen-principal"
+                      loading="eager"
+                    />
+                  ) : (
+                    <div style={{ textAlign: "center", width: "100%" }}>
                       <img
-                        src={img}
-                        alt={`Miniatura ${index + 1}`}
+                        src="/FOTOS/COCHES/default.jpg"
+                        alt="No hay imágenes para este coche"
+                        className="imagen-principal"
                         loading="eager"
                       />
+                      <div style={{ color: "#888", marginTop: 8 }}>
+                        No hay imágenes para este coche
+                      </div>
                     </div>
-                  ))}
+                  )}
                 </div>
+
+                {cocheSeleccionado[0].imagenes &&
+                  cocheSeleccionado[0].imagenes.length > 0 && (
+                    <>
+                      <div className="carousel-controls">
+                        <button
+                          onClick={() =>
+                            setCurrentImageIndex(
+                              (prev) =>
+                                (prev -
+                                  1 +
+                                  cocheSeleccionado[0].imagenes.length) %
+                                cocheSeleccionado[0].imagenes.length
+                            )
+                          }
+                        >
+                          <i className="fas fa-chevron-left"></i>
+                        </button>
+                        <button
+                          onClick={() =>
+                            setCurrentImageIndex(
+                              (prev) =>
+                                (prev + 1) %
+                                cocheSeleccionado[0].imagenes.length
+                            )
+                          }
+                        >
+                          <i className="fas fa-chevron-right"></i>
+                        </button>
+                      </div>
+
+                      <div className="thumbnail-container">
+                        {cocheSeleccionado[0].imagenes.map((img, index) => (
+                          <div
+                            key={index}
+                            className={`thumbnail ${
+                              index === currentImageIndex ? "active" : ""
+                            }`}
+                            onClick={() => setCurrentImageIndex(index)}
+                          >
+                            <img
+                              src={`/FOTOS/COCHES/${img}`}
+                              alt={`Miniatura ${index + 1}`}
+                              loading="eager"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
 
                 {cocheSeleccionado[0]?.tipo_combustible?.toLowerCase() ===
                   "híbrido" && <div className="eco-badge">ECO</div>}

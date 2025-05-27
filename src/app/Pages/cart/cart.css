@@ -256,6 +256,13 @@
   font-size: 1rem;
 }
 
+.cart-buttons {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+  justify-content: center;
+}
+
 .btn-continuar {
   background: #f0f0f0;
   color: #333;
@@ -263,6 +270,21 @@
 
 .btn-continuar:hover {
   background: #e0e0e0;
+}
+
+.btn-comprar {
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-comprar:hover {
+  background-color: #218838;
 }
 
 .btn-procesar {
@@ -314,7 +336,7 @@
   }
   
   .item-quantity {
-    margin: 1rem 0;
+    margin: 0;
   }
   
   .item-price {

@@ -1,8 +1,21 @@
 import axios from 'axios';
 
+// Detectamos automáticamente si estamos en localhost o en red local
+const host = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+
+// Si estamos en localhost, usamos localhost, si no, usamos la IP del servidor
+const backendHost = host === 'localhost' || host === '127.0.0.1' ? 'localhost' : host;
+
+// Usamos el puerto correcto para el backend
+const backendPort = '5000'; // Puerto de ASP.NET Core según tu configuración
+
+// Construimos la URL completa
+const baseURL = `http://${backendHost}:${backendPort}/api`;
+console.log('Usando backend en:', baseURL);
+
 // Crea una instancia de Axios con configuración base
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:5138/api', // Cambiar por la URL de tu backend 5138(CASA LUIS) o 5003(Portatil Luis) 
+    baseURL: baseURL,
     headers: {
         'Content-Type': 'application/json'
     }
